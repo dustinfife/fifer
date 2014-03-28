@@ -49,6 +49,11 @@ chi-square test.}
   \code{p.adjust} function should be consulted for further
   description of the methods used.
 }
+\note{
+  This code was adapted and modified from the NCStats
+  package (see
+  \url{http://www.rforge.net/doc/packages/NCStats/chisqPostHoc.html})
+}
 \examples{
 # Makes a table of observations -- similar to first example in chisq.test
 M <- as.table(rbind(c(76, 32, 46), c(48,23,47), c(45,34,78)))

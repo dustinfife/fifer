@@ -56,4 +56,7 @@
 \references{
   \url{http://www.mathsisfun.com/polar-cartesian-coordinates.html}
 }
+\seealso{
+  \code{\link{compute.theta}}.
+}
 

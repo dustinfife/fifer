@@ -11,10 +11,11 @@
   \item{data}{the dataset you're trying to eliminate (or
   keep) variables from}
 
-  \item{keep}{should the variables be kept or dropped?}
+  \item{keep}{should the variables be kept (keep=T) or
+  dropped (keep=F)?}
 }
 \value{
-  a dataset, having the variables of interest only
+  a dataset, containing the variables of interest only
 }
 \description{
   Given a set of variable names (or integers), remove (or
@@ -33,5 +34,10 @@ new.data2 = make.null(c("Sepal.Length"), r("Sepal.Width", "Petal.Width", names(i
 }
 \author{
   Dustin Fife
+}
+\seealso{
+  \code{\link{subset}}.
+
+  \code{\link{get.cols}}, \code{\link{r}}
 }
 

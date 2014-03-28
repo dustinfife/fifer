@@ -5,12 +5,20 @@
   printx(x, file = "", ...)
 }
 \arguments{
+  \item{x}{The \code{xtable} object the user wishes to
+  export}
+
   \item{file}{the location where the file is stored}
 
   \item{...}{other arguments passed to print.xtable}
 }
 \description{
   Change Defaults for print.xtable
+}
+\details{
+  This is a wrapper for the function
+  \code{\link{print.xtable}}, where the defaults have been
+  specified for apa-like tables.
 }
 \author{
   Dustin Fife

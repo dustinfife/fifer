@@ -22,6 +22,9 @@
 
   \item{nmin}{Number of times the "minimum value" is
   multiplied to set threshold value.}
+
+  \item{...}{other arguments passed to
+  \code{\link{cforest}} or \code{\link{randomForest}}}
 }
 \value{
   The object returned has the following attributes:
@@ -58,16 +61,79 @@
 \description{
   Using a set of predictors, this function uses random
   forests to select the best ones in a stepwise fashion.
+  Both the procedure and the algorithm were borrowed
+  heavily from the \code{VSURF} package with some
+  modifications. These modifications allow for unbiased
+  computation of variable importance via the
+  \code{\link{cforest}} function in the party package.
 }
 \details{
-  This function begins by predicting classes using random
-  forests with all of the predictors. It repeats this 50
-  times, then computes variable importance for each
-  variable. Subsequently, each predictor is added
-  sequentially in order of importance until the value of
-  \code{pick.best} is reached.
+  What follows is the documentation for the original
+  algorithm in VSURF:
+
+  Three steps variable selection procedure based on random
+  forests for supervised classification and regression
+  problems.  First step ("thresholding step") is dedicated
+  to eliminate irrelevant variables from the dataset.
+  Second step ("interpretation step") aims to select all
+  variables related to the response for interpretation
+  prupose.  Third step ("prediction step") refines the
+  selection by eliminating redundancy in the set of
+  variables selected by the second step, for prediction
+  prupose.
+
+  \itemize{ \item First step ("thresholding step"): first,
+  \code{nfor.thres} random forests are computed using the
+  function \code{randomForest} with arguments
+  \code{importance=TRUE}. Then variables are sorted
+  according to their mean variable importance (VI), in
+  decreasing order.  This order is kept all along the
+  procedure. Next, a threshold is computed:
+  \code{min.thres}, the minimum predicted value of a pruned
+  CART tree fitted to the curve of the standard deviations
+  of VI.  Finally, the actual "thresholding step" is
+  performed: only variables with a mean VI larger than
+  \code{nmin} * \code{min.thres} are kept.
+
+  \item Second step ("intepretation step"): the variables
+  selected by the first step are considered.
+  \code{nfor.interp} embedded random forests models are
+  grown, starting with the random forest build with only
+  the most important variable and ending with all variables
+  selected in the first step. Then, \code{err.min} the
+  minimum mean out-of-bag (OOB) error of these models and
+  its associated standard deviation \code{sd.min} are
+  computed.  Finally, the smallest model (and hence its
+  corresponding variables) having a mean OOB error less
+  than \code{err.min} + \code{nsd} * \code{sd.min} is
+  selected.
+
+  \item Third step ("prediction step"): the starting point
+  is the same than in the second step. However, now the
+  variables are added to the model in a stepwise manner.
+  \code{mean.jump}, the mean jump value is calculated using
+  variables that have been left out by the second step, and
+  is set as the mean absolute difference between mean OOB
+  errors of one model and its first following model.  Hence
+  a variable is included in the model if the mean OOB error
+  decrease is larger than \code{nmj} * \code{mean.jump}.  }
 }
 \author{
-  Dustin Fife
+  Robin Genuer, Jean-Michel Poggi and Christine
+  Tuleau-Malot, with modifications by Dustin Fife
+}
+\references{
+  Genuer, R. and Poggi, J.M. and Tuleau-Malot, C. (2010),
+  Variable selection using random forests, Pattern
+  Recognition Letters 31(14), 2225-2236 Carolin Strobl,
+  Anne-Laure Boulesteix, Achim Zeileis, and Torsten
+  Hothorn. Bias in random forest variable importance
+  measures: Illustrations, sources and a solution. BMC
+  Bioinformatics, 8(1): 1-21, 2007. doi:
+  10.1186/1471-2105-8-25. URL
+  http://dx.doi.org/10.1186/1471-2105-8-25.
+}
+\seealso{
+  \code{\link{rfInterp}}, \code{\link{rfPred}}
 }
 

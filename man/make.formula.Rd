@@ -10,13 +10,16 @@
 
   \item{predictors}{a string (or a vector of strings)
   representing the predictors. Each will be separated by a
-  +}
+  plus sign.}
 }
 \value{
   a formula object
 }
 \description{
-  Given a set of strings, convert into a formula
+  \code{make.formula} is a function that easily converts a
+  set of strings into a formula. It requires two arguments:
+  a single response variable, and a vector of strings. See
+  examples.
 }
 \examples{
 k = data.frame(matrix(rnorm(100), ncol=5))

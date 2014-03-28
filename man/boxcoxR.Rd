@@ -20,8 +20,20 @@
   optimal lambda using a boxcox transformation, then
   returnes a transformed version of the variable.
 }
+\details{
+  The \code{MASS} package has a function that computes the
+  optimal lambda value for a particular regression
+  equation. However, it currently (as of version 7.3-23)
+  returns a lambda vector rather than the boxcox
+  transformed variable. This function is a wrapper for
+  \code{\link{boxcox}} that actually returns a vector that
+  is a transformed version of the original variable.
+}
 \examples{
 x = rnorm(100)^2
+### use original boxcox function
+boxcox(x~1, plot=FALSE) ## returns a vector of lambda values and their likelihoods
+### use boxcoxR function
 boxcoxR(x)
 }
 \author{

@@ -14,6 +14,9 @@
 
   \item{importance}{method of calculating importance
   (permutation or gini)}
+
+  \item{...}{other arguments passed to
+  \code{\link{cforest}} or \code{\link{randomForest}}}
 }
 \value{
   \item{varselect.interp}{The variables selected for
@@ -38,7 +41,8 @@
 }
 \description{
   Find best variables using Random Forest (Interpretation
-  Step)
+  Step). Find complete documentation at
+  \code{\link{rfThresh}}
 }
 \examples{
 #### do threshold step
@@ -50,6 +54,10 @@ object = rfThresh(formula, data=iris, nruns=2, importance="gini");
 rfInterp(object, nruns=10, importance="permutation")}
 }
 \author{
-  Dustin Fife
+  Robin Genuer, Jean-Michel Poggi and Christine
+  Tuleau-Malot, with modifications by Dustin Fife
+}
+\seealso{
+  \code{\link{rfInterp}}, \code{\link{rfPred}}
 }
 

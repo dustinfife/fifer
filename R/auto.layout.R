@@ -3,7 +3,7 @@
 ##'
 ##' @title Automatically select the layout.
 ##' @param n the number of plots
-##' @param layout should the fuction return a preallocated layout object? If \code{False}, it returns a matrix
+##' @param layout should the fuction return a preallocated layout object? If \code{FALSE}, it returns a matrix
 ##' @return either a matrix or a layout object
 ##' @author Dustin Fife
 ##' @export

@@ -25,7 +25,7 @@
   (e.g., "AAC") and returns either a number that indicates
   where that string falls in the sequence of excel named
   columns, or it returns the variable name corresponding to
-  that column number. "
+  that column number.
 }
 \examples{
 fake.names = paste("Variable", 1:1000, sep="")
@@ -36,5 +36,8 @@ excelMatch("AC", n=1000)
 }
 \author{
   Dustin Fife
+}
+\seealso{
+  \code{\link{excelCols}}
 }
 

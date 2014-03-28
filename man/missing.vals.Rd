@@ -5,14 +5,15 @@
   missing.vals(dataset)
 }
 \arguments{
-  \item{dataset}{a matrix (persons in rows, variables in
-  columns).}
+  \item{dataset}{a matrix or data frame (persons in rows,
+  variables in columns).}
 }
 \value{
   a matrix with information about what is missing.
 }
 \description{
-  Provides a summary of missing data.
+  Given a dataset, \code{missing.vals} will report on the
+  number of missing observations per variable
 }
 \author{
   Dustin Fife

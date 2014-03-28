@@ -19,12 +19,15 @@
   Excel columns are labeled with letters (e.g., A, B, C,
   ... AA, AB, AC, etc). Given an integer (n), this function
   will return labels starting from A until the nth column.
-  See examples
+  See examples.
 }
 \examples{
 excelCols(11)
 }
 \author{
   Dustin Fife
+}
+\seealso{
+  \code{\link{excelMatch}}
 }
 

@@ -4,7 +4,8 @@
 ##' @param object an object returned from \code{\link{rfInterp}}
 ##' @param importance what importance measure should be used? Either "permutation" or "gini."
 ##' @param nfor.pred number of forests to grow
-##' @param nmj i don't know
+##' @param nmj a contant used for setting the threshold for variable selection. Higher values indicate a less stringent threshold. 
+##' @param ... other arguments passed to \code{\link{cforest}} or \code{\link{randomForest}}
 #'@return \item{varselect.pred}{The variables selected for Prediction (sorted)}
 #'@return \item{err.interp}{The error at each stage of the stepwise variable inclusion.}
 #'@return \item{mean.jump}{The threshold for variable inclusion.}
@@ -147,7 +148,7 @@ rfPred <-function(object, importance="permutation", nfor.pred=25, nmj=1, ...){
 	if (importance=="gini"){
 		model = randomForest(formula, data=data, importance=TRUE,...)
 	} else {
-		model = cforest(formula, data=data, controls=cforest_unbiased(ntree=1000, mtry=mt),...)
+		model = cforest(formula, data=data, controls=cforest_unbiased(ntree=1000, mtry=sqrt(length(varselect.pred))),...)
 	}
 		
 	comput.time <- Sys.time()-start

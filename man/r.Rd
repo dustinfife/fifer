@@ -14,14 +14,17 @@
   \item{data.names}{the names of the dataset}
 
   \item{names}{Should the names of the variables be
-  returned? Or the column indices? Defaults to FALSE.}
+  returned? Or the column indices? Defaults to FALSE
+  (meaning the column indices will be returned).}
 }
 \value{
   a vector of numbers corresponding to the column names
 }
 \description{
-  Extract the column index for a sequence of variable
-  names.
+  Given a starting string and an ending string, \code{r}
+  will extract all columns between the first and the last
+  string and return either a vector of strings or a vector
+  of integers. See examples.
 }
 \examples{
 var.names = LETTERS[1:20]
@@ -29,5 +32,8 @@ r("C", "F", var.names)
 }
 \author{
   Dustin Fife
+}
+\seealso{
+  \code{\link{make.null}}, \code{\link{get.cols}}
 }
 

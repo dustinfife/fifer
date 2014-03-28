@@ -11,18 +11,23 @@
   wish to extract the column}
 }
 \value{
-  an integer corresponding to the column number
+  an integer corresponding to the column index(indices)
 }
 \description{
-  Extract the column index for a given variable name
+  Given a vector of strings and another reference vector,
+  \code{get.cols} will search the reference vector for
+  matches and return the column indices where each string
+  was located. See examples.
 }
 \examples{
-string = c("A", "B", "Q")
 names = LETTERS[1:10]
 get.cols(c("A", "B", "D"), LETTERS[1:10])  ### works
 #get.cols(c("A", "B", "Z"), LETTERS[1:10])  ### doesn't work
 }
 \author{
   Dustin Fife
+}
+\seealso{
+  \code{\link{make.null}}, \code{\link{r}}
 }
 

@@ -19,11 +19,16 @@
   mean.}
 
   \item{spreadfunc}{what function should be used to
-  calculate the spread of the distribution. Defaults to
-  sd.}
+  calculate the spread of the distribution. Defaults to sd.
+  Currently, it must be a symmetrical function. Future
+  implementations will have non-symmetric functions (e.g.,
+  interquartile range).}
 
   \item{def.axis}{Logical. Should the default axes be
   used?}
+
+  \item{jitter.y}{Logical. Should the y values be jittered
+  as well?}
 
   \item{add}{Should the plot be added to an existing plot?}
 

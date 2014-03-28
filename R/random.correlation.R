@@ -4,7 +4,7 @@
 ##' @param n the number of rows/dimensions of the correlation matrix 
 ##' @return a correlation matrix, of size \code{nxn}
 ##' @export
-##' @imports MASS
+##' @importFrom MASS mvrnorm
 ##' @author Dustin Fife
 random.correlation = function(n){
 	t = mvrnorm(n,rep(0,n),diag(n))

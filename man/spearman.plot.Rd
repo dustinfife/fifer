@@ -2,11 +2,14 @@
 \alias{spearman.plot}
 \title{Spearman plot}
 \usage{
-  spearman.plot(x, dcol = "blue", lhist = 20,
+  spearman.plot(x, y = NULL, dcol = "blue", lhist = 20,
     num.dnorm = 5 * lhist, plot.cor = TRUE, ...)
 }
 \arguments{
-  \item{x}{a matrix with two columns}
+  \item{x}{either a matrix with two columns or a vector (if
+  y is not \code{NULL})}
+
+  \item{y}{a vector}
 
   \item{dcol}{the color of the lines drawn for the density
   plot}
@@ -27,13 +30,12 @@
 }
 \details{
   Often data are not normally distributed, requiring the
-  use a a spearman correlation to determine their
+  use of a spearman correlation to determine their
   relationship. However, doing so makes it difficult to
   visualize the data since scatterplots of raw data present
   the data as if a pearson correlation were used. This
-  function plots the ranks of the data, while labeling the
-  axes according to the raw data. Consequently, it is an
-  accurate representation of a spearman correlation.
+  function plots the ranks of the data, while plotting
+  along the axes the distributions of the raw data.
 }
 \examples{
 ### generate skewed data
@@ -41,6 +43,7 @@ x = rnorm(1000)^2
 y = .6*x + rnorm(1000, 0, sqrt(1-.6^2))
 
 spearman.plot(cbind(x,y), col="red", lhist=50)
+spearman.plot(x=iris$Sepal.Length, y=iris$Sepal.Width)
 }
 \author{
   Dustin Fife

@@ -6,6 +6,7 @@
 ##' @param nruns how many forests should be grown?
 ##' @param nsd defaults to one. 
 ##' @param importance method of calculating importance (permutation or gini)
+##' @param ... other arguments passed to \code{\link{cforest}} or \code{\link{randomForest}}
 #'@return \item{varselect.interp}{The variables selected for Interpretation (sorted)}
 #'@return \item{err.interp}{The error at each stage of the stepwise variable inclusion.}
 #'@return \item{sd.min}{The standard deviation of the minimum fitted value.}

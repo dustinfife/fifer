@@ -37,7 +37,8 @@
 }
 \author{
   Ken Kelley (University of Notre Dame;
-  (\email{KKelley@ND.Edu}), Keke Lai, with modifications by
-  Dustin Fife \email{fife.dustin@gmail.com}.
+  (\email{KKelley@ND.Edu}) and Keke Lai (the \code{MBESS}
+  package), with modifications by Dustin Fife
+  \email{fife.dustin@gmail.com}.
 }
 

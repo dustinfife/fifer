@@ -4,7 +4,8 @@
 ##' makes it difficult to visualize the data since scatterplots of raw data present the data as if a pearson correlation were used. This function
 ##' plots the ranks of the data, while plotting along the axes the distributions of the raw data.
 ##' @title Spearman plot
-##' @param x a matrix with two columns
+##' @param x either a matrix with two columns or a vector (if y is not \code{NULL})
+##' @param y a vector
 ##' @param dcol the color of the lines drawn for the density plot
 ##' @param lhist the number of breaks in the histogram
 ##' @param num.dnorm the number of breaks in the density line

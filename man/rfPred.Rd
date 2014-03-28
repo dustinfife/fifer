@@ -14,7 +14,12 @@
 
   \item{nfor.pred}{number of forests to grow}
 
-  \item{nmj}{i don't know}
+  \item{nmj}{a contant used for setting the threshold for
+  variable selection. Higher values indicate a less
+  stringent threshold.}
+
+  \item{...}{other arguments passed to
+  \code{\link{cforest}} or \code{\link{randomForest}}}
 }
 \value{
   \item{varselect.pred}{The variables selected for
@@ -38,7 +43,8 @@
 }
 \description{
   Variable selection for prediction purposes using Random
-  Forest
+  Forest. See \code{\link{rfThresh}} for complete
+  documentation.
 }
 \examples{
 \dontrun{data(iris);
@@ -50,6 +56,10 @@ predic = rfPred(interp, importance="gini")
 predic}
 }
 \author{
-  Dustin Fife
+  Robin Genuer, Jean-Michel Poggi and Christine
+  Tuleau-Malot, with modifications by Dustin Fife
+}
+\seealso{
+  \code{\link{rfInterp}}, \code{\link{rfThresh}}
 }
 

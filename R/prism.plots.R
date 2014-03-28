@@ -9,6 +9,7 @@
 ##' @param spreadfunc what function should be used to calculate the spread of the distribution. Defaults to sd. Currently,
 ##' it must be a symmetrical function. Future implementations will have non-symmetric functions (e.g., interquartile range).  
 ##' @param def.axis Logical. Should the default axes be used?
+##' @param jitter.y Logical. Should the y values be jittered as well?
 ##' @param add Should the plot be added to an existing plot?
 ##' @param start What X value should the plot start at? (defaults to zero)
 ##' @param ... other arguments passed to plot

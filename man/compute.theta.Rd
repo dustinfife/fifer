@@ -16,9 +16,6 @@
   Computes angle in polar coordinates, accounting for which
   quadrant the datapoints are in.
 }
-\details{
-  See the link below for details
-}
 \author{
   Dustin Fife
 }

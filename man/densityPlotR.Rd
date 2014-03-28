@@ -19,7 +19,12 @@
   \item{...}{other arguments passed to the plot function}
 }
 \description{
-  Generate a density plot using a formula
+  Given two groups with scores on a quantitative variable,
+  \code{densityPlotR} will draw both distributions, one for
+  each group.
+}
+\examples{
+densityPlotR(Petal.Width~Species, data=iris)
 }
 \author{
   Dustin Fife
