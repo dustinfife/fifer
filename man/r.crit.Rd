@@ -1,0 +1,29 @@
+\name{r.crit}
+\alias{r.crit}
+\title{Compute critical r or p.}
+\usage{
+  r.crit(n, r = NULL, p = 0.025)
+}
+\arguments{
+  \item{n}{The sample size.}
+
+  \item{p}{the probability. Defaults to .025.}
+
+  \item{r}{The observed r value}
+}
+\value{
+  the critical r value or the observed p value for a given
+  r
+}
+\description{
+  Compute the critical r value, or return the p value of an
+  r, assuming a given number of degrees of freedom.
+}
+\examples{
+r.crit(n=100, p=.025)
+r.crit(n=20, r=.6, p=.05)
+}
+\author{
+  Dustin Fife
+}
+

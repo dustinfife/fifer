@@ -1,0 +1,59 @@
+\name{SummarizeVar}
+\alias{SummarizeVar}
+\title{Summarize a vector (continuous or factor)}
+\usage{
+  SummarizeVar(x, group = rep(1, length(x)), latex = TRUE,
+    decimalFactor = 0, decimalContinuous = 2,
+    ContinuousSummaryFunction = SummarizeContinuousDefault,
+    FactorSummaryFunction = SummarizeFactorDefault, ...)
+}
+\arguments{
+  \item{x}{Vector of values.}
+
+  \item{group}{Group identifiers to return summaries by
+  group.}
+
+  \item{latex}{Return LaTeX characters if \code{TRUE}
+  (default). For example, the LaTeX code for the percentage
+  symbol should be preceeded by the escape character
+  \code{\\}.}
+
+  \item{decimalFactor}{The number of decimals to display in
+  percentages for factor variables. This is passed to the
+  \code{decimal} in \code{factor.summary.function}.}
+
+  \item{decimalContinuous}{The number of decimals to
+  display in percentages for numeric variables. This is
+  passed to the \code{decimal} in
+  \code{ContinuousSummaryFunction}.}
+
+  \item{ContinuousSummaryFunction}{Function to use to
+  summarize a continuous variable; defaults to
+  \code{\link{SummarizeContinuousDefault}}. Function must
+  take in the following arguments: \code{x}: a vector of
+  values. \code{group}: a vector that identifies group.
+  \code{decimal}: a numeric value to indicate the decimal
+  places in the formatted output. \code{latex}: a logical
+  value that indicates whether the resulting output
+  contains LaTeX code; should default to \code{TRUE}.
+  \code{...}: additional arguments.}
+
+  \item{FactorSummaryFunction}{Function to use to summarize
+  a factor variable; defaults to
+  \code{\link{SummarizeFactorDefault}}. See
+  \code{ContinuousSummaryFunction}.}
+
+  \item{...}{Arguments to be passed to
+  \code{ContinuousSummaryFunction} and
+  \code{FactorSummaryFunction}.}
+}
+\value{
+  Formatted text in a vector or matrix.
+}
+\description{
+  Summarize a continuous or discrete (factor) vector.
+}
+\author{
+  Vinh Nguyen
+}
+

@@ -1,0 +1,44 @@
+\name{SummarizeContinuousDefault}
+\alias{SummarizeContinuousDefault}
+\title{Summarize a continuous vector with mean plus/minus standard deviation}
+\usage{
+  SummarizeContinuousDefault(x, group = rep(1, length(x)),
+    decimal = 2, latex = TRUE, na.rm = TRUE, ...)
+}
+\arguments{
+  \item{x}{Vector of values.}
+
+  \item{group}{Group identifier to return summaries by
+  group.}
+
+  \item{decimal}{The number of decimal values to format the
+  results; defaults to 2.}
+
+  \item{latex}{Return LaTeX characters if \code{TRUE}; for
+  example, the LaTeX code for the plus-minus symbol.}
+
+  \item{na.rm}{Remove missing values if \code{TRUE}.}
+
+  \item{...}{Nothing.}
+}
+\value{
+  Formatted text of mean plus/minus standard deviation in a
+  vector or matrix.
+}
+\description{
+  Summarize a continuous variable with mean plus/minus
+  standard deviation.
+}
+\details{
+  Default \code{continuous.summary.function} for use in
+  \code{\link{SummarizeVar}}. Returns formatted text of
+  mean plus/minus standard deviation, possibly by group.
+  For use in construction of demographics tables.
+}
+\examples{
+SummarizeContinuousDefault(x=c(rnorm(100, 5), rnorm(100, 0)), group=rep(0:1, each=100))
+}
+\author{
+  Vinh Nguyen
+}
+
