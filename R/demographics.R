@@ -60,6 +60,7 @@ SummarizeFactorDefault <- function(x, group=rep(1, length(x)), decimal=0, latex=
 ##' @param ... Arguments to be passed to \code{ContinuousSummaryFunction} and \code{FactorSummaryFunction}.
 ##' @return Formatted text in a vector or matrix.
 ##' @author Vinh Nguyen
+##' @references This function was borrowed (and modified) from Vinh Nguyen's \code{day2day} package. 
 ##' @export
 SummarizeVar <- function(x, group=rep(1, length(x)), latex=TRUE, decimalFactor=0, decimalContinuous=2, ContinuousSummaryFunction=SummarizeContinuousDefault, FactorSummaryFunction=SummarizeFactorDefault, ...){
   if(any(is.na(group))) stop("group must not contain NA.")
@@ -123,5 +124,13 @@ demographics <- function(formula, data, latex=TRUE, na.action=na.pass, ...) {
     }
   }
   colnames(rslt) <- paste(levels(group), " (n=", table(group), ")", sep="")
+  if (!latex){
+  	rslt = data.frame(rslt)
+	names(rslt) = subsetString(names(rslt), "..",position=1)
+	for (i in 1:ncol(rslt)){
+		rslt[,i] = gsub("$\\pm$", " sd =", x= rslt[,i], fixed=T)	
+		rslt[,i] = gsub("\\%", " percent", x= rslt[,i], fixed=T)
+	}
+  }
   return(rslt)
 }

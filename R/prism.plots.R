@@ -89,6 +89,9 @@ plotSigBars = function(formula, data, type=c("tukey", "dunn")){
     dv = as.character(formula[[2]])
     levs = sort(unique(data[,iv]))
     
+    #### convert to a factor
+    data[,iv] = as.factor(data[,iv])
+    
 	if (type=="tukey"){
 		tuk = data.frame(TukeyHSD(aov(formula, data=data))[iv])
 		tuk[,4] = paste0("p=",round(tuk[,4], digits=4))

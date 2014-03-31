@@ -5,9 +5,9 @@
 ##' @author Dustin Fife
 par1 = function(){
 	if (.Platform$OS.type=="unix"){
-		par(mar=c(3,3,1,1), mgp=c(2, .5, 0), tck=-.01, cex.axis=.8, family="Times", cex.lab=1.5, cex.main=1.5, font.main=1)
+		par(mar=c(3.25,3.25,1,1), mgp=c(2, .5, 0), tck=-.01, cex.axis=.8, family="Times", cex.lab=1.5, cex.main=1.5, font.main=1)
 	} else {
-		par(mar=c(3,3,1,1), mgp=c(2, .5, 0), tck=-.01, cex.axis=.8, cex.lab=1.5, cex.main=1.5, font.main=1)
+		par(mar=c(3.25,3.25,1,1), mgp=c(2, .5, 0), tck=-.01, cex.axis=.8, cex.lab=1.5, cex.main=1.5, font.main=1)
 	}
 }
 

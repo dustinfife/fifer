@@ -56,4 +56,8 @@
 \author{
   Vinh Nguyen
 }
+\references{
+  This function was borrowed (and modified) from Vinh
+  Nguyen's \code{day2day} package.
+}
 
