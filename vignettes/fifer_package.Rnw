@@ -16,7 +16,7 @@
 \usepackage{amssymb,amsmath}
 \usepackage{apacite}
 
-
+%\VignetteIndexEntry{Using the fifer package}
 % type setting of functions, packages, and R follows a particular style
 \let\proglang=\textsf
 \newcommand{\R}{\proglang{R}}
@@ -93,7 +93,7 @@ The purpose of this paper is to introduce the \texttt{fifer} package and familia
 \section{Installation}
 \subsection{Code}
 <<echo=FALSE>>=
-options(prompt=" ", width=50, continue=" ")
+options(prompt=" ", continue=" ")
 @
 <<echo=TRUE, eval=FALSE>>=
 ### 1. first the package devtools must be installed
@@ -122,8 +122,8 @@ This method is problematic for two reasons: (1) it is time consuming, and (2) (m
 Often times, the variables of interest are listed consecutively (e.g., there's a section of demographics that covers 8 columns, there's a section of certain types of biomarkers for 60 columns, then there's a section of clinical information for 18 columns). The \texttt{r} function is used to select a consecutive range of columns and requires three arguments: the name of the starting variable, the name of the ending variable, and the names of the dataset. An optional argument tells the computer to return the string names or the column indices. 
 
 <<echo = FALSE>>=
-load("../data/fakeMedicalData.rda")
 require(fifer)
+data(fakeMedicalData)
 @
 <<echo = TRUE>>=
 ### first load the fakeMedicalData dataset
