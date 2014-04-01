@@ -96,3 +96,35 @@ excel.names = excelMatch("AA", "CD", "FF", names=names(fakeMedicalData))excel.n
 excel.names
 
 ### now subset the matrix to just those using make.nullnew.dat = make.null(excel.names, data=fakeMedicalData, keep=T)head(new.dat)
+
+
+### DEMONSTRATE THE subsetString FUNCTION
+#################
+#################
+#################
+
+### see documentation
+?subsetString
+#### generate random data (normally this would come from importing a file)data = data.frame(matrix(rnorm(10*3), ncol=3))names(data) = c("ANA.by.IFA.0.neg.40...pos",         "dsDNA....Calculated.",         "IgG..10.neg..10.19.low..20.89.mod...90.high")
+#### print the names (so we can see how messy they are)names(data)#### rename the column names, taking only the first element
+names(data) = subsetString(names(data), sep=".", position=1)names(data)
+#### be careful!! The pattern may not be consistent across datasets
+
+
+##################################################
+##################################################
+##################################################
+##################################################
+		# DATA ANALYSIS
+##################################################
+##################################################
+##################################################
+##################################################
+
+### DEMONSTRATE THE missing.vals FUNCTION
+#################
+#################
+#################
+
+### see documentation
+?subsetString

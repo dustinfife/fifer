@@ -5,6 +5,7 @@
 ##' @param dataset a matrix or data frame (persons in rows, variables in columns).
 ##' @return a matrix with information about what is missing.
 ##' @export
+##' @aliases missingVals, missing.Vals
 ##' @author Dustin Fife
 missing.vals = function(dataset){
 	ms = sapply(dataset, function(x) sum(is.na(x)))

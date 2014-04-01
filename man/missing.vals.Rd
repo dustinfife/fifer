@@ -1,5 +1,7 @@
 \name{missing.vals}
+\alias{missing.Vals}
 \alias{missing.vals}
+\alias{missingVals,}
 \title{Summary of Missing Data}
 \usage{
   missing.vals(dataset)
