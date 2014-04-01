@@ -127,4 +127,8 @@ names(data) = subsetString(names(data), sep=".", position=1)names(data)
 #################
 
 ### see documentation
-?subsetString
+?missing.vals
+
+### summarize missing values
+missing.vals(fakeMedicalData)
+missing.vals(na.omit(fakeMedicalData))
