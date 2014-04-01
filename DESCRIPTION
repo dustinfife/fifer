@@ -8,9 +8,6 @@ Maintainer: Dustin Fife <fife.dustin@gmail.com>
 License: GPL-2
 Depends:
     MASS,
-    randomForest,
-    rpart,
-    party,
     xtable,
     pgirmess
 Collate:
@@ -30,10 +27,7 @@ Collate:
     'chisqPostHoc.R'
     'cor2cov.R'
     'random.correlation.R'
-    'rf.thresh.R'
     'scale.it.R'
-    'rf.interp.R'
-    'rf.pred.R'
     'densityPlotR.R'
     'excelMatch.R'
     'prism.plots.R'
@@ -43,3 +37,4 @@ Collate:
     'intersperse.R'
     'subsetString.R'
     'auto.layout.R'
+    'contents.R'
