@@ -16,7 +16,7 @@ comp.p = function(variable, group){
 
 ##' Extract the p value from a univariate significance test
 ##'
-##' Given a dataframe, this function predicts the specified categorical variable using each column in the dataset, one at a time.
+##' @description Given a dataframe, this function predicts the specified categorical variable using each column in the dataset, one at a time.
 ##' The function will automatically select whether to do a chi-square test, a t-test, or an ANOVA. See details. 
 ##' @details \code{univariate.tests} will look at each column in the dataframe, then perform a t-test, ANOVA, or chi-square test where
 ##' the grouping variable serves as the independent variable. The computer will chose a chi-square test of one of the following three conditions is

@@ -132,3 +132,90 @@ names(data) = subsetString(names(data), sep=".", position=1)names(data)
 ### summarize missing values
 missing.vals(fakeMedicalData)
 missing.vals(na.omit(fakeMedicalData))
+
+### DEMONSTRATE THE demographics FUNCTION
+#################
+#################
+#################
+
+### see documentation
+?demographics
+
+### summarize missing values
+demographics(disease~age + gender + ethnicity, data=fakeMedicalData, latex=FALSE)
+
+### DEMONSTRATE THE make.formula FUNCTION
+#################
+#################
+#################
+
+### see documentation
+?make.formula
+
+#### list all the variables I want to use using the r functionpredictors = r("Glucose_10A", "Glucose_9E", names(fakeMedicalData), names=T)### make sure it worked!predictors
+### now write the formulaformula = make.formula("disease", predictors)### and look at itformula
+
+### DEMONSTRATE THE univariate.tests FUNCTION
+#################
+#################
+#################
+
+### see documentation
+?univariate.tests
+
+### compute significance tests for each variable in dataset but the ID columnp.values = univariate.tests(dataframe=fakeMedicalData, exclude.cols=1, group="disease") #### adjust those p-values using FDR (false discovery rate)p.adjusted = p.adjust(p.values, method="fdr")#### display only those that exceed statistical significancep.adjusted[p.adjusted<.05]
+
+##################################################
+##################################################
+##################################################
+##################################################
+		# PLOTTING
+##################################################
+##################################################
+##################################################
+##################################################
+
+#### plot the best five biomarkers
+best.five = names(sort(p.adjusted)[1:5])
+
+### prepare the layout
+par(mfrow = c(3,2))	## old way
+auto.layout(5)		## new way
+for (i in 1:length(best.five)){
+	### set my favorite defaults
+	par1()
+	### make the formula
+	formula = make.formula(best.five[i], "disease")
+	### plot density plots
+	densityPlotR(formula, data=fakeMedicalData, main="")
+}
+
+### do prism-like plots with significance bars
+auto.layout(4)
+for (i in 1:4){
+	### set different defaults
+	par2()
+	### make the formula
+	formula = make.formula(best.five[i], "disease")
+	### plot prism plots
+	prism.plots(formula, data=fakeMedicalData)
+	### show significance bars
+	plotSigBars(formula, data=fakeMedicalData, type="tukey")
+}
+
+par1()
+#### color code according to disease statuscolors = string.to.color(fakeMedicalData$disease, colors=c("blue", "red"))#### change symbol according to disease statuspch = as.numeric(string.to.color(fakeMedicalData$disease, colors=c(15, 16)))#### plot itplot(fakeMedicalData[,best.five[1]], fakeMedicalData[,best.five[2]], col=colors,                pch=pch, xlab = best.five[1], ylab=best.five[2])legend("bottomright", c("Case", "Control"), pch=c(15,16),                col=c("blue", "red"), bty="n")
+                
+#### show off spearman.plot
+x = rnorm(100)^2
+y = rnorm(100)^2                
+### induce a correlation of .6 (approximately) with choleski decomp
+cor = matrix(c(1, .6, .6, 1), nrow=2)
+skewed.data = cbind(x,y)%*%chol(cor)
+names(skewed.data) = c("x", "y")
+### show original plot
+par2()
+plot(skewed.data, xlab="x", ylab="y")
+#### now show spearman plot
+par2()
+spearman.plot(skewed.data, xlab="rank(x)", ylab="rank(y)", pch=16)
