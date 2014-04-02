@@ -10,8 +10,11 @@
 ##' ## see what's in fifer
 ##' contents()
 ##' ## see what's in MASS
-##' contents("MASS")
-contents = function(x){
+##' \dontrun{contents("MASS")}
+contents = function(x=NULL){
+	if (is.null(x)){
+		x = "fifer"
+	}
 	p = paste0("package:", x)
 	ls(p)
 }

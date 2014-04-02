@@ -16,6 +16,7 @@
 ##' @author Dustin Fife	
 ##' @seealso \code{\link{boxplot}}, \code{\link{densityPlotR}}, \code{\link{plotSigBars}}
 ##' @export
+##' @aliases prismPlots prismplots plots.prism
 ##' @examples
 ##' prism.plots(count ~ spray, data = InsectSprays, centerfunc=mean)
 ##' prism.plots(count ~ spray, data = InsectSprays, centerfunc=median)
@@ -75,13 +76,16 @@ prism.plots = function(formula, data, centerfunc=mean, spreadfunc=function(x){re
 ##' @param type either "tukey" or "dunn" indicating which multiple comparison should be used
 ##' @seealso \code{\link{boxplot}}, \code{\link{densityPlotR}}, \code{\link{prism.plots}}
 ##' @export
-##' @import pgirmess
 ##' @author Dustin Fife
 ##' @examples 
 ##'	prism.plots(Sepal.Length ~ Species, data = iris, centerfunc=mean)
 ##' plotSigBars(Sepal.Length ~ Species, data = iris, type="tukey")
 ##' @note This function should probably only be used when the number of groups is less than four, otherwise the number
 ##' of pairwise comparisons becomes too large to display. 
+##'
+##' When p-values are adjusted using Dunn's multiple comparison, this function calls the \code{kruskalmc} function in the
+##' \code{pgirmess} package. To avoid having to load the entire package, the function was directly copied into the fifer package. 
+##' references Patrick Giraudoux (2013). pgirmess: Data analysis in ecology. R package version 1.5.7. http://CRAN.R-project.org/package=pgirmess
 plotSigBars = function(formula, data, type=c("tukey", "dunn")){
 	
 	type = match.arg(type)
@@ -121,7 +125,7 @@ plotSigBars = function(formula, data, type=c("tukey", "dunn")){
 			yheights = -1*yheights
 		}				
 
-		p.text = tuk[i,4]
+		p.text = tuk[i, ncol(tuk)]
 		segments(xcoords[1]+xlengths, miny[1]+yheights, xcoords[2]-xlengths, miny[1]+yheights)
 		segments(xcoords[1]+xlengths, miny[1]+yheights, xcoords[1]+xlengths, miny[1]+2*yheights)
 		segments(xcoords[2]-xlengths, miny[1]+yheights, xcoords[2]-xlengths, miny[1]+2*yheights)		

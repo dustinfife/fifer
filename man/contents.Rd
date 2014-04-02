@@ -2,7 +2,7 @@
 \alias{contents}
 \title{View the contents (functions) of a package}
 \usage{
-  contents(x)
+  contents(x = NULL)
 }
 \arguments{
   \item{x}{a string containing the name of the package.
@@ -24,7 +24,7 @@
 ## see what's in fifer
 contents()
 ## see what's in MASS
-contents("MASS")
+\dontrun{contents("MASS")}
 }
 \author{
   Dustin Fife

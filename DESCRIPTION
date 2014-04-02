@@ -7,9 +7,8 @@ Author: Dustin Fife <fife.dustin@gmail.com>
 Maintainer: Dustin Fife <fife.dustin@gmail.com>
 License: GPL-2
 Depends:
-    MASS,
     xtable,
-    pgirmess
+    MASS
 Collate:
     'polarCoord.R'
     'stratified.R'
@@ -38,3 +37,6 @@ Collate:
     'subsetString.R'
     'auto.layout.R'
     'contents.R'
+    'mvrnorm.R'
+    'boxcox.R'
+    'kruskalmc.R'

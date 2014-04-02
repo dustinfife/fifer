@@ -29,14 +29,27 @@
   \code{\link{boxcox}} that actually returns a vector that
   is a transformed version of the original variable.
 }
+\note{
+  This function calls the boxcox function in the MASS
+  package. To avoid loading the package, I have branched
+  the function directly into the fifer package.
+}
 \examples{
 x = rnorm(100)^2
 ### use original boxcox function
+\dontrun{
+require(MASS)
 boxcox(x~1, plot=FALSE) ## returns a vector of lambda values and their likelihoods
+}
 ### use boxcoxR function
 boxcoxR(x)
 }
 \author{
   Dustin Fife \email{fife.dustin@gmail.com}.
+}
+\references{
+  Venables, W. N. & Ripley, B. D. (2002) Modern Applied
+  Statistics with S. Fourth Edition. Springer, New York.
+  ISBN 0-387-95457-0
 }
 

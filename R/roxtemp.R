@@ -5,11 +5,16 @@
 ##' @export
 roxtemp = function(){
 	f = paste0(
-"##' Make a title
+"##' Insert title here
 ##'
-##' @title
+##' Write the description here
+##'	
+##' Write the details here
 ##' @param
 ##' @param
+##' @aliases
+##' @seealso \\code{\\link{MASS}}
+##' @references
 ##' @return \\item{}{}
 ##' @author
 ##' @export

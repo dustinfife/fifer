@@ -10,15 +10,20 @@
 #' @param minval before a transformation is performed, the variables must often be positive. This tells R what the minimum value should be. Defaults to .01. 
 #' @param ... additional parameters to be used in the model fitting.
 #' @export
-#' @importFrom MASS boxcox
 #' @aliases boxcox.R
 #' @author Dustin Fife \email{fife.dustin@@gmail.com}.
 #' @examples
 #' x = rnorm(100)^2
 #' ### use original boxcox function
+#' \dontrun{
+#' require(MASS)
 #' boxcox(x~1, plot=FALSE) ## returns a vector of lambda values and their likelihoods
+#' }
 #' ### use boxcoxR function
 #' boxcoxR(x)
+#' @references  Venables, W. N. & Ripley, B. D. (2002) Modern Applied Statistics with S. Fourth Edition. Springer, New York. ISBN 0-387-95457-0
+#' @note This function calls the boxcox function in the MASS package. To avoid loading the package, I have branched the function directly into
+#' the fifer package. 
 boxcoxR = function(x, minval=.01, ...){
 	variable = x
 	if (min(variable, na.rm=T)<=0){

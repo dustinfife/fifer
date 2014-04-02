@@ -74,6 +74,7 @@ newData = make.null("ID", "gender", "ethnicity", "age", "disease",
 					bregs, 
 					data=fakeMedicalData,
 					keep=TRUE)
+head(newData)
 ### we could instead drop everything after bregs
 newData2 = make.null(
 			r("BCI_10A", "TNF_9E", data.names=names(fakeMedicalData)),
@@ -106,7 +107,8 @@ excel.names
 ### see documentation
 ?subsetString
 #### generate random data (normally this would come from importing a file)data = data.frame(matrix(rnorm(10*3), ncol=3))names(data) = c("ANA.by.IFA.0.neg.40...pos",         "dsDNA....Calculated.",         "IgG..10.neg..10.19.low..20.89.mod...90.high")
-#### print the names (so we can see how messy they are)names(data)#### rename the column names, taking only the first element
+#### print the names (so we can see how messy they are)
+head(data)#### rename the column names, taking only the first element
 names(data) = subsetString(names(data), sep=".", position=1)names(data)
 #### be careful!! The pattern may not be consistent across datasets
 
@@ -128,6 +130,7 @@ names(data) = subsetString(names(data), sep=".", position=1)names(data)
 
 ### see documentation
 ?missing.vals
+?missingVals
 
 ### summarize missing values
 missing.vals(fakeMedicalData)
@@ -205,6 +208,7 @@ for (i in 1:4){
 
 par1()
 #### color code according to disease statuscolors = string.to.color(fakeMedicalData$disease, colors=c("blue", "red"))#### change symbol according to disease statuspch = as.numeric(string.to.color(fakeMedicalData$disease, colors=c(15, 16)))#### plot itplot(fakeMedicalData[,best.five[1]], fakeMedicalData[,best.five[2]], col=colors,                pch=pch, xlab = best.five[1], ylab=best.five[2])legend("bottomright", c("Case", "Control"), pch=c(15,16),                col=c("blue", "red"), bty="n")
+###### make the ... for the densityPlotR
                 
 #### show off spearman.plot
 x = rnorm(100)^2

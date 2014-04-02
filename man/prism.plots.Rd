@@ -1,5 +1,8 @@
 \name{prism.plots}
+\alias{plots.prism}
 \alias{prism.plots}
+\alias{prismPlots}
+\alias{prismplots}
 \title{Plot prism-like Plots}
 \usage{
   prism.plots(formula, data, centerfunc = mean,

@@ -23,6 +23,15 @@
   This function should probably only be used when the
   number of groups is less than four, otherwise the number
   of pairwise comparisons becomes too large to display.
+
+  When p-values are adjusted using Dunn's multiple
+  comparison, this function calls the \code{kruskalmc}
+  function in the \code{pgirmess} package. To avoid having
+  to load the entire package, the function was directly
+  copied into the fifer package. references Patrick
+  Giraudoux (2013). pgirmess: Data analysis in ecology. R
+  package version 1.5.7.
+  http://CRAN.R-project.org/package=pgirmess
 }
 \examples{
 prism.plots(Sepal.Length ~ Species, data = iris, centerfunc=mean)
