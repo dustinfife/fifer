@@ -37,10 +37,8 @@
 \examples{
 x = rnorm(100)^2
 ### use original boxcox function
-\dontrun{
 require(MASS)
 boxcox(x~1, plot=FALSE) ## returns a vector of lambda values and their likelihoods
-}
 ### use boxcoxR function
 boxcoxR(x)
 }

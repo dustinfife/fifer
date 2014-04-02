@@ -1,8 +1,8 @@
 Package: fifer
 Title: A collection of miscellaneous functions.
 Description: A collection of functions that assist in data
-    manipulation/analysis.
-Version: 0.1
+    manipulation analysis and plotting.
+Version: 1.0
 Author: Dustin Fife <fife.dustin@gmail.com>
 Maintainer: Dustin Fife <fife.dustin@gmail.com>
 License: GPL-2
@@ -38,5 +38,4 @@ Collate:
     'auto.layout.R'
     'contents.R'
     'mvrnorm.R'
-    'boxcox.R'
     'kruskalmc.R'

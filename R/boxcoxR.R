@@ -15,10 +15,8 @@
 #' @examples
 #' x = rnorm(100)^2
 #' ### use original boxcox function
-#' \dontrun{
 #' require(MASS)
 #' boxcox(x~1, plot=FALSE) ## returns a vector of lambda values and their likelihoods
-#' }
 #' ### use boxcoxR function
 #' boxcoxR(x)
 #' @references  Venables, W. N. & Ripley, B. D. (2002) Modern Applied Statistics with S. Fourth Edition. Springer, New York. ISBN 0-387-95457-0
