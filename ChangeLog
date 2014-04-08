@@ -1,0 +1,4 @@
+2014-04-08 dustinfife
+
+	* read.fife, write.fife,
+		Created function that write and read meta-data for a dataset

@@ -39,3 +39,4 @@ Collate:
     'contents.R'
     'mvrnorm.R'
     'kruskalmc.R'
+    'meta.data.R'

@@ -203,6 +203,34 @@ names(data)
 
 I do recommend using caution with this one. Sometimes the naming isn't consistent and applying the same rule across the entire dataset may not work. For example, if the original name was something like ``anti-dsDNA, pos>10, neg<10'', it would come out as \texttt{anti.dsDNA..pos.10..neg.10}, and using the code above would produce \texttt{anti}, which isn't what we want. 
 
+\subsection{The write.fife and read.fife functions}
+
+Let us suppose that we have used the above functions to create a subsetted dataset (we'll call it \texttt{formattedMatrix.csv}). Let us also suppose that some unsavory researcher in our lab decided to update the data matrix and didn't tell us. Unbeknownst to us, our entire analysis is wrong because we are using an outdated matrix. After basking in pride when we see our publication in print, some young arrogant biostatistician accuses you of fabricating your data because he cannot reproduce your results. It isn't until then that you realize with horror the error that you made. After dozens of lawsuits, several public addresses of apology, a half-dozen grant funding removals, and moving to Haiti, you decide something needs to change. So you start using the write.fife and read.fife functions!
+
+What write.fifer does is create a separate file (kinda like meta data) that allows the user to specify the location of the original data file. Then, read.fifer will output that information. This way, the statistician is never too far removed from knowing what the original data file was that created the subsetted matrix. 
+
+The example below shows how one might use it.
+
+<<echo=TRUE, eval=FALSE>>==
+original.path = "documents/research/medical_data_apr_2014.xlsx"
+require(xlxx)
+d = read.xlsx(original.path, sheetIndex=1, startRow=3)
+#### do some data manipulation and create a dataset 
+#### called d_new (not actually shown)
+write.fife(d_new, newfile="documents/research/medicalFormatted.csv", 
+		originalfile=original.path, fullpath=T)
+@
+
+Now, when we read that file back in, we get the following message:
+
+\begin{verbatim}
+Loading objects:
+  original.file
+Original File Name: documents/research/medical_data_apr_2014.xlsx
+\end{verbatim}
+
+Hopefully this will lead to less confusion (and zero lawsuits). 
+
 \clearpage
 \section{Basic Data Analysis}
 Hopefully that brief introduction will make data manipulation easier. In this section, I will introduce a series of function that make basic data analysis easier. 
