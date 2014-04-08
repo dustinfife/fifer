@@ -32,7 +32,8 @@ SummarizeContinuousDefault <- function(x, group=rep(1, length(x)), decimal=2, la
 ##' @return Formatted text of counts with percentages in parentheses, in a vector or matrix.
 ##' @author Vinh Nguyen
 ##' @examples
-##' SummarizeFactorDefault(x=c(sample(1:5, 100, replace=TRUE), sample(1:5, 100, replace=TRUE)), group=rep(0:1, each=100))
+##' SummarizeFactorDefault(x=c(sample(1:5, 100, replace=TRUE), sample(1:5, 100, replace=TRUE)), 
+##'   group=rep(0:1, each=100))
 ##' @export
 SummarizeFactorDefault <- function(x, group=rep(1, length(x)), decimal=0, latex=TRUE, useNA="ifany", ...){
   counts <- table(x, group, useNA=useNA)
@@ -86,7 +87,8 @@ SummarizeVar <- function(x, group=rep(1, length(x)), latex=TRUE, decimalFactor=0
 ##' @examples
 ##' set.seed(1)
 ##' n <- 50
-##' df <- data.frame(trt=sample(0:1, 2*n, replace=TRUE), x1=runif(2*n), x2=rnorm(2*n), x3=sample(c("a", "b", "c"), 2*n, replace=TRUE))
+##' df <- data.frame(trt=sample(0:1, 2*n, replace=TRUE), x1=runif(2*n), x2=rnorm(2*n), 
+#'    x3=sample(c("a", "b", "c"), 2*n, replace=TRUE))
 ##' demographics(~x1+x2+x3, data=df)
 ##' demographics(trt~x1+x2+x3, data=df)
 ##' demographics(~., data=df)

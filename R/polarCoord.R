@@ -1,11 +1,15 @@
 ##' Rotates the x-y coordinates by choosing one datapoint as the origin, choosing another to be fixed on the x axis, and choosing a third to be positive or negative. 
 ##'
-##' Many algorithms exist for projecting m-dimensional datapoints in two-dimensions (e.g., tsne and MDS). However, often they begin the algorithm by randomly placing datapoints in an arbitrary position. Unfortunately, this makes the axes meaningless from one iteration of the algorithm to the next, making comparisons across datasets (for example) impossible. One solution is to fix one datapoint to the origin, while rotating the others about the origin. This algorithm does just that by using polar coordinates.
+##' Many algorithms exist for projecting m-dimensional datapoints in two-dimensions (e.g., tsne and MDS). 
+##' However, often they begin the algorithm by randomly placing datapoints in an arbitrary position. Unfortunately, this makes the axes 
+##' meaningless from one iteration of the algorithm to the next, making comparisons across datasets (for example) impossible. One solution 
+##' is to fix one datapoint to the origin, while rotating the others about the origin. This algorithm does just that by using polar coordinates.
 ##'
 ##' @title Rotate a graph using polar coordinates
 ##' @aliases rotategraph rotate.graph
 ##' @param coords a nx2 dimensional matrix corresponding to the cartesian coordinates of the n datapoints.
-##' @param scale a nx2 dimensional matrix. This is used when comparing two graphs to one another. This parameter will scale one graph to the other by ensuring the average of the radi are the same across the two graphs. Defaults to NULL.
+##' @param scale a nx2 dimensional matrix. This is used when comparing two graphs to one another. This parameter will 
+##' scale one graph to the other by ensuring the average of the radi are the same across the two graphs. Defaults to NULL.
 ##' @param origin an integer indicating which datapoint (i.e., which row) should be fixed as the origin. 
 ##' @param axis an integer indicating which datapoint (i.e., which row) should be fixed on the x-axis.
 ##' @param fixedPos an integer indicating which datapoint (i.e., which row) must be positive on y. 

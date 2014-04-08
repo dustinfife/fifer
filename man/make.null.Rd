@@ -27,10 +27,12 @@ names(data) = LETTERS[1:5]
 
 #### extract only the classification
 data(iris)
-new.data = make.null(c("Sepal.Length"), r("Sepal.Width", "Petal.Width", names(iris)), data=iris)
+new.data = make.null(c("Sepal.Length"),
+       r("Sepal.Width", "Petal.Width", names(iris)), data=iris)
 
 #### extract all but the classification
-new.data2 = make.null(c("Sepal.Length"), r("Sepal.Width", "Petal.Width", names(iris)), data=iris, keep=TRUE)
+new.data2 = make.null(c("Sepal.Length"),
+   r("Sepal.Width", "Petal.Width", names(iris)), data=iris, keep=TRUE)
 }
 \author{
   Dustin Fife

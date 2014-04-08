@@ -38,7 +38,8 @@
   demographics tables.
 }
 \examples{
-SummarizeFactorDefault(x=c(sample(1:5, 100, replace=TRUE), sample(1:5, 100, replace=TRUE)), group=rep(0:1, each=100))
+SummarizeFactorDefault(x=c(sample(1:5, 100, replace=TRUE), sample(1:5, 100, replace=TRUE)),
+  group=rep(0:1, each=100))
 }
 \author{
   Vinh Nguyen

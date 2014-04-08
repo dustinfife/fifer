@@ -10,12 +10,12 @@
 #' @param minval before a transformation is performed, the variables must often be positive. This tells R what the minimum value should be. Defaults to .01. 
 #' @param ... additional parameters to be used in the model fitting.
 #' @export
+#' @import MASS
 #' @aliases boxcox.R
 #' @author Dustin Fife \email{fife.dustin@@gmail.com}.
 #' @examples
 #' x = rnorm(100)^2
 #' ### use original boxcox function
-#' require(MASS)
 #' boxcox(x~1, plot=FALSE) ## returns a vector of lambda values and their likelihoods
 #' ### use boxcoxR function
 #' boxcoxR(x)
@@ -27,7 +27,6 @@ boxcoxR = function(x, minval=.01, ...){
 	if (min(variable, na.rm=T)<=0){
 		variable = ((variable + (minval-min(variable, na.rm=T))))		#### make positive
 	}
-	require(MASS)
 	bc = boxcox(variable~1, plot=FALSE, ...)
 	lambda = bc$x[bc$y == max(bc$y)]
 	if (lambda==0){

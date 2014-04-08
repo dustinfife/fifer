@@ -50,7 +50,8 @@
 \examples{
 set.seed(1)
 n <- 50
-df <- data.frame(trt=sample(0:1, 2*n, replace=TRUE), x1=runif(2*n), x2=rnorm(2*n), x3=sample(c("a", "b", "c"), 2*n, replace=TRUE))
+df <- data.frame(trt=sample(0:1, 2*n, replace=TRUE), x1=runif(2*n), x2=rnorm(2*n),
+   x3=sample(c("a", "b", "c"), 2*n, replace=TRUE))
 demographics(~x1+x2+x3, data=df)
 demographics(trt~x1+x2+x3, data=df)
 demographics(~., data=df)

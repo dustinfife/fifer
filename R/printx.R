@@ -8,6 +8,7 @@
 ##' @param ... other arguments passed to print.xtable
 ##' @author Dustin Fife
 ##' @export
+##' @import xtable
 printx = function(x, file="",...){
 	print(x, file=file, type="latex", 
 		caption.placement="top", latex.environment="center", ...)		
