@@ -62,7 +62,7 @@ write.fife = function(object, newfile, originalfile=NULL, file.type = ".csv", ro
 		fl = paste0(newfile, file.type)				
 	}
 
-	data = write.csv(object, fl, row.names, ...)
+	data = write.csv(object, fl, row.names=row.names, ...)
 	
 	#### format the 
 	meta = gsub(file.type, ".file", fl, fixed=T)
