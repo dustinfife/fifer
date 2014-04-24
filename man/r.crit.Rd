@@ -2,7 +2,7 @@
 \alias{r.crit}
 \title{Compute critical r or p.}
 \usage{
-  r.crit(n, r = NULL, p = 0.025)
+  r.crit(n, r = NULL, p = 0.025, two.tailed = T)
 }
 \arguments{
   \item{n}{The sample size.}

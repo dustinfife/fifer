@@ -10,7 +10,7 @@
 ##' @examples
 ##' r.crit(n=100, p=.025)
 ##' r.crit(n=20, r=.6, p=.05)
-r.crit = function(n, r=NULL, p=.025){
+r.crit = function(n, r=NULL, p=.025, two.tailed=T){
 	
 	if (is.null(r)){
 		tcrit = qt(p, n)
@@ -18,6 +18,9 @@ r.crit = function(n, r=NULL, p=.025){
 		return(rcrit)
 	} else {
 		tobs = r*sqrt((n-2)/(1-r^2))
+		if (two.tailed){
+			tobs = abs(tobs)
+		}
 		pobt = 1-pt(tobs, df=n-2)
 		tcrit = qt(p, n)
 		rcrit = sqrt(tcrit^2 / (n-2+tcrit^2))		
