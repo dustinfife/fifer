@@ -41,7 +41,7 @@ comp.p = function(variable, group){
 univariate.tests = function(dataframe, exclude.cols=NULL, group){
 	#### change exclude.cols so it takes either all numeric or all character
 	if (!is.numeric(exclude.cols)){
-		exclude.cols = which(names(data.frame) %in% exclude.cols)
+		exclude.cols = which(names(dataframe) %in% exclude.cols)
 	}
 	cl = which(names(dataframe)==group)
 	if (is.null(exclude.cols)){
