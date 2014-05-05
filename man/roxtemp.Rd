@@ -2,12 +2,12 @@
 \alias{roxtemp}
 \title{Generate a Roxygen Template}
 \usage{
-  roxtemp()
+roxtemp()
 }
 \description{
-  Generate a Roxygen Template
+Generate a Roxygen Template
 }
 \author{
-  Dustin Fife
+Dustin Fife
 }
 

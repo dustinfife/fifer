@@ -4,8 +4,7 @@
 \alias{rotategraph}
 \title{Rotate a graph using polar coordinates}
 \usage{
-  rotateGraph(coords, scale = NULL, origin, axis,
-    fixedPos = 2)
+rotateGraph(coords, scale = NULL, origin, axis, fixedPos = 2)
 }
 \arguments{
   \item{coords}{a nx2 dimensional matrix corresponding to
@@ -27,36 +26,35 @@
   (i.e., which row) must be positive on y.}
 }
 \value{
-  \item{coords}{the new coordinates obtained after
-  rotation}
+\item{coords}{the new coordinates obtained after rotation}
 
-  \item{radi}{a vector of the radi for each of the
-  datapoints}
+\item{radi}{a vector of the radi for each of the
+datapoints}
 }
 \description{
-  Rotates the x-y coordinates by choosing one datapoint as
-  the origin, choosing another to be fixed on the x axis,
-  and choosing a third to be positive or negative.
+Rotates the x-y coordinates by choosing one datapoint as
+the origin, choosing another to be fixed on the x axis, and
+choosing a third to be positive or negative.
 }
 \details{
-  Many algorithms exist for projecting m-dimensional
-  datapoints in two-dimensions (e.g., tsne and MDS).
-  However, often they begin the algorithm by randomly
-  placing datapoints in an arbitrary position.
-  Unfortunately, this makes the axes meaningless from one
-  iteration of the algorithm to the next, making
-  comparisons across datasets (for example) impossible. One
-  solution is to fix one datapoint to the origin, while
-  rotating the others about the origin. This algorithm does
-  just that by using polar coordinates.
+Many algorithms exist for projecting m-dimensional
+datapoints in two-dimensions (e.g., tsne and MDS). However,
+often they begin the algorithm by randomly placing
+datapoints in an arbitrary position. Unfortunately, this
+makes the axes meaningless from one iteration of the
+algorithm to the next, making comparisons across datasets
+(for example) impossible. One solution is to fix one
+datapoint to the origin, while rotating the others about
+the origin. This algorithm does just that by using polar
+coordinates.
 }
 \author{
-  Dustin Fife
+Dustin Fife
 }
 \references{
-  \url{http://www.mathsisfun.com/polar-cartesian-coordinates.html}
+\url{http://www.mathsisfun.com/polar-cartesian-coordinates.html}
 }
 \seealso{
-  \code{\link{compute.theta}}.
+\code{\link{compute.theta}}.
 }
 

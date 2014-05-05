@@ -2,8 +2,7 @@
 \alias{scaleIt}
 \title{Scale a variable}
 \usage{
-  scaleIt(x, mean = NULL, sd = NULL, min = NULL,
-    max = NULL)
+scaleIt(x, mean = NULL, sd = NULL, min = NULL, max = NULL)
 }
 \arguments{
   \item{x}{the variable to be scaled}
@@ -17,13 +16,12 @@
   \item{max}{the max you wish the distribution to have}
 }
 \value{
-  the scaled variable
+the scaled variable
 }
 \description{
-  Scale a variable to have a particular mean/sd (or
-  min/max)
+Scale a variable to have a particular mean/sd (or min/max)
 }
 \author{
-  Dustin Fife
+Dustin Fife
 }
 

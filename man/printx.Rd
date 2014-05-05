@@ -2,7 +2,7 @@
 \alias{printx}
 \title{Change Defaults of print.xtable}
 \usage{
-  printx(x, file = "", ...)
+printx(x, file = "", ...)
 }
 \arguments{
   \item{x}{The \code{xtable} object the user wishes to
@@ -13,14 +13,14 @@
   \item{...}{other arguments passed to print.xtable}
 }
 \description{
-  Change Defaults for print.xtable
+Change Defaults for print.xtable
 }
 \details{
-  This is a wrapper for the function
-  \code{\link{print.xtable}}, where the defaults have been
-  specified for apa-like tables.
+This is a wrapper for the function
+\code{\link{print.xtable}}, where the defaults have been
+specified for apa-like tables.
 }
 \author{
-  Dustin Fife
+Dustin Fife
 }
 

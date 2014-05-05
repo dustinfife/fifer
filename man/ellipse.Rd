@@ -2,7 +2,7 @@
 \alias{ellipse}
 \title{Plots an Ellipse}
 \usage{
-  ellipse(x0, y0, axisX, axisY, color = "lightgray")
+ellipse(x0, y0, axisX, axisY, color = "lightgray")
 }
 \arguments{
   \item{x0}{the x coordinate of the center of the circle}
@@ -16,9 +16,9 @@
   \item{color}{what color should the ellipse be drawn in}
 }
 \description{
-  ##' Plots an ellipse
+##' Plots an ellipse
 }
 \author{
-  Dustin Fife
+Dustin Fife
 }
 

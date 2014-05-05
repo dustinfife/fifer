@@ -5,20 +5,20 @@
 \alias{missingvals}
 \title{Summary of Missing Data}
 \usage{
-  missing.vals(dataset)
+missing.vals(dataset)
 }
 \arguments{
   \item{dataset}{a matrix or data frame (persons in rows,
   variables in columns).}
 }
 \value{
-  a matrix with information about what is missing.
+a matrix with information about what is missing.
 }
 \description{
-  Given a dataset, \code{missing.vals} will report on the
-  number of missing observations per variable
+Given a dataset, \code{missing.vals} will report on the
+number of missing observations per variable
 }
 \author{
-  Dustin Fife
+Dustin Fife
 }
 

@@ -2,7 +2,7 @@
 \alias{make.formula}
 \title{Convert strings to a formula}
 \usage{
-  make.formula(response, predictors)
+make.formula(response, predictors)
 }
 \arguments{
   \item{response}{a single string used on the left side of
@@ -13,13 +13,13 @@
   plus sign.}
 }
 \value{
-  a formula object
+a formula object
 }
 \description{
-  \code{make.formula} is a function that easily converts a
-  set of strings into a formula. It requires two arguments:
-  a single response variable, and a vector of strings. See
-  examples.
+\code{make.formula} is a function that easily converts a
+set of strings into a formula. It requires two arguments: a
+single response variable, and a vector of strings. See
+examples.
 }
 \examples{
 k = data.frame(matrix(rnorm(100), ncol=5))
@@ -29,6 +29,6 @@ formula
 lm(formula, data=k)
 }
 \author{
-  Dustin Fife
+Dustin Fife
 }
 

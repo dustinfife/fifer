@@ -2,8 +2,8 @@
 \alias{SummarizeContinuousDefault}
 \title{Summarize a continuous vector with mean plus/minus standard deviation}
 \usage{
-  SummarizeContinuousDefault(x, group = rep(1, length(x)),
-    decimal = 2, latex = TRUE, na.rm = TRUE, ...)
+SummarizeContinuousDefault(x, group = rep(1, length(x)), decimal = 2,
+  latex = TRUE, na.rm = TRUE, ...)
 }
 \arguments{
   \item{x}{Vector of values.}
@@ -22,23 +22,23 @@
   \item{...}{Nothing.}
 }
 \value{
-  Formatted text of mean plus/minus standard deviation in a
-  vector or matrix.
+Formatted text of mean plus/minus standard deviation in a
+vector or matrix.
 }
 \description{
-  Summarize a continuous variable with mean plus/minus
-  standard deviation.
+Summarize a continuous variable with mean plus/minus
+standard deviation.
 }
 \details{
-  Default \code{continuous.summary.function} for use in
-  \code{\link{SummarizeVar}}. Returns formatted text of
-  mean plus/minus standard deviation, possibly by group.
-  For use in construction of demographics tables.
+Default \code{continuous.summary.function} for use in
+\code{\link{SummarizeVar}}. Returns formatted text of mean
+plus/minus standard deviation, possibly by group. For use
+in construction of demographics tables.
 }
 \examples{
 SummarizeContinuousDefault(x=c(rnorm(100, 5), rnorm(100, 0)), group=rep(0:1, each=100))
 }
 \author{
-  Vinh Nguyen
+Vinh Nguyen
 }
 

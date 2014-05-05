@@ -2,7 +2,7 @@
 \alias{densityPlotR}
 \title{Generate a density plot using a formula}
 \usage{
-  densityPlotR(formula, data = NULL, colors = NULL, ...)
+densityPlotR(formula, data = NULL, colors = NULL, ...)
 }
 \arguments{
   \item{formula}{a formula object where the grouping
@@ -19,18 +19,18 @@
   \item{...}{other arguments passed to the plot function}
 }
 \description{
-  Given two groups with scores on a quantitative variable,
-  \code{densityPlotR} will draw both distributions, one for
-  each group.
+Given two groups with scores on a quantitative variable,
+\code{densityPlotR} will draw both distributions, one for
+each group.
 }
 \examples{
 densityPlotR(Petal.Width~Species, data=iris)
 }
 \author{
-  Dustin Fife
+Dustin Fife
 }
 \seealso{
-  \code{\link{boxplot}}, \code{\link{prism.plots}},
-  \code{\link{plotSigBars}}
+\code{\link{boxplot}}, \code{\link{prism.plots}},
+\code{\link{plotSigBars}}
 }
 

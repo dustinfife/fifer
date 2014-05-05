@@ -3,11 +3,10 @@
 \alias{fakeMedicalData}
 \title{Fictitious Medical Dataset}
 \description{
-  Fictitious Medical Dataset
+Fictitious Medical Dataset
 }
 \author{
-  Dustin Fife \email{blahblah@roxygen.org}
+Dustin Fife \email{blahblah@roxygen.org}
 }
 \keyword{data}
-\keyword{datasets}
 

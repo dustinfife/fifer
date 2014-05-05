@@ -2,8 +2,8 @@
 \alias{SummarizeFactorDefault}
 \title{Summarize a factor vector with count and percentages}
 \usage{
-  SummarizeFactorDefault(x, group = rep(1, length(x)),
-    decimal = 0, latex = TRUE, useNA = "ifany", ...)
+SummarizeFactorDefault(x, group = rep(1, length(x)), decimal = 0,
+  latex = TRUE, useNA = "ifany", ...)
 }
 \arguments{
   \item{x}{Vector of values.}
@@ -25,23 +25,23 @@
   \item{...}{Nothing.}
 }
 \value{
-  Formatted text of counts with percentages in parentheses,
-  in a vector or matrix.
+Formatted text of counts with percentages in parentheses,
+in a vector or matrix.
 }
 \description{
-  Summarize a factor variable with count and percentages.
+Summarize a factor variable with count and percentages.
 }
 \details{
-  Default \code{factor.summary.function} for use in
-  \code{\link{SummarizeVar}}. Returns formatted text of
-  count and percentages. For use in construction of
-  demographics tables.
+Default \code{factor.summary.function} for use in
+\code{\link{SummarizeVar}}. Returns formatted text of count
+and percentages. For use in construction of demographics
+tables.
 }
 \examples{
 SummarizeFactorDefault(x=c(sample(1:5, 100, replace=TRUE), sample(1:5, 100, replace=TRUE)),
   group=rep(0:1, each=100))
 }
 \author{
-  Vinh Nguyen
+Vinh Nguyen
 }
 

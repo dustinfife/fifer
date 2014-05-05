@@ -5,10 +5,9 @@
 \alias{prismplots}
 \title{Plot prism-like Plots}
 \usage{
-  prism.plots(formula, data, centerfunc = mean,
-    spreadfunc = function(x) {
-        return(sd(x)/sqrt(length(x))) }, def.axis = TRUE,
-    jitter.y = FALSE, add = FALSE, start = 0, ...)
+prism.plots(formula, data, centerfunc = mean, spreadfunc = function(x) {    
+  return(sd(x)/sqrt(length(x))) }, def.axis = TRUE, jitter.y = FALSE,
+  add = FALSE, start = 0, ...)
 }
 \arguments{
   \item{formula}{a formula object with the quantitative
@@ -41,23 +40,22 @@
   \item{...}{other arguments passed to plot}
 }
 \description{
-  Plot prism-like Plots
+Plot prism-like Plots
 }
 \details{
-  Given a factor (e.g., group membership) and a
-  quantitative variable, this function plots a
-  psuedo-scatterplot of the groups on the x axis (jittered)
-  and the DV on the y axis.
+Given a factor (e.g., group membership) and a quantitative
+variable, this function plots a psuedo-scatterplot of the
+groups on the x axis (jittered) and the DV on the y axis.
 }
 \examples{
 prism.plots(count ~ spray, data = InsectSprays, centerfunc=mean)
 prism.plots(count ~ spray, data = InsectSprays, centerfunc=median)
 }
 \author{
-  Dustin Fife
+Dustin Fife
 }
 \seealso{
-  \code{\link{boxplot}}, \code{\link{densityPlotR}},
-  \code{\link{plotSigBars}}
+\code{\link{boxplot}}, \code{\link{densityPlotR}},
+\code{\link{plotSigBars}}
 }
 

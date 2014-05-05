@@ -2,7 +2,7 @@
 \alias{random.correlation}
 \title{Generate a random correlation matrix}
 \usage{
-  random.correlation(n, ev = runif(n, 0, 10))
+random.correlation(n, ev = runif(n, 0, 10))
 }
 \arguments{
   \item{n}{the number of rows/dimensions of the correlation
@@ -12,17 +12,17 @@
   uniform distribution betwen 0 and 10.}
 }
 \value{
-  a correlation matrix, of size \code{nxn}
+a correlation matrix, of size \code{nxn}
 }
 \description{
-  Generate a random correlation matrix from specified
-  eigenvalues. If eigenvalues are not specified, they are
-  randomly generated from a uniform [0,10] distribution.
+Generate a random correlation matrix from specified
+eigenvalues. If eigenvalues are not specified, they are
+randomly generated from a uniform [0,10] distribution.
 }
 \author{
-  Dustin Fife
+Dustin Fife
 }
 \references{
-  https://stat.ethz.ch/pipermail/r-help/2008-February/153708.html
+https://stat.ethz.ch/pipermail/r-help/2008-February/153708.html
 }
 

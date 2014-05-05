@@ -4,8 +4,7 @@
 \alias{mvrnorm}
 \title{Randomly Generate Multivariate Normal Data}
 \usage{
-  mv.rnorm(n = 1, vars = NULL, mu = NULL, Sigma = NULL,
-    names = NULL)
+mv.rnorm(n = 1, vars = NULL, mu = NULL, Sigma = NULL, names = NULL)
 }
 \arguments{
   \item{n}{The sample size of the randomly generated
@@ -25,22 +24,22 @@
   variable names.}
 }
 \value{
-  a nxp matrix of pseuodo-random values.
+a nxp matrix of pseuodo-random values.
 }
 \description{
-  This function will randomly generate correlated
-  multivariate normal data with specified means and
-  covariances (or correlations). The user also has the
-  flexibility to generate data with a randomly selected
-  correlation matrix using the
-  \code{\link{random.correlation}} function.
+This function will randomly generate correlated
+multivariate normal data with specified means and
+covariances (or correlations). The user also has the
+flexibility to generate data with a randomly selected
+correlation matrix using the
+\code{\link{random.correlation}} function.
 }
 \details{
-  \code{mv.norm} generates correlated multivariate normal
-  data using a choleski decomposition. If the user does not
-  specify \code{Sigma}, a random correlation matrix will be
-  generated. Also, if means are not specified, the function
-  will default to means of zero.
+\code{mv.norm} generates correlated multivariate normal
+data using a choleski decomposition. If the user does not
+specify \code{Sigma}, a random correlation matrix will be
+generated. Also, if means are not specified, the function
+will default to means of zero.
 }
 \examples{
 set.seed(2)
@@ -63,9 +62,9 @@ d = mv.rnorm(n=1000, mu=ms, Sigma=Sigma, names=letters[1:4])
 head(d); cor(d)
 }
 \author{
-  Dustin Fife
+Dustin Fife
 }
 \seealso{
-  \code{\link{random.correlation}} \code{\link{cor2cov}}
+\code{\link{random.correlation}} \code{\link{cor2cov}}
 }
 

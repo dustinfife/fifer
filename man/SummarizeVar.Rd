@@ -2,10 +2,10 @@
 \alias{SummarizeVar}
 \title{Summarize a vector (continuous or factor)}
 \usage{
-  SummarizeVar(x, group = rep(1, length(x)), latex = TRUE,
-    decimalFactor = 0, decimalContinuous = 2,
-    ContinuousSummaryFunction = SummarizeContinuousDefault,
-    FactorSummaryFunction = SummarizeFactorDefault, ...)
+SummarizeVar(x, group = rep(1, length(x)), latex = TRUE,
+  decimalFactor = 0, decimalContinuous = 2,
+  ContinuousSummaryFunction = SummarizeContinuousDefault,
+  FactorSummaryFunction = SummarizeFactorDefault, ...)
 }
 \arguments{
   \item{x}{Vector of values.}
@@ -48,16 +48,16 @@
   \code{FactorSummaryFunction}.}
 }
 \value{
-  Formatted text in a vector or matrix.
+Formatted text in a vector or matrix.
 }
 \description{
-  Summarize a continuous or discrete (factor) vector.
+Summarize a continuous or discrete (factor) vector.
 }
 \author{
-  Vinh Nguyen
+Vinh Nguyen
 }
 \references{
-  This function was borrowed (and modified) from Vinh
-  Nguyen's \code{day2day} package.
+This function was borrowed (and modified) from Vinh
+Nguyen's \code{day2day} package.
 }
 

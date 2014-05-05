@@ -2,7 +2,7 @@
 \alias{make.null}
 \title{Drop or keep variables in a dataset}
 \usage{
-  make.null(..., data, keep = FALSE)
+make.null(..., data, keep = FALSE)
 }
 \arguments{
   \item{...}{objects (either vectors of strings, vectors of
@@ -15,11 +15,11 @@
   dropped (keep=F)?}
 }
 \value{
-  a dataset, containing the variables of interest only
+a dataset, containing the variables of interest only
 }
 \description{
-  Given a set of variable names (or integers), remove (or
-  keep) these columns from a dataset
+Given a set of variable names (or integers), remove (or
+keep) these columns from a dataset
 }
 \examples{
 data = data.frame(matrix(rnorm(100), ncol=5))
@@ -35,11 +35,11 @@ new.data2 = make.null(c("Sepal.Length"),
    r("Sepal.Width", "Petal.Width", names(iris)), data=iris, keep=TRUE)
 }
 \author{
-  Dustin Fife
+Dustin Fife
 }
 \seealso{
-  \code{\link{subset}}.
+\code{\link{subset}}.
 
-  \code{\link{get.cols}}, \code{\link{r}}
+\code{\link{get.cols}}, \code{\link{r}}
 }
 

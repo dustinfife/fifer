@@ -2,8 +2,7 @@
 \alias{demographics}
 \title{Summarize a Data Set (Demographics)}
 \usage{
-  demographics(formula, data, latex = TRUE,
-    na.action = na.pass, ...)
+demographics(formula, data, latex = TRUE, na.action = na.pass, ...)
 }
 \arguments{
   \item{formula}{A \code{\link[stats]{formula}}, with the
@@ -30,22 +29,22 @@
   \code{FactorSummaryFunction}.}
 }
 \value{
-  A matrix to be used with \code{\link[xtable]{xtable}},
-  which in turn should be used in
-  \code{\link[xtable]{print.xtable}}.
+A matrix to be used with \code{\link[xtable]{xtable}},
+which in turn should be used in
+\code{\link[xtable]{print.xtable}}.
 }
 \description{
-  Creates a summary table of a data set in a matrix object
-  for pretty printing via \code{\link[xtable]{xtable}}.
+Creates a summary table of a data set in a matrix object
+for pretty printing via \code{\link[xtable]{xtable}}.
 }
 \details{
-  This is generally used to create demographics table and
-  used with the package \link[xtable]{xtable} to print. To
-  get proper names to display, a \code{data.frame} should
-  be constructed such that the variable names are what the
-  users want to be displayed. For \code{factor} variables,
-  the user should make use of the \code{levels} and
-  \code{labels} arguments in \code{\link{factor}}.
+This is generally used to create demographics table and
+used with the package \link[xtable]{xtable} to print. To
+get proper names to display, a \code{data.frame} should be
+constructed such that the variable names are what the users
+want to be displayed. For \code{factor} variables, the user
+should make use of the \code{levels} and \code{labels}
+arguments in \code{\link{factor}}.
 }
 \examples{
 set.seed(1)
@@ -59,6 +58,6 @@ demographics(trt~., data=df, decimalFactor=2)
 \dontrun{print(xtable(Summarize(trt~., data=df)), sanitize.text.function=identity)}
 }
 \author{
-  Vinh Nguyen
+Vinh Nguyen
 }
 

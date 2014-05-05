@@ -2,12 +2,12 @@
 \alias{par1}
 \title{Change default par parameters}
 \usage{
-  par1()
+par1()
 }
 \description{
-  Change default par parameters
+Change default par parameters
 }
 \author{
-  Dustin Fife
+Dustin Fife
 }
 

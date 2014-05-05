@@ -2,32 +2,32 @@
 \alias{excelCols}
 \title{Generate Excel column labels}
 \usage{
-  excelCols(n)
+excelCols(n)
 }
 \arguments{
   \item{n}{an integer that indicates how many named columns
   the user wishes to obtain}
 }
 \value{
-  a vector of strings of length n
+a vector of strings of length n
 }
 \description{
-  Generate a sequence of column labels to match Excel's
-  naming
+Generate a sequence of column labels to match Excel's
+naming
 }
 \details{
-  Excel columns are labeled with letters (e.g., A, B, C,
-  ... AA, AB, AC, etc). Given an integer (n), this function
-  will return labels starting from A until the nth column.
-  See examples.
+Excel columns are labeled with letters (e.g., A, B, C, ...
+AA, AB, AC, etc). Given an integer (n), this function will
+return labels starting from A until the nth column. See
+examples.
 }
 \examples{
 excelCols(11)
 }
 \author{
-  Dustin Fife
+Dustin Fife
 }
 \seealso{
-  \code{\link{excelMatch}}
+\code{\link{excelMatch}}
 }
 

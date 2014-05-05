@@ -2,7 +2,7 @@
 \alias{excelMatch}
 \title{Obtain column number or variable name from Excel named Columns}
 \usage{
-  excelMatch(..., n = NULL, names = NULL)
+excelMatch(..., n = NULL, names = NULL)
 }
 \arguments{
   \item{...}{An Excel-like string consisting of all capital
@@ -13,19 +13,19 @@
   \item{names}{the column names of the data of interest}
 }
 \value{
-  either a variable name or column number
+either a variable name or column number
 }
 \description{
-  Obtain column number or variable name from Excel named
-  Columns
+Obtain column number or variable name from Excel named
+Columns
 }
 \details{
-  Excel columns are labeled with letters (e.g., A, B, C,
-  ... AA, AB, AC, etc). This function accepts a string
-  (e.g., "AAC") and returns either a number that indicates
-  where that string falls in the sequence of excel named
-  columns, or it returns the variable name corresponding to
-  that column number.
+Excel columns are labeled with letters (e.g., A, B, C, ...
+AA, AB, AC, etc). This function accepts a string (e.g.,
+"AAC") and returns either a number that indicates where
+that string falls in the sequence of excel named columns,
+or it returns the variable name corresponding to that
+column number.
 }
 \examples{
 fake.names = paste("Variable", 1:1000, sep="")
@@ -35,9 +35,9 @@ excelMatch("AC", names=fake.names)
 excelMatch("AC", n=1000)
 }
 \author{
-  Dustin Fife
+Dustin Fife
 }
 \seealso{
-  \code{\link{excelCols}}
+\code{\link{excelCols}}
 }
 

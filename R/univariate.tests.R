@@ -24,7 +24,7 @@ comp.p = function(variable, group){
 ##' used if the number of levels of the grouping variable is greater than two. In all other cases, a t-test will be used. 
 ##' @title Extract p values for a data frame
 ##' @param dataframe a data frame containing both the variables and the grouping variable
-##' @param exclude.cols a vector indicating which columns should not have a significance test
+##' @param exclude.cols a vector indicating (either numeric or character) which columns should not have a significance test
 ##' @param group a string with the name of the grouping variable
 ##' @return a vector of p values
 ##' @author Dustin Fife
@@ -36,7 +36,13 @@ comp.p = function(variable, group){
 ##'				C = rnorm(100),
 ##'				Group = rep(1:2, times=50)))
 ##' univariate.tests(dataframe = k, exclude.cols=1, group="Group")
+
+
 univariate.tests = function(dataframe, exclude.cols=NULL, group){
+	#### change exclude.cols so it takes either all numeric or all character
+	if (!is.numeric(exclude.cols)){
+		exclude.cols = which(names(data.frame) %in% exclude.cols)
+	}
 	cl = which(names(dataframe)==group)
 	if (is.null(exclude.cols)){
 		exclude.cols = cl
