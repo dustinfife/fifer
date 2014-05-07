@@ -2,7 +2,7 @@
 \alias{univariate.tests}
 \title{Extract p values for a data frame}
 \usage{
-univariate.tests(dataframe, exclude.cols = NULL, group)
+univariate.tests(dataframe, exclude.cols = NULL, group, parametric = T, ...)
 }
 \arguments{
   \item{dataframe}{a data frame containing both the
@@ -14,6 +14,9 @@ univariate.tests(dataframe, exclude.cols = NULL, group)
 
   \item{group}{a string with the name of the grouping
   variable}
+
+  \item{parametric}{Should parametric tests be used?
+  Defaults to TRUE.}
 }
 \value{
 a vector of p values
@@ -29,15 +32,17 @@ details.
 Extract the p value from a univariate significance test
 
 \code{univariate.tests} will look at each column in the
-dataframe, then perform a t-test, ANOVA, or chi-square test
-where the grouping variable serves as the independent
-variable. The computer will chose a chi-square test of one
-of the following three conditions is met: (1) the variable
-is a factor, (2) the variable is a character variable, or
-(3) the variable has less than four unique values. An ANOVA
-will be used if the number of levels of the grouping
-variable is greater than two. In all other cases, a t-test
-will be used.
+dataframe, then perform a t-test (or wilcoxen.test if
+parametric=TRUE), ANOVA (or kruskal.test if
+parametric=TRUE), or chi-square test where the grouping
+variable serves as the independent variable. The computer
+will chose a chi-square test of one of the following three
+conditions is met: (1) the variable is a factor, (2) the
+variable is a character variable, or (3) the variable has
+less than four unique values. An ANOVA (or Kruskall) will
+be used if the number of levels of the grouping variable is
+greater than two. In all other cases, a t-test (or
+wilcoxen) will be used.
 }
 \examples{
 k = data.frame(cbind(ID=1:100,
