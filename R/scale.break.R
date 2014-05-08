@@ -44,7 +44,8 @@ scaleBreak = function(x,y,axis=2, breakpos=1, plot.numbers=c(1,2),...){
 	if (1 %in% plot.numbers){
 		plot(range(x), ylims1, type="n", yaxt="n",...)
 		points(x_below, y_below, yaxt="n",...)
-		axis(2, pretty(y_below))
+		l = pretty(y_below)
+		axis(2, l[1:(length(l)-1)])
 	}
 	
 	min2 = (breakpos + .45*breakpos - max(y))/.45
