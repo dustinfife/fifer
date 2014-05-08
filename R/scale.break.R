@@ -13,40 +13,49 @@
 ##' @author Dustin Fife
 ##' @export
 ##' @examples
-#' # generate correlated data
-#' d = data.frame(mvrnorm(1000, mu=c(0,0), Sigma=matrix(c(1,.6,.6,1), nrow=2)))
-#' names(d) = c("x","y")
-#' ## Skew Y
-#' d$y = d$y^2
-#' scaleVreak(d$x, d$y, breakpos=4)
-scaleBreak = function(x,y,axis=2, breakpos=1,...){
+##' # generate correlated data
+##' d = data.frame(mvrnorm(1000, mu=c(0,0), Sigma=matrix(c(1,.6,.6,1), nrow=2)))
+##' names(d) = c("x","y")
+##' ## Skew Y
+##' d$y = d$y^2
+##' scaleBreak(d$x, d$y, breakpos=4, plot.numbers=1)
+##' ## add a lowess line
+##' lines(lowess(d$x, d$y), col="red")
+##' ## add a fitted line
+##' mod = glm(y~x, data=d, family=inverse.gaussian)
+##' curve(predict(mod,data.frame(x=x),type="resp"),add=TRUE,col="blue")
+##' ## add second plot
+##' scaleBreak(d$x, d$y, breakpos=4, plot.numbers=2)
+scaleBreak = function(x,y,axis=2, breakpos=1, plot.numbers=c(1,2),...){
 	
 	#### figure out which Y values are above the breakpos
 	y_above = y[y>breakpos]; x_above = x[y>breakpos]
 	y_below = y[y<=breakpos]; x_below = x[y<=breakpos]
 	
 	#### pick ranges
-	if (is.null(range_1)){range_1 = range(y_below)}
-	if (is.null(range_2)){range_2 = range(y_above)}	
+	range_1 = range(y_below)
+	range_2 = range(y_above)
 	
 	#### find limits of y axis (so it spans 2/3rds)
 	mx = max(y_below); mn = min(y_below)
 	ylims1 = c(mn, mx + (mx-mn)/2)
 
-	#### plot bottom graph
-	plot(range(x), ylims1, type="n", yaxt="n",...)
-	points(x_below, y_below, yaxt="n", col="blue",...)
-	axis(2, pretty(y_below))
-	#axis.break(axis=axis, breakpos,style="zigzag")
+	#### plot bottom graph (if specified)
+	if (1 %in% plot.numbers){
+		plot(range(x), ylims1, type="n", yaxt="n",...)
+		points(x_below, y_below, yaxt="n",...)
+		axis(2, pretty(y_below))
+	}
 	
 	min2 = (breakpos + .45*breakpos - max(y))/.45
-	
-	#### add second graph
-	par(new=TRUE)
-	plot(range(x), c(min2, max(y)), type="n", yaxt="n", ylab="", axes=F,...)
-	points(x_above, y_above, yaxt="n",col="red",...)
-	axis(2, pretty(y_above)[-1])
 
-	axis.break(axis=axis, breakpos)		
+	if (2 %in% plot.numbers){
+		#### add second graph
+		par(new=TRUE)
+		plot(range(x), c(min2, max(y)), type="n", yaxt="n", xaxt="n", ylab="", axes=F)
+		points(x_above, y_above, yaxt="n",...)
+		axis(2, pretty(y_above)[-1])
+		require(plotrix)
+		axis.break(axis=axis, breakpos)				
+	}
 }
-
