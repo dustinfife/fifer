@@ -5,7 +5,7 @@
 \alias{scalebreak}
 \title{Scatterplot with a Scale Break}
 \usage{
-scaleBreak(x, y, axis = 2, breakpos = 1, ...)
+scaleBreak(x, y, axis = 2, breakpos = 1, plot.numbers = c(1, 2), ...)
 }
 \arguments{
   \item{x}{The x variables to be plotted.}
@@ -32,7 +32,14 @@ d = data.frame(mvrnorm(1000, mu=c(0,0), Sigma=matrix(c(1,.6,.6,1), nrow=2)))
 names(d) = c("x","y")
 ## Skew Y
 d$y = d$y^2
-scaleVreak(d$x, d$y, breakpos=4)
+scaleBreak(d$x, d$y, breakpos=4, plot.numbers=1)
+## add a lowess line
+lines(lowess(d$x, d$y), col="red")
+## add a fitted line
+mod = glm(y~x, data=d, family=inverse.gaussian)
+curve(predict(mod,data.frame(x=x),type="resp"),add=TRUE,col="blue")
+## add second plot
+scaleBreak(d$x, d$y, breakpos=4, plot.numbers=2)
 }
 \author{
 Dustin Fife

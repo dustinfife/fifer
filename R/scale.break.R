@@ -52,7 +52,7 @@ scaleBreak = function(x,y,axis=2, breakpos=1, plot.numbers=c(1,2),...){
 	if (2 %in% plot.numbers){
 		#### add second graph
 		par(new=TRUE)
-		plot(range(x), c(min2, max(y)), type="n", yaxt="n", xaxt="n", ylab="", axes=F)
+		plot(range(x), c(min2, max(y)), type="n", yaxt="n", xaxt="n", ylab="", axes=F, xlab="")
 		points(x_above, y_above, yaxt="n",...)
 		axis(2, pretty(y_above)[-1])
 		require(plotrix)
