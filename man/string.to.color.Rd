@@ -1,5 +1,8 @@
 \name{string.to.color}
 \alias{string.to.color}
+\alias{string.to.colors}
+\alias{stringToColors}
+\alias{stringtocolor}
 \title{Convert between strings to colors}
 \usage{
 string.to.color(string, colors = NULL)
