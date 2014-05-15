@@ -5,6 +5,7 @@
 ##' @param colors a vector of colors, one for each unique element in \code{string}.
 ##' @export
 ##' @return a vector of colors, one for each element in \code{string} 
+##' @aliases string.to.colors stringtocolor stringToColors
 ##' @author Dustin Fife
 ##' @examples
 ##' groups = sample(LETTERS[1:5], size=100, replace=TRUE)
