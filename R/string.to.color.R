@@ -15,6 +15,9 @@
 ##' @note This function can also be used to specify pch values, cex values, or any other plotting values
 ##' the user may wish to differ across groups. See examples. 
 string.to.color = function(string, colors=NULL){
+	if (is.factor(string)){
+		string = as.character(string)
+	}
 	if (!is.null(colors)){
 		if (length(colors)!=length(unique(string))){
 			break("The number of colors must be equal to the number of unique elements.")
