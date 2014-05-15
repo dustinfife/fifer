@@ -71,8 +71,8 @@ rfPred <-function(object, importance="permutation", nfor.pred=25, nmj=1, ...){
 			s <- c(s, abs(err.interp[i+1] - err.interp[i]) )
 		}
 		
-		mean.jump <- mean(s, na.omit=T)
-		
+		mean.jump <- mean(s, na.rm=T)
+
 		# comparison between the error with the variable and the precedent error
 		# and test of the addition of the variable
 		rf <- rep(NA, nfor.pred)
