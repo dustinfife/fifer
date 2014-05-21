@@ -2,7 +2,7 @@
 \alias{make.formula}
 \title{Convert strings to a formula}
 \usage{
-make.formula(response, predictors)
+make.formula(response, predictors, random = NULL)
 }
 \arguments{
   \item{response}{a single string used on the left side of
@@ -11,6 +11,10 @@ make.formula(response, predictors)
   \item{predictors}{a string (or a vector of strings)
   representing the predictors. Each will be separated by a
   plus sign.}
+
+  \item{random}{a string that indicates the random
+  component in an \code{lmer}-like object (e.g.,
+  "(1|group)"). Defaults to NULL.}
 }
 \value{
 a formula object
@@ -27,6 +31,8 @@ names(k) = LETTERS[1:5]
 formula = make.formula("A", LETTERS[2:5])
 formula
 lm(formula, data=k)
+#do a random model
+make.formula("A", LETTERS[2:5], random="(1|group)")
 }
 \author{
 Dustin Fife
