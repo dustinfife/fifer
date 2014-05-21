@@ -28,8 +28,8 @@ prism.plots = function(formula, data, centerfunc=mean, spreadfunc=function(x){re
     iv = as.character(formula[[3]])
 
 	#### make a vector of colors if they didn't supply one
-	if (col=="gray"){
-		col = rep("gray", times=length(iv.vals))
+	if (col[1]=="gray"){
+		col = rep("gray", times=nrow(data))
 	}    
     
     #### resort so variables line up
