@@ -7,7 +7,7 @@
 \usage{
 prism.plots(formula, data, centerfunc = mean, spreadfunc = function(x) {    
   return(sd(x)/sqrt(length(x))) }, def.axis = TRUE, jitter.y = FALSE,
-  add = FALSE, start = 0, ...)
+  add = FALSE, start = 0, col = "gray", ...)
 }
 \arguments{
   \item{formula}{a formula object with the quantitative
@@ -36,6 +36,9 @@ prism.plots(formula, data, centerfunc = mean, spreadfunc = function(x) {
 
   \item{start}{What X value should the plot start at?
   (defaults to zero)}
+
+  \item{col}{What color should the dots be painted?
+  Defaults to gray.}
 
   \item{...}{other arguments passed to plot}
 }

@@ -12,6 +12,7 @@
 ##' @param jitter.y Logical. Should the y values be jittered as well?
 ##' @param add Should the plot be added to an existing plot?
 ##' @param start What X value should the plot start at? (defaults to zero)
+##' @param col What color should the dots be painted? Defaults to gray.
 ##' @param ... other arguments passed to plot
 ##' @author Dustin Fife	
 ##' @seealso \code{\link{boxplot}}, \code{\link{densityPlotR}}, \code{\link{plotSigBars}}
@@ -21,13 +22,20 @@
 ##' prism.plots(count ~ spray, data = InsectSprays, centerfunc=mean)
 ##' prism.plots(count ~ spray, data = InsectSprays, centerfunc=median)
 prism.plots = function(formula, data, centerfunc=mean, spreadfunc=function(x){return(sd(x)/sqrt(length(x)))},
-		def.axis=TRUE, jitter.y=FALSE, add=FALSE, start=0,...){
+		def.axis=TRUE, jitter.y=FALSE, add=FALSE, start=0, col="gray",...){
 			
 	dv = as.character(formula[[2]])
     iv = as.character(formula[[3]])
+
+	#### make a vector of colors if they didn't supply one
+	if (col=="gray"){
+		col = rep("gray", times=length(iv.vals))
+	}    
     
     #### resort so variables line up
-    data = data[order(data[,iv]),]
+    ord = order(data[,iv])
+    data = data[ord,]
+    col = col[ord]
     types = unique(data[, iv])
     
     centers = aggregate(formula, data=data, FUN=centerfunc)[,2]
@@ -51,14 +59,17 @@ prism.plots = function(formula, data, centerfunc=mean, spreadfunc=function(x){re
 					xlim=c(.5,(length(types)+.5)), xaxt="n", x=NA, y=NA)
 	args = modifyList(labels, list(x=NA,...))
 	
+	
+
+	
 	##### compute mean (or median)
     if (def.axis){
 	    if (!add){do.call("plot", args)}
-	    points(jitter(iv.vals) + rep(start, times=nrow(data)), depvar, pch=16, col="gray")
+	    points(jitter(iv.vals) + rep(start, times=nrow(data)), depvar, pch=16, col=col)
 	    axis(1, at=(1:length(types))+start, labels=unique(data[,iv]))
     } else {
 	    if (!add){do.call("plot", args)}
-	    points(jitter(iv.vals) + rep(start, times=nrow(data)), depvar, pch=16, col="gray")
+	    points(jitter(iv.vals) + rep(start, times=nrow(data)), depvar, pch=16, col=col)
     }
     
     segments(1:length(unique(data[,iv]))-.25 + start, centers, 1:length(unique(data[,iv]))+.25 + start, centers, lwd=2)
