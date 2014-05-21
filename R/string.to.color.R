@@ -36,12 +36,13 @@ string.to.colors = function(string, colors=NULL){
 ##'
 ##' @title Convert from numbers to colors
 ##' @param value a vector of numbers. 
-##' @param colors a vector of two or more colors representing the inflection points of the gradients.
+##' @param colors a vector of two or more colors representing the inflection points of the gradients, passed to \code{\link{colorRampPalette}}.
 ##' @num The number of unique intervals for colors. Chose larger numbers for finer gradients (higher resolution).
 ##' @export
 ##' @return a vector of colors. 
 ##' @aliases number.to.color numbers.to.colors integers.to.colors integer.to.colors numberToColors numberToColor
 ##' @author Dustin Fife
+##' @seealso \code{\link{string.to.colors}} \code{\link{colorRampPalette}} \code{\link{gradient.legend}}
 ##' @examples
 ##' #### plot three variables, represent the third with a color
 ##' d = mvrnorm(100, mu=c(0,0,0), Sigma=matrix(c(1, .6, .6, .6, 1, .6, .6, .6, 1), ncol=3))
@@ -50,4 +51,44 @@ number.to.colors = function(value, colors=c("red", "blue"), num=100){
 	cols = colorRampPalette(colors)(num)
 	cols = 	cols[findInterval(value, vec=seq(from=min(value), to=max(value), length.out=num))]
 	cols
+}
+
+
+
+##' Create a gradiented legend
+##'	
+##' @param y the variable used to create the gradient, typically in \code{\link{number.to.colors}}
+##' @param yrange The range of y values. If y is supplied, it will pulls these from the actual y values.
+##' @param cols The color gradients to be used that are passed to \code{\link{colorRampPalette}}.
+##' @param location The location of the subplot, expressed in fractions of the entire plot (left x, right x,
+##' bottom y, top y).
+##' n the number of values used for the gradient. Higher numbers make a higher resolution
+##' @aliases gradient
+##' @seealso \code{\link{number.to.colors}} \code{\link{colorRampPalette}}
+##' @author Dustin Fife
+##' @export
+##' @examples
+##' y = rnorm(100); x = .6*y + rnorm(100,0,sqrt(1-.6^2))
+##' randnum = runif(100)
+##' plot(x,y, col=number.to.colors(randnum), pch=16)
+##' gradient.legend(randnum, xlab="", ylab="")
+gradient.legend = function(y=NULL, yrange=NULL, cols = c("red", "blue"),location=c(.075,.3,.575,.975), n=100,...){
+	
+	#### if they don't supply a y, make sure they give range
+	if (is.null(y) & is.null(yrange)){
+		stop("You must supply either a y value or a y range.")
+	}
+	if (is.null(yrange)){
+		yrange = range(y, na.rm=T)
+	}
+	
+	#### set location
+	par(fig=location, new=T, las=1, ps=9)
+	z=matrix(1:n,nrow=1)
+	x=1
+	y=seq(yrange[1],yrange[2],len=n) 
+	my.colors = colorRampPalette(cols)
+	image(x,y,z,col=my.colors(n),axes=FALSE,...)
+	axis(2)
+	par(fig=c(0,1,0,1))
 }

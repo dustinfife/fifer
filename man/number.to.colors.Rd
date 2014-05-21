@@ -14,7 +14,8 @@ number.to.colors(value, colors = c("red", "blue"), num = 100)
   \item{value}{a vector of numbers.}
 
   \item{colors}{a vector of two or more colors representing
-  the inflection points of the gradients.}
+  the inflection points of the gradients, passed to
+  \code{\link{colorRampPalette}}.}
 }
 \value{
 a vector of colors.
@@ -30,5 +31,10 @@ plot(d[,1:2], col=number.to.colors(d[,3], c("black", "pink")), pch=16)
 }
 \author{
 Dustin Fife
+}
+\seealso{
+\code{\link{string.to.colors}}
+\code{\link{colorRampPalette}}
+\code{\link{gradient.legend}}
 }
 
