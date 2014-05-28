@@ -16,6 +16,10 @@ number.to.colors(value, colors = c("red", "blue"), num = 100)
   \item{colors}{a vector of two or more colors representing
   the inflection points of the gradients, passed to
   \code{\link{colorRampPalette}}.}
+
+  \item{num}{The number of unique intervals for colors.
+  Chose larger numbers for finer gradients (higher
+  resolution).}
 }
 \value{
 a vector of colors.

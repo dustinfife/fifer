@@ -37,7 +37,7 @@ string.to.colors = function(string, colors=NULL){
 ##' @title Convert from numbers to colors
 ##' @param value a vector of numbers. 
 ##' @param colors a vector of two or more colors representing the inflection points of the gradients, passed to \code{\link{colorRampPalette}}.
-##' @num The number of unique intervals for colors. Chose larger numbers for finer gradients (higher resolution).
+##' @param num The number of unique intervals for colors. Chose larger numbers for finer gradients (higher resolution).
 ##' @export
 ##' @return a vector of colors. 
 ##' @aliases number.to.color numbers.to.colors integers.to.colors integer.to.colors numberToColors numberToColor
