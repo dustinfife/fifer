@@ -5,9 +5,10 @@
 \alias{prismplots}
 \title{Plot prism-like Plots}
 \usage{
-prism.plots(formula, data, centerfunc = mean, spreadfunc = function(x) {    
-  return(sd(x)/sqrt(length(x))) }, def.axis = TRUE, jitter.y = FALSE,
-  add = FALSE, start = 0, col = "gray", ...)
+prism.plots(formula, data, centerfunc = median, interquartile = TRUE,
+  spreadfunc = function(x) {     return(1.96 * sd(x)/sqrt(length(x))) },
+  def.axis = TRUE, jitter.y = FALSE, add = FALSE, start = 0,
+  col = "gray", ...)
 }
 \arguments{
   \item{formula}{a formula object with the quantitative
@@ -18,13 +19,16 @@ prism.plots(formula, data, centerfunc = mean, spreadfunc = function(x) {
 
   \item{centerfunc}{what function should be used to
   indicate the center of the distribution. Defaults to
-  mean.}
+  median.}
+
+  \item{interquartile}{Should the interquartile range be
+  plotted? Defaults to TRUE.}
 
   \item{spreadfunc}{what function should be used to
-  calculate the spread of the distribution. Defaults to sd.
-  Currently, it must be a symmetrical function. Future
-  implementations will have non-symmetric functions (e.g.,
-  interquartile range).}
+  calculate the spread of the distribution? If
+  interquartile=TRUE, this argument will be ignored. The
+  default (when not ignored) is to produce a 95\%
+  confidence interval (1.96*sd(x)/sqrt(n)).}
 
   \item{def.axis}{Logical. Should the default axes be
   used?}
