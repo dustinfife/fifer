@@ -307,8 +307,8 @@ Rather than talking about each plotting function individually, I've included a t
 		& with bars for means or medians \\
 \texttt{plotSigBars} & Used in conduction with \texttt{prism.plots} to mark which differences are \\
 		& statistically significant. \\
-\texttt{string.to.color} & Given a vector of group labels (e.g., ``male", ``female", ``female", ``male", etc.)   \\
-		& \texttt{string.to.color} will automatically generate a vector of colors to correspond to \\
+\texttt{string.to.colors} & Given a vector of group labels (e.g., ``male", ``female", ``female", ``male", etc.)   \\
+		& \texttt{string.to.colors} will automatically generate a vector of colors to correspond to \\
 		& the group labels. \\
  \hline
 \end{tabular}
@@ -365,9 +365,9 @@ for (i in 1:4){
 	### change default parameters
 par2() 
 	#### color code according to disease status
-colors = string.to.color(fakeMedicalData$disease, colors=c("blue", "red"))
+colors = string.to.colors(fakeMedicalData$disease, colors=c("blue", "red"))
 	#### change symbol according to disease status
-pch = as.numeric(string.to.color(fakeMedicalData$disease, colors=c(15, 16)))
+pch = as.numeric(string.to.colors(fakeMedicalData$disease, colors=c(15, 16)))
 	#### plot it
 plot(fakeMedicalData[,best.five[1]], fakeMedicalData[,best.five[2]], col=colors, 
 		pch=pch, xlab = best.five[1], ylab=best.five[2])
