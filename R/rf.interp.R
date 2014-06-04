@@ -37,6 +37,13 @@ rfInterp = function(object, nruns=20, nsd=1, importance="permutation",...){
 	formula = object$formula
 	data = object$data
 	model = object$model
+	y = row.names(attr(terms(formula), "factors"))[1]
+	
+		#### if levels of y < 3, convert to factor and tell user
+	if (length(unique(data[,y]))<3){
+		warning("Note: Converting the DV to a factor.")
+		data[,y] = factor(data[,y])
+	}
 	
 	#### set function depending on whether permutations are used
 	if (importance == "permutation"){
