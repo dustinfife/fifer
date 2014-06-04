@@ -207,7 +207,7 @@ for (i in 1:4){
 }
 
 par1()
-#### color code according to disease statuscolors = string.to.color(fakeMedicalData$disease, colors=c("blue", "red"))#### change symbol according to disease statuspch = as.numeric(string.to.color(fakeMedicalData$disease, colors=c(15, 16)))#### plot itplot(fakeMedicalData[,best.five[1]], fakeMedicalData[,best.five[2]], col=colors,                pch=pch, xlab = best.five[1], ylab=best.five[2])legend("bottomright", c("Case", "Control"), pch=c(15,16),                col=c("blue", "red"), bty="n")
+#### color code according to disease statuscolors = string.to.colors(fakeMedicalData$disease, colors=c("blue", "red"))#### change symbol according to disease statuspch = as.numeric(string.to.colors(fakeMedicalData$disease, colors=c(15, 16)))#### plot itplot(fakeMedicalData[,best.five[1]], fakeMedicalData[,best.five[2]], col=colors,                pch=pch, xlab = best.five[1], ylab=best.five[2])legend("bottomright", c("Case", "Control"), pch=c(15,16),                col=c("blue", "red"), bty="n")
 ###### make the ... for the densityPlotR
                 
 #### show off spearman.plot

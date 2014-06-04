@@ -27,9 +27,9 @@ densityPlotR = function(formula, data=NULL, colors=NULL, ...){
 			warning("length of colors argument is not the same as the number of groups in the dataset. I will use the default colors.")
 			colors = NULL
 		}
-		colors = string.to.color(as.character(data[,iv]), colors=colors)
+		colors = string.to.colors(as.character(data[,iv]), colors=colors)
 	} else {
-		colors = string.to.color(as.character(data[,iv]))
+		colors = string.to.colors(as.character(data[,iv]))
 	}
 	
 	#### loop through each type to get range of x and y
