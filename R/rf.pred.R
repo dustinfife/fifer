@@ -124,9 +124,9 @@ rfPred <-function(object, importance="permutation", nfor.pred=25, nmj=1, ...){
 						rf[j] = oob
 					} else {
 						if (object$model$type=="regression"){
-							rf[j] <- tail(randomForest(f, data=data, ...)$mse, n=1)
+							rf[j] <- tail(randomForest(form.1, data=data, ...)$mse, n=1)
 						} else {
-							rf[j] <- tail(randomForest(f, data=data, ...)$err.rate[,1], n=1)					
+							rf[j] <- tail(randomForest(form.1, data=data, ...)$err.rate[,1], n=1)					
 						}
 					}	
 				}
@@ -272,8 +272,49 @@ xtable.rfPred = function(x,caption=NULL, label=NULL, align=NULL, digits=NULL, di
 	xtable(tab, caption=caption, label=label, align=align, digits=digits, display=display, ...)
 
 }
-	
 
+#' @title Print a Summary Table of rfPred
+#' @description summary.rfPred is best for those non-Latex users to produce a table
+#' that shows each stage of the variable selection algorithm.
+#' @aliases summary.rfPred
+#' @param object an rfPred object
+#' @param ... additional arguments affecting the summary produced.
+#' @method summary rfPred
+#' @S3method summary rfPred
+summary.rfPred = function(object, ...){
+	require(xtable)
+	tab = data.frame(matrix(nrow=length(x$vars.considered), ncol=3))
+	names(tab) = c("Current Variable", "OOB Error", "Model Selected")
+	tab[,1] = x$vars.considered
+	tab[,2] = x$stepwise.error
+	selected = x$varselect.pred
+	
+	#### if only one is selected, populate entire table
+	if (length(selected)==1){
+		tab[,3] = selected
+	} else {
+
+		#### give first row the first variable
+		tab[1,3] = selected[1] 
+		sel.string = selected[1]
+		
+		s=2
+		#### loop through and add only if it's included
+		for (i in 2:nrow(tab)){
+			if (s>length(selected)){
+				tab[(i:nrow(tab)),3] = sel.string
+			} else {
+				if (tab[i,1] == selected[s]){
+					sel.string = paste(sel.string, "+", selected[s])
+					s = s+1
+				}
+				tab[i,3] = sel.string
+			}
+
+		}
+	}
+	tab
+}
 	
 	
 #' @title Plot rfPred Summary
