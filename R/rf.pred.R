@@ -282,12 +282,11 @@ xtable.rfPred = function(x,caption=NULL, label=NULL, align=NULL, digits=NULL, di
 #' @method summary rfPred
 #' @S3method summary rfPred
 summary.rfPred = function(object, ...){
-	require(xtable)
-	tab = data.frame(matrix(nrow=length(x$vars.considered), ncol=3))
+	tab = data.frame(matrix(nrow=length(object$vars.considered), ncol=3))
 	names(tab) = c("Current Variable", "OOB Error", "Model Selected")
-	tab[,1] = x$vars.considered
-	tab[,2] = x$stepwise.error
-	selected = x$varselect.pred
+	tab[,1] = object$vars.considered
+	tab[,2] = object$stepwise.error
+	selected = object$varselect.pred
 	
 	#### if only one is selected, populate entire table
 	if (length(selected)==1){
@@ -332,4 +331,29 @@ plot.rfPred = function(x, y, ...){
 	do.call("plot", args)
 #	plot(1:length.vars, x$err.pred[1:length.vars], ylab="Stepwise OOB Error", xlab="", pch=16, cex=.8,col="gray", type="b",...)
 	text(1:length.vars, x$err.pred[1:length.vars], x$varselect.pred, pos=4, cex=.8)
+}
+
+##' Output accuracy, sensitivity, specificity, NPV, and PPV. 
+##'
+##' @param object An rfPred object
+##' @return A list containing the accuracy, sensitivity, etc. 
+##' @export
+rfSensitivity = function(object){
+	Observed = object$model$y
+	Predicted = object$model$predicted 
+	predmat = table(Observed=Observed, Predicted=Predicted)
+	if (nrow(predmat)>2){
+		stop("You can only compute sensitivity when groups=3")
+	} else {
+		TP = predmat[2,2]
+		FP = predmat[2,1]
+		TN = predmat[1,1]
+		FN = predmat[1,2]
+		sens = TP/(TP+FN)
+		spec = TN/(TN + FP)
+		ppv = TP/(FP+TP)
+		npv = TN/(TN+FN)
+		acc = (TP+TN)/(TP+FP+TN+FN)
+		list(acc=acc,sens=sens, spec=spec, ppv=ppv, npv=npv)
+	}
 }
