@@ -161,7 +161,8 @@ rfPred <-function(object, importance="permutation", nfor.pred=25, nmj=1, ...){
 	 'mean.jump'=mean.jump,
 	 'num.varselect.pred'=length(varselect.pred),
 	 'comput.time'=comput.time,
-	 'model' = model)
+	 'model' = model,
+	 importance = importance)
 	attr(output, "class") = "rfPred"
 	return(output)
 }
@@ -339,11 +340,19 @@ plot.rfPred = function(x, y, ...){
 ##' @return A list containing the accuracy, sensitivity, etc. 
 ##' @export
 rfSensitivity = function(object){
-	Observed = object$model$y
-	Predicted = object$model$predicted 
+	
+	if (object$importance=="permutation"){
+		Observed = attr(object$model@responses,"variables")$Case.Control
+		Predicted = predict(object$model, OOB=T)
+	} else {
+		Observed = object$model$y
+		Predicted = object$model$predicted 
+	}
 	predmat = table(Observed=Observed, Predicted=Predicted)
 	if (nrow(predmat)>2){
-		stop("You can only compute sensitivity when groups=3")
+		warning("You can only compute sensitivity when groups=3. Computing just accuracy.")
+		accuracy = sum(diag(predmat))/sum(predmat)
+		list(accuracy=accuracy)
 	} else {
 		TP = predmat[2,2]
 		FP = predmat[2,1]
