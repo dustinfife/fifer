@@ -342,7 +342,7 @@ plot.rfPred = function(x, y, ...){
 rfSensitivity = function(object){
 	
 	if (object$importance=="permutation"){
-		Observed = attr(object$model@responses,"variables")$Case.Control
+		Observed = attr(object$model@responses,"variables")[,1]
 		Predicted = predict(object$model, OOB=T)
 	} else {
 		Observed = object$model$y
