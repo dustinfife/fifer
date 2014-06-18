@@ -2,7 +2,8 @@
 \alias{rfPred}
 \title{Variable selection in Random Forest}
 \usage{
-rfPred(object, importance = "permutation", nfor.pred = 25, nmj = 1, ...)
+rfPred(object, importance = "permutation", nfor.pred = 25, nmj = 1,
+  outfile = "rfPred.file", named.file = "rfPredResults", ...)
 }
 \arguments{
   \item{object}{an object returned from
@@ -16,6 +17,13 @@ rfPred(object, importance = "permutation", nfor.pred = 25, nmj = 1, ...)
   \item{nmj}{a contant used for setting the threshold for
   variable selection. Higher values indicate a less
   stringent threshold.}
+
+  \item{outfile}{The file location where the rfPred object
+  should be stored. Defaults to storing it in rfPred.file
+  in the default directory.}
+
+  \item{named.file}{What should the rfPred object be named
+  when saved? Defaults to "rfPredResults".}
 
   \item{...}{other arguments passed to
   \code{\link{cforest}} or \code{\link{randomForest}}}

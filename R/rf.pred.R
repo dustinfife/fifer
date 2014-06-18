@@ -5,6 +5,8 @@
 ##' @param importance what importance measure should be used? Either "permutation" or "gini."
 ##' @param nfor.pred number of forests to grow
 ##' @param nmj a contant used for setting the threshold for variable selection. Higher values indicate a less stringent threshold. 
+##' @param outfile The file location where the rfPred object should be stored. Defaults to storing it in rfPred.file in the default directory.
+##' @param named.file What should the rfPred object be named when saved? Defaults to "rfPredResults".
 ##' @param ... other arguments passed to \code{\link{cforest}} or \code{\link{randomForest}}
 #'@return \item{varselect.pred}{The variables selected for Prediction (sorted)}
 #'@return \item{err.interp}{The error at each stage of the stepwise variable inclusion.}
@@ -25,7 +27,7 @@
 #' interp = rfInterp(thresh, importance="permutation");
 #' predic = rfPred(interp, importance="gini")
 #' predic}
-rfPred <-function(object, importance="permutation", nfor.pred=25, nmj=1, ...){
+rfPred <-function(object, importance="permutation", nfor.pred=25, nmj=1, outfile="rfPred.file", named.file="rfPredResults",...){
 
 
 	### record system time at beginning
@@ -152,6 +154,7 @@ rfPred <-function(object, importance="permutation", nfor.pred=25, nmj=1, ...){
 	}
 		
 	comput.time <- Sys.time()-start
+
 	
 	output <- list(
 	'varselect.pred'=varselect.pred,
@@ -164,7 +167,10 @@ rfPred <-function(object, importance="permutation", nfor.pred=25, nmj=1, ...){
 	 'model' = model,
 	 importance = importance)
 	attr(output, "class") = "rfPred"
+	assign(named.file, output)
+	save(list = named.file, file=outfile)	
 	return(output)
+
 }
 
 
