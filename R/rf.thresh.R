@@ -111,8 +111,16 @@ rfThresh = function(formula, data, nruns = 50, silent=FALSE, importance="permuta
 		}
 	} else if (importance=="permutation"){
 		for (i in 1:nrow(preds)){
+			
+
+
 			mt = sqrt(length(vars))
-			rf = cforest(formula, data=data, controls=cforest_unbiased(ntree=1000, mtry=mt),...)
+			
+			##### add controls based on Strobl et al, 2007 (see http://www.biomedcentral.com/content/supplementary/1471-2105-8-25-S1.R)
+			my_cforest_control <- cforest_control(teststat = "quad",
+			    testtype = "Univ", mincriterion = 0, ntree = 1000, mtry = mt,
+			    replace = FALSE)			
+			rf = cforest(formula, data=data, controls= my_cforest_control,...)
 
 				##### compute variable importance
 			imp = varimp(rf)
@@ -123,7 +131,10 @@ rfThresh = function(formula, data, nruns = 50, silent=FALSE, importance="permuta
 	} else {
 		for (i in 1:nrow(preds)){
 			mt = sqrt(length(vars))
-			rf = cforest(formula, data=data, controls=cforest_unbiased(ntree=1000, mtry=mt),...)
+			my_cforest_control <- cforest_control(teststat = "quad",
+			    testtype = "Univ", mincriterion = 0, ntree = 1000, mtry = mt,
+			    replace = FALSE)			
+			rf = cforest(formula, data=data, controls= my_cforest_control,...)			
 				##### compute variable importance
 			preds[i,] = NA
 			oobError = predict(rf, OOB=T)
@@ -178,8 +189,11 @@ rfThresh = function(formula, data, nruns = 50, silent=FALSE, importance="permuta
 	formula = make.formula(resp, names(ord.imp[1:s]))
 	if (importance=="gini"){
 		model = randomForest(formula, data=data, importance=TRUE,...)
-	} else {
-		model = cforest(formula, data=data, controls=cforest_unbiased(ntree=1000, mtry=mt),...)
+	} else {			
+		my_cforest_control <- cforest_control(teststat = "quad",
+		    testtype = "Univ", mincriterion = 0, ntree = 1000, mtry = mt,
+		    replace = FALSE)			
+		model = cforest(formula, data=data, controls= my_cforest_control,...)
 	}
 	
 	time = Sys.time()-start
