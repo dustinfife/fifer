@@ -91,7 +91,7 @@ rfThresh = function(formula, data, nruns = 50, silent=FALSE, importance="permuta
 	require(randomForest)
 	
 	##### check importance
-	importance = match.arg(importance, c("permutation", "gini", NULL))
+	importance = match.arg(importance, c("permutation", "gini", "minDepth",NULL))
 
 	##### loop through and compute variable importance nruns times
 	preds = data.frame(matrix(nrow=nruns, ncol=length(vars)))
@@ -123,22 +123,24 @@ rfThresh = function(formula, data, nruns = 50, silent=FALSE, importance="permuta
 			rf = cforest(formula, data=data, controls= my_cforest_control,...)
 
 				##### compute variable importance
-			imp = varimp(rf)
+			imp = varimp(rf,...)
 			preds[i,] = imp
 			oobError = predict(rf, OOB=T)
 			oob[i] = 1-length(which(oobError==data[,resp]))/length(data[, resp])
 		}
-	} else {
+	} else if (importance=="minDepth"){
+		thresh = 1:nrow(preds)
 		for (i in 1:nrow(preds)){
-			mt = sqrt(length(vars))
-			my_cforest_control <- cforest_control(teststat = "quad",
-			    testtype = "Univ", mincriterion = 0, ntree = 1000, mtry = mt,
-			    replace = FALSE)			
-			rf = cforest(formula, data=data, controls= my_cforest_control,...)			
-				##### compute variable importance
-			preds[i,] = NA
-			oobError = predict(rf, OOB=T)
-			oob[i] = 1-length(which(predict(rf, OOB=T)==data[,resp]))/length(data[, resp])
+			require(randomForestSRC)
+			rf_mindepth = var.select(formula, data=data, method="md", conservative="high")
+			varimp = rf_mindepth$threshold
+			
+			#### extract order of variables (because the stupid algorithm sorts it by var imp)
+			ord.depth = unlist(lapply(row.names(rf_mindepth$varselect), function(x){which(vars==x)}))
+			varimp = rf_mindepth$varselect[ord.depth,1]
+			thresh[i] = rf_mindepth$md.obj$threshold
+			oob[i] = rf_mindepth$err.rate[1]
+			preds[i,] = varimp
 		}
 	}
 	
@@ -150,44 +152,50 @@ rfThresh = function(formula, data, nruns = 50, silent=FALSE, importance="permuta
 	ord.sd = vimp.sd[ord]
 	ord.imp = vimp[ord]
 	
-	#### estimate tree (for threshold)
-	s <- NULL
-	if (length(vars)==1) {
-		s <- 1
+	#### threshold
+	if (importance=="minDepth"){
+		s = length(which(vimp<mean(thresh)))
 	} else {
 	
-		p <- length(vars)
-		u <- 1:p
-		u <- as.data.frame(u)
-
-		# estimation of the standard deviations curve with CART (using "rpart" package)
-
-		# construction of the maximal tree and search of optimal complexity
-		tree <- rpart(ord.sd ~., data=u, control=rpart.control(cp=0, minsplit=2))
-		d <- tree$cptable
-		argmin.cp <- which.min(d[,4])
+		s <- NULL
+		if (length(vars)==1) {
+			s <- 1
+		} else {
 		
-		# pruning
-		pruned.tree <- prune(tree, cp=d[argmin.cp, 1])
-		pred.pruned.tree <- predict(pruned.tree)
-		
-		# determination of the y-value of the lowest stair: this is the estimation
-		# of the mean standard deviation of IV
-		min.pred <- min(pred.pruned.tree)
-		
-		# thresholding: all variables with IV mean lower than min.pred are discarded
-		w <- which(ord.imp < nmin*min.pred)
-		
-		if (length(w)==0) {
-		  s <- p
+			p <- length(vars)
+			u <- 1:p
+			u <- as.data.frame(u)
+	
+			# estimation of the standard deviations curve with CART (using "rpart" package)
+	
+			# construction of the maximal tree and search of optimal complexity
+			tree <- rpart(ord.sd ~., data=u, control=rpart.control(cp=0, minsplit=2))
+			d <- tree$cptable
+			argmin.cp <- which.min(d[,4])
+			
+			# pruning
+			pruned.tree <- prune(tree, cp=d[argmin.cp, 1])
+			pred.pruned.tree <- predict(pruned.tree)
+			
+			# determination of the y-value of the lowest stair: this is the estimation
+			# of the mean standard deviation of IV
+			min.pred <- min(pred.pruned.tree)
+			
+			# thresholding: all variables with IV mean lower than min.pred are discarded
+			w <- which(ord.imp < nmin*min.pred)
+			
+			if (length(w)==0) {
+			  s <- p
+			}
+			else {
+			  s <- min(w)-1
+			}
 		}
-		else {
-		  s <- min(w)-1
-		}
+	
 	}
 	
 	formula = make.formula(resp, names(ord.imp[1:s]))
-	if (importance=="gini"){
+	if (importance!="permutation"){
 		model = randomForest(formula, data=data, importance=TRUE,...)
 	} else {			
 		my_cforest_control <- cforest_control(teststat = "quad",
@@ -208,6 +216,7 @@ rfThresh = function(formula, data, nruns = 50, silent=FALSE, importance="permuta
 	
 	return(ret)
 }
+
 
 
 #' @title Print rfThesh Summary
