@@ -2,7 +2,7 @@
 \alias{r}
 \title{Extract variable column indices}
 \usage{
-r(stringA, stringB, data.names, names = F)
+  r(stringA, stringB, data.names, names = F)
 }
 \arguments{
   \item{stringA}{the name of the first variable you wish to
@@ -18,22 +18,22 @@ r(stringA, stringB, data.names, names = F)
   (meaning the column indices will be returned).}
 }
 \value{
-a vector of numbers corresponding to the column names
+  a vector of numbers corresponding to the column names
 }
 \description{
-Given a starting string and an ending string, \code{r} will
-extract all columns between the first and the last string
-and return either a vector of strings or a vector of
-integers. See examples.
+  Given a starting string and an ending string, \code{r}
+  will extract all columns between the first and the last
+  string and return either a vector of strings or a vector
+  of integers. See examples.
 }
 \examples{
 var.names = LETTERS[1:20]
 r("C", "F", var.names)
 }
 \author{
-Dustin Fife
+  Dustin Fife
 }
 \seealso{
-\code{\link{make.null}}, \code{\link{get.cols}}
+  \code{\link{make.null}}, \code{\link{get.cols}}
 }
 

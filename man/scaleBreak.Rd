@@ -5,7 +5,8 @@
 \alias{scalebreak}
 \title{Scatterplot with a Scale Break}
 \usage{
-scaleBreak(x, y, axis = 2, breakpos = 1, plot.numbers = c(1, 2), ...)
+  scaleBreak(x, y, axis = 2, breakpos = 1,
+    plot.numbers = c(1, 2), ...)
 }
 \arguments{
   \item{x}{The x variables to be plotted.}
@@ -20,11 +21,12 @@ scaleBreak(x, y, axis = 2, breakpos = 1, plot.numbers = c(1, 2), ...)
   Defaults to 1.}
 }
 \description{
-With skewed data, important relationships are often scaled
-so small because the graph attempts to capture the
-outliers. \code{scaleBreak} will plot two different scales
-on the same plot, shrinking the range where the outliers
-lay. The break in scale is indicated with a mark.
+  With skewed data, important relationships are often
+  scaled so small because the graph attempts to capture the
+  outliers. \code{scaleBreak} will plot two different
+  scales on the same plot, shrinking the range where the
+  outliers lay. The break in scale is indicated with a
+  mark.
 }
 \examples{
 # generate correlated data
@@ -42,6 +44,6 @@ curve(predict(mod,data.frame(x=x),type="resp"),add=TRUE,col="blue")
 scaleBreak(d$x, d$y, breakpos=4, plot.numbers=2)
 }
 \author{
-Dustin Fife
+  Dustin Fife
 }
 

@@ -2,8 +2,8 @@
 \alias{spearman.plot}
 \title{Spearman plot}
 \usage{
-spearman.plot(x, y = NULL, dcol = "blue", lhist = 20, num.dnorm = 5 *
-  lhist, plot.cor = TRUE, ...)
+  spearman.plot(x, y = NULL, dcol = "blue", lhist = 20,
+    num.dnorm = 5 * lhist, plot.cor = TRUE, ...)
 }
 \arguments{
   \item{x}{either a matrix with two columns or a vector (if
@@ -25,17 +25,17 @@ spearman.plot(x, y = NULL, dcol = "blue", lhist = 20, num.dnorm = 5 *
   \item{...}{arguments passed to \code{plot}}
 }
 \description{
-Plots the relationship between two variables using a
-Spearman Plot
+  Plots the relationship between two variables using a
+  Spearman Plot
 }
 \details{
-Often data are not normally distributed, requiring the use
-of a spearman correlation to determine their relationship.
-However, doing so makes it difficult to visualize the data
-since scatterplots of raw data present the data as if a
-pearson correlation were used. This function plots the
-ranks of the data, while plotting along the axes the
-distributions of the raw data.
+  Often data are not normally distributed, requiring the
+  use of a spearman correlation to determine their
+  relationship. However, doing so makes it difficult to
+  visualize the data since scatterplots of raw data present
+  the data as if a pearson correlation were used. This
+  function plots the ranks of the data, while plotting
+  along the axes the distributions of the raw data.
 }
 \examples{
 ### generate skewed data
@@ -46,6 +46,6 @@ spearman.plot(cbind(x,y), col="red", lhist=50)
 spearman.plot(x=iris$Sepal.Length, y=iris$Sepal.Width)
 }
 \author{
-Dustin Fife
+  Dustin Fife
 }
 

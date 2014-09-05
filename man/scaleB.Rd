@@ -2,7 +2,7 @@
 \alias{scaleB}
 \title{Standardize coefficients}
 \usage{
-scaleB(object, scale.response = F)
+  scaleB(object, scale.response = F)
 }
 \arguments{
   \item{object}{an object resulting from glm, lm, or lda}
@@ -11,16 +11,16 @@ scaleB(object, scale.response = F)
   scaled as well? (Usually not for glm or lda).}
 }
 \value{
-an object of the same class as the one outputted
+  an object of the same class as the one outputted
 }
 \description{
-Generic function for obtaining scaled coefficients
+  Generic function for obtaining scaled coefficients
 }
 \details{
-Given an object of class lm, glm, or lda, this function
-will first standardize the variables, then run the model
-again. The resulting coefficients will be standardized
-betas.
+  Given an object of class lm, glm, or lda, this function
+  will first standardize the variables, then run the model
+  again. The resulting coefficients will be standardized
+  betas.
 }
 \examples{
 #### create random data with different means and variances
@@ -37,6 +37,6 @@ object = lda(A~B + C + D + E, data=d, family=binomial)
 scaleB(object)
 }
 \author{
-Dustin Fife
+  Dustin Fife
 }
 

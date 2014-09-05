@@ -2,7 +2,7 @@
 \alias{clear}
 \title{Clear memory of all objects}
 \usage{
-clear(obj = NULL, keep = T)
+  clear(obj = NULL, keep = T)
 }
 \arguments{
   \item{obj}{The object (as a string) that needs to be
@@ -15,8 +15,8 @@ clear(obj = NULL, keep = T)
   environment}
 }
 \description{
-This function is a wrapper for the command
-\code{rm(list=ls())}. It's just less keystrokes.
+  This function is a wrapper for the command
+  \code{rm(list=ls())}. It's just less keystrokes.
 }
 \examples{
 #NOTE: ONLY RUN THIS IF YOU DON'T MIND ERASING YOUR R SESSION
@@ -34,6 +34,6 @@ clear(c("a", "b"), keep=T)
 ls()
 }
 \author{
-Dustin Fife
+  Dustin Fife
 }
 

@@ -22,8 +22,15 @@
 ##' spearman.plot(x=iris$Sepal.Length, y=iris$Sepal.Width)
 spearman.plot <- function(x, y=NULL,dcol="blue", lhist=20, num.dnorm=5*lhist, plot.cor = TRUE,...){
 
+
 	if (!is.null(y)){
 		x = cbind(x,y)
+	}
+
+	### omit missing vars
+	missing.vals = which(is.na(rowSums(x)))
+	if (length(missing.vals)>0){
+		x = x[-missing.vals,]
 	}
 
 	if (ncol(x)!=2 & is.null(y)){

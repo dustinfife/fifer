@@ -3,7 +3,7 @@
 \alias{plot.rfInterp}
 \title{Plot rfInterp Summary}
 \usage{
-\method{plot}{rfInterp}(x, y, ...)
+  \method{plot}{rfInterp} (x, y, ...)
 }
 \arguments{
   \item{x}{an rfInterp object}
@@ -13,6 +13,6 @@
   \item{...}{other parameters passed to plot}
 }
 \description{
-Plot rfInterp Summary
+  Plot rfInterp Summary
 }
 

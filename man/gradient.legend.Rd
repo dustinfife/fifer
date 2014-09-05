@@ -3,8 +3,9 @@
 \alias{gradient.legend}
 \title{Create a gradiented legend}
 \usage{
-gradient.legend(y = NULL, yrange = NULL, cols = c("red", "blue"),
-  location = c(0.075, 0.3, 0.575, 0.975), n = 100, ...)
+  gradient.legend(y = NULL, yrange = NULL,
+    cols = c("red", "blue"),
+    location = c(0.075, 0.3, 0.575, 0.975), n = 100, ...)
 }
 \arguments{
   \item{y}{the variable used to create the gradient,
@@ -22,7 +23,7 @@ gradient.legend(y = NULL, yrange = NULL, cols = c("red", "blue"),
   Higher numbers make a higher resolution}
 }
 \description{
-Create a gradiented legend
+  Create a gradiented legend
 }
 \examples{
 y = rnorm(100); x = .6*y + rnorm(100,0,sqrt(1-.6^2))
@@ -31,10 +32,10 @@ plot(x,y, col=number.to.colors(randnum), pch=16)
 gradient.legend(randnum, xlab="", ylab="")
 }
 \author{
-Dustin Fife
+  Dustin Fife
 }
 \seealso{
-\code{\link{number.to.colors}}
-\code{\link{colorRampPalette}}
+  \code{\link{number.to.colors}}
+  \code{\link{colorRampPalette}}
 }
 

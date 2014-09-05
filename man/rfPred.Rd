@@ -2,8 +2,9 @@
 \alias{rfPred}
 \title{Variable selection in Random Forest}
 \usage{
-rfPred(object, importance = "permutation", nfor.pred = 25, nmj = 1,
-  outfile = "rfPred.file", named.file = "rfPredResults", ...)
+  rfPred(object, importance = "permutation",
+    nfor.pred = 25, nmj = 1, outfile = "rfPred.file",
+    named.file = "rfPredResults", ...)
 }
 \arguments{
   \item{object}{an object returned from
@@ -29,29 +30,29 @@ rfPred(object, importance = "permutation", nfor.pred = 25, nmj = 1,
   \code{\link{cforest}} or \code{\link{randomForest}}}
 }
 \value{
-\item{varselect.pred}{The variables selected for Prediction
-(sorted)}
+  \item{varselect.pred}{The variables selected for
+  Prediction (sorted)}
 
-\item{err.interp}{The error at each stage of the stepwise
-variable inclusion.}
+  \item{err.interp}{The error at each stage of the stepwise
+  variable inclusion.}
 
-\item{mean.jump}{The threshold for variable inclusion.}
+  \item{mean.jump}{The threshold for variable inclusion.}
 
-\item{stepwise.error}{The OOB error rate at each iteration
-of the stepwise procedure.}
+  \item{stepwise.error}{The OOB error rate at each
+  iteration of the stepwise procedure.}
 
-\item{num.varselect.pred}{The number of variables selected
-for prediction.}
+  \item{num.varselect.pred}{The number of variables
+  selected for prediction.}
 
-\item{comput.time}{Computation time of the procedure.}
+  \item{comput.time}{Computation time of the procedure.}
 
-\item{model}{The final model, either a \code{randomForest}
-or \code{cforest} object.}
+  \item{model}{The final model, either a
+  \code{randomForest} or \code{cforest} object.}
 }
 \description{
-Variable selection for prediction purposes using Random
-Forest. See \code{\link{rfThresh}} for complete
-documentation.
+  Variable selection for prediction purposes using Random
+  Forest. See \code{\link{rfThresh}} for complete
+  documentation.
 }
 \examples{
 \dontrun{data(iris);
@@ -63,10 +64,10 @@ predic = rfPred(interp, importance="gini")
 predic}
 }
 \author{
-Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot,
-with modifications by Dustin Fife
+  Robin Genuer, Jean-Michel Poggi and Christine
+  Tuleau-Malot, with modifications by Dustin Fife
 }
 \seealso{
-\code{\link{rfInterp}}, \code{\link{rfThresh}}
+  \code{\link{rfInterp}}, \code{\link{rfThresh}}
 }
 

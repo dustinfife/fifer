@@ -2,7 +2,7 @@
 \alias{auto.layout}
 \title{Automatically select the layout.}
 \usage{
-auto.layout(n, layout = T)
+  auto.layout(n, layout = T)
 }
 \arguments{
   \item{n}{the number of plots}
@@ -11,12 +11,12 @@ auto.layout(n, layout = T)
   layout object? If \code{FALSE}, it returns a matrix}
 }
 \value{
-either a matrix or a layout object
+  either a matrix or a layout object
 }
 \description{
-Given a particular number of plots, \code{auto.layout} will
-automatically determine the arrangement of each plot using
-the \code{layout} function. See examples.
+  Given a particular number of plots, \code{auto.layout}
+  will automatically determine the arrangement of each plot
+  using the \code{layout} function. See examples.
 }
 \examples{
 ## plot six plots
@@ -41,6 +41,6 @@ for (i in 1:5){
 }
 }
 \author{
-Dustin Fife
+  Dustin Fife
 }
 

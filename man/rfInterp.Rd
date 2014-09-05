@@ -2,7 +2,8 @@
 \alias{rfInterp}
 \title{Variable Selection with Random Forest}
 \usage{
-rfInterp(object, nruns = 20, nsd = 1, importance = "permutation", ...)
+  rfInterp(object, nruns = 20, nsd = 1,
+    importance = "permutation", ...)
 }
 \arguments{
   \item{object}{a rfThresh object}
@@ -18,29 +19,30 @@ rfInterp(object, nruns = 20, nsd = 1, importance = "permutation", ...)
   \code{\link{cforest}} or \code{\link{randomForest}}}
 }
 \value{
-\item{varselect.interp}{The variables selected for
-Interpretation (sorted)}
+  \item{varselect.interp}{The variables selected for
+  Interpretation (sorted)}
 
-\item{err.interp}{The error at each stage of the stepwise
-variable inclusion.}
+  \item{err.interp}{The error at each stage of the stepwise
+  variable inclusion.}
 
-\item{sd.min}{The standard deviation of the minimum fitted
-value.}
+  \item{sd.min}{The standard deviation of the minimum
+  fitted value.}
 
-\item{num.varselect.interp}{The number of variables
-selected for interpretation.}
+  \item{num.varselect.interp}{The number of variables
+  selected for interpretation.}
 
-\item{comput.time}{Computation time of the procedure.}
+  \item{comput.time}{Computation time of the procedure.}
 
-\item{data}{The dataset used for fitting the RF algorithm}
+  \item{data}{The dataset used for fitting the RF
+  algorithm}
 
-\item{formula}{The formula of all variables included after
-the interpretation step.}
+  \item{formula}{The formula of all variables included
+  after the interpretation step.}
 }
 \description{
-Find best variables using Random Forest (Interpretation
-Step). Find complete documentation at
-\code{\link{rfThresh}}
+  Find best variables using Random Forest (Interpretation
+  Step). Find complete documentation at
+  \code{\link{rfThresh}}
 }
 \examples{
 #### do threshold step
@@ -52,10 +54,10 @@ object = rfThresh(formula, data=iris, nruns=2, importance="gini");
 rfInterp(object, nruns=10, importance="permutation")}
 }
 \author{
-Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot,
-with modifications by Dustin Fife
+  Robin Genuer, Jean-Michel Poggi and Christine
+  Tuleau-Malot, with modifications by Dustin Fife
 }
 \seealso{
-\code{\link{rfInterp}}, \code{\link{rfPred}}
+  \code{\link{rfInterp}}, \code{\link{rfPred}}
 }
 

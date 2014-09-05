@@ -8,7 +8,8 @@
 \alias{numbers.to.colors}
 \title{Convert from numbers to colors}
 \usage{
-number.to.colors(value, colors = c("red", "blue"), num = 100)
+  number.to.colors(value, colors = c("red", "blue"),
+    num = 100)
 }
 \arguments{
   \item{value}{a vector of numbers.}
@@ -22,11 +23,11 @@ number.to.colors(value, colors = c("red", "blue"), num = 100)
   resolution).}
 }
 \value{
-a vector of colors.
+  a vector of colors.
 }
 \description{
-Automatically convert a vector of numbers into a color for
-easy plotting
+  Automatically convert a vector of numbers into a color
+  for easy plotting
 }
 \examples{
 #### plot three variables, represent the third with a color
@@ -34,11 +35,11 @@ d = mvrnorm(100, mu=c(0,0,0), Sigma=matrix(c(1, .6, .6, .6, 1, .6, .6, .6, 1), n
 plot(d[,1:2], col=number.to.colors(d[,3], c("black", "pink")), pch=16)
 }
 \author{
-Dustin Fife
+  Dustin Fife
 }
 \seealso{
-\code{\link{string.to.colors}}
-\code{\link{colorRampPalette}}
-\code{\link{gradient.legend}}
+  \code{\link{string.to.colors}}
+  \code{\link{colorRampPalette}}
+  \code{\link{gradient.legend}}
 }
 

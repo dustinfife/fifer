@@ -2,7 +2,7 @@
 \alias{make.formula}
 \title{Convert strings to a formula}
 \usage{
-make.formula(response, predictors, random = NULL)
+  make.formula(response, predictors, random = NULL)
 }
 \arguments{
   \item{response}{a single string used on the left side of
@@ -17,13 +17,13 @@ make.formula(response, predictors, random = NULL)
   "(1|group)"). Defaults to NULL.}
 }
 \value{
-a formula object
+  a formula object
 }
 \description{
-\code{make.formula} is a function that easily converts a
-set of strings into a formula. It requires two arguments: a
-single response variable, and a vector of strings. See
-examples.
+  \code{make.formula} is a function that easily converts a
+  set of strings into a formula. It requires two arguments:
+  a single response variable, and a vector of strings. See
+  examples.
 }
 \examples{
 k = data.frame(matrix(rnorm(100), ncol=5))
@@ -35,6 +35,6 @@ lm(formula, data=k)
 make.formula("A", LETTERS[2:5], random="(1|group)")
 }
 \author{
-Dustin Fife
+  Dustin Fife
 }
 

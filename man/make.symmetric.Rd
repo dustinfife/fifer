@@ -2,7 +2,7 @@
 \alias{make.symmetric}
 \title{Force a matrix to be symmetric}
 \usage{
-make.symmetric(a, lower.tri = TRUE)
+  make.symmetric(a, lower.tri = TRUE)
 }
 \arguments{
   \item{a}{A matrix you wish to force to be symmetrical}
@@ -11,16 +11,16 @@ make.symmetric(a, lower.tri = TRUE)
   with the lower triangle?}
 }
 \value{
-a symmetric matrix
+  a symmetric matrix
 }
 \description{
-Force a matrix to be symmetric
+  Force a matrix to be symmetric
 }
 \examples{
 a = matrix(rnorm(16), ncol=4)
 make.symmetric(a, lower.tri=FALSE)
 }
 \author{
-Dustin Fife
+  Dustin Fife
 }
 

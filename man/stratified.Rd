@@ -2,7 +2,8 @@
 \alias{stratified}
 \title{Sample from a \code{data.frame} according to a stratification variable}
 \usage{
-stratified(df, group, size, select = NULL, seed = NULL, ...)
+  stratified(df, group, size, select = NULL, seed = NULL,
+    ...)
 }
 \arguments{
   \item{df}{The source \code{data.frame}.}
@@ -41,51 +42,52 @@ stratified(df, group, size, select = NULL, seed = NULL, ...)
   \code{\link{sample}} function.}
 }
 \description{
-The \code{\link{stratified}} function samples from a
-\code{\link{data.frame}} in which one of the columns can be
-used as a "stratification" or "grouping" variable. The
-result is a new \code{data.frame} with the specified number
-of samples from each group.
+  The \code{\link{stratified}} function samples from a
+  \code{\link{data.frame}} in which one of the columns can
+  be used as a "stratification" or "grouping" variable. The
+  result is a new \code{data.frame} with the specified
+  number of samples from each group.
 }
 \note{
-\emph{Slightly different sizes than requested}
+  \emph{Slightly different sizes than requested}
 
-Because of how computers deal with floating-point
-arithmetic, and because R uses a "round to even" approach,
-the size per strata that results when specifying a
-proportionate sample may be slightly higher or lower per
-strata than you might have expected.
+  Because of how computers deal with floating-point
+  arithmetic, and because R uses a "round to even"
+  approach, the size per strata that results when
+  specifying a proportionate sample may be slightly higher
+  or lower per strata than you might have expected.
 
-\emph{"Seed" argument}
+  \emph{"Seed" argument}
 
-This is different from using \code{\link{set.seed}} before
-using the function. Setting a seed using this argument is
-equivalent to using \code{set.seed} each time that you go
-to take a sample from a different group (in other words,
-the same seed is used for each group).
+  This is different from using \code{\link{set.seed}}
+  before using the function. Setting a seed using this
+  argument is equivalent to using \code{set.seed} each time
+  that you go to take a sample from a different group (in
+  other words, the same seed is used for each group).
 
-The inclusion of a \code{seed} argument is mostly a matter
-of convenience, to be able to have a single seed with which
-the samples can be verified later. However, by using the
-\code{seed} argument, the same seed is used to sample from
-each group. This may be a problem if there are many groups
-that have the same number of observations, since it means
-that the same observation number will be selected from each
-of those grops. For instance, if group "AA" and "DD" both
-had the same number of observations (say, 5) and you were
-sampling 3 cases using a seed of 1, the second, fifth, and
-fourth observation would be taken from each of those
-groups. To avoid this, you can set the seed using
-\code{set.seed} \emph{before} you run the
-\code{\link{stratified}} function.
+  The inclusion of a \code{seed} argument is mostly a
+  matter of convenience, to be able to have a single seed
+  with which the samples can be verified later. However, by
+  using the \code{seed} argument, the same seed is used to
+  sample from each group. This may be a problem if there
+  are many groups that have the same number of
+  observations, since it means that the same observation
+  number will be selected from each of those grops. For
+  instance, if group "AA" and "DD" both had the same number
+  of observations (say, 5) and you were sampling 3 cases
+  using a seed of 1, the second, fifth, and fourth
+  observation would be taken from each of those groups. To
+  avoid this, you can set the seed using \code{set.seed}
+  \emph{before} you run the \code{\link{stratified}}
+  function.
 
-As a user, you need to weigh the benefits and drawbacks of
-setting the seed \emph{before} running the function as
-opposed to setting the seed \emph{with} the function.
-Setting the seed before would be useful if there are
-several groups with the same number of observations;
-however, in the slim chance that you need to verify the
-samples manually, you \emph{may} run into problems.
+  As a user, you need to weigh the benefits and drawbacks
+  of setting the seed \emph{before} running the function as
+  opposed to setting the seed \emph{with} the function.
+  Setting the seed before would be useful if there are
+  several groups with the same number of observations;
+  however, in the slim chance that you need to verify the
+  samples manually, you \emph{may} run into problems.
 }
 \examples{
 # Generate a couple of sample data.frames to play with
@@ -143,18 +145,18 @@ names(which(table(interaction(s.out[c("E", "D", "A")])) < 2))
 \dontshow{rm(dat1, dat2, s.out)}
 }
 \author{
-Ananda Mahto
+  Ananda Mahto
 }
 \references{
-The evolution of this function can be traced at the
-following links. The version in this package is entirely
-reworked and does not require an additional package to be
-loaded.
+  The evolution of this function can be traced at the
+  following links. The version in this package is entirely
+  reworked and does not require an additional package to be
+  loaded.
 
-\itemize{ \item
-\url{http://news.mrdwab.com/2011/05/15/stratified-random-sampling-in-r-beta/}
-\item
-\url{http://news.mrdwab.com/2011/05/20/stratified-random-sampling-in-r-from-a-data-frame/}
-\item \url{http://stackoverflow.com/a/9714207/1270695} }
+  \itemize{ \item
+  \url{http://news.mrdwab.com/2011/05/15/stratified-random-sampling-in-r-beta/}
+  \item
+  \url{http://news.mrdwab.com/2011/05/20/stratified-random-sampling-in-r-from-a-data-frame/}
+  \item \url{http://stackoverflow.com/a/9714207/1270695} }
 }
 

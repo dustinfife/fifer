@@ -2,7 +2,7 @@
 \alias{cor2cov}
 \title{Correlation Matrix to Covariance Matrix Conversion}
 \usage{
-cor2cov(cor.mat, sd, discrepancy = 1e-05)
+  cor2cov(cor.mat, sd, discrepancy = 1e-05)
 }
 \arguments{
   \item{cor.mat}{the correlation matrix to be converted}
@@ -16,29 +16,29 @@ cor2cov(cor.mat, sd, discrepancy = 1e-05)
   neighborhood}
 }
 \description{
-Function to convert a correlation matrix to a covariance
-matrix.
+  Function to convert a correlation matrix to a covariance
+  matrix.
 }
 \details{
-The correlation matrix to convert can be either symmetric
-or triangular. The covariance matrix returned is always a
-symmetric matrix.
+  The correlation matrix to convert can be either symmetric
+  or triangular. The covariance matrix returned is always a
+  symmetric matrix.
 }
 \note{
-The correlation matrix input should be a square matrix, and
-the length of sd should be equal to the number of variables
-in the correlation matrix (i.e., the number of
-rows/columns). Sometimes the correlation matrix input may
-not have exactly 1's on the main diagonal, due to, eg,
-rounding; discrepancy specifies the allowable discrepancy
-so that the function still considers the input as a
-correlation matrix and can proceed (but the function does
-not change the numbers on the main diagonal).
+  The correlation matrix input should be a square matrix,
+  and the length of sd should be equal to the number of
+  variables in the correlation matrix (i.e., the number of
+  rows/columns). Sometimes the correlation matrix input may
+  not have exactly 1's on the main diagonal, due to, eg,
+  rounding; discrepancy specifies the allowable discrepancy
+  so that the function still considers the input as a
+  correlation matrix and can proceed (but the function does
+  not change the numbers on the main diagonal).
 }
 \author{
-Ken Kelley (University of Notre Dame;
-(\email{KKelley@ND.Edu}) and Keke Lai (the \code{MBESS}
-package), with modifications by Dustin Fife
-\email{fife.dustin@gmail.com}.
+  Ken Kelley (University of Notre Dame;
+  (\email{KKelley@ND.Edu}) and Keke Lai (the \code{MBESS}
+  package), with modifications by Dustin Fife
+  \email{fife.dustin@gmail.com}.
 }
 

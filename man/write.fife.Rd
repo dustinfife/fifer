@@ -6,8 +6,8 @@
 \alias{write.metadata}
 \title{Write a dataset and load the meta-data}
 \usage{
-write.fife(object, newfile, originalfile = NULL, file.type = ".csv",
-  row.names = F, fullpath = T, ...)
+  write.fife(object, newfile, originalfile = NULL,
+    file.type = ".csv", row.names = F, fullpath = T, ...)
 }
 \arguments{
   \item{object}{An R object to be written as a .csv (or
@@ -34,26 +34,27 @@ write.fife(object, newfile, originalfile = NULL, file.type = ".csv",
   \code{\link{write.csv}}.}
 }
 \description{
-Oftentimes the original data matrix is too large to
-practically read in everytime you want to do analysis. This
-often means creating a separate file for analysis.
-Unfortunately, if the original file is changed, the
-separate file doesn't reflect those changes.
-\code{read.fife} and \code{\link{write.fife}} both read and
-write meta-data, then display the original file name for
-the meta data.
+  Oftentimes the original data matrix is too large to
+  practically read in everytime you want to do analysis.
+  This often means creating a separate file for analysis.
+  Unfortunately, if the original file is changed, the
+  separate file doesn't reflect those changes.
+  \code{read.fife} and \code{\link{write.fife}} both read
+  and write meta-data, then display the original file name
+  for the meta data.
 }
 \details{
-Technically, \code{read.fife} and \code{\link{write.fife}}
-don't actually read and write meta-data. Instead, they
-create (or read) a separate file that has the same name
-(though different extension) than the subsetted dataset.
-The extension of the meta data file is .file.
+  Technically, \code{read.fife} and
+  \code{\link{write.fife}} don't actually read and write
+  meta-data. Instead, they create (or read) a separate file
+  that has the same name (though different extension) than
+  the subsetted dataset. The extension of the meta data
+  file is .file.
 }
 \author{
-Dustin Fife
+  Dustin Fife
 }
 \seealso{
-\code{\link{read.fife}}
+  \code{\link{read.fife}}
 }
 
