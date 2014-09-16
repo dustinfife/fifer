@@ -9,6 +9,9 @@ License: GPL-2
 Depends:
     xtable,
     MASS
+Imports:
+    party,
+	randomForest
 Collate:
     'auto.layout.R'
     'boxcoxR.R'
