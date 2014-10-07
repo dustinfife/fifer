@@ -10,7 +10,7 @@
 #' @param minval before a transformation is performed, the variables must often be positive. This tells R what the minimum value should be. Defaults to .01. 
 #' @param ... additional parameters to be used in the model fitting.
 #' @export
-#' @import MASS
+#' @importFrom MASS boxcox
 #' @aliases boxcox.R
 #' @author Dustin Fife \email{fife.dustin@@gmail.com}.
 #' @examples

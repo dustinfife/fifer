@@ -11,8 +11,9 @@
 ##' @param FUN What should be done with the multiple samples? This function can be used to extract the last 
 ##' (or first) sample using the decreasing/sort.var options, or a function can be performed (such as the mean)
 ##' on one or more columns. See examples. 
-##' @param If FUN if not null, the variable (or a vector of variables), expressed as strings to have the function
+##' @param fun.var If FUN if not null, the variable (or a vector of variables), expressed as strings to have the function
 ##' applied to.
+##' @param ... Other arguments passed to the chosen function.
 ##' @aliases lastsample lastSample one.row last.row
 ##' @return a new dataframe containing one row per ID
 ##' @author Dustin Fife

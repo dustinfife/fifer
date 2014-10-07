@@ -15,8 +15,11 @@
 #'@return \item{data}{The dataset used for fitting the RF algorithm}
 #'@return \item{formula}{The formula of all variables included after the interpretation step.}
 #' @author Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot, with modifications by Dustin Fife
-#' @import party
-#' @import rpart
+#' @importFrom party cforest
+#' @importFrom party cforest_control
+#' @importFrom party cforest_unbiased
+#' @importFrom party varimp
+#' @importFrom randomForest  randomForest
 #' @rdname rfInterp
 #' @export rfInterp
 #' @seealso \code{\link{rfInterp}}, \code{\link{rfPred}}
@@ -84,11 +87,6 @@ rfInterp = function(object, nruns=20, nsd=1, importance="permutation",...){
 		
 		##### extract other things
 		vars = object$remaining.variables
-		
-		##### get packages
-		require(party)
-		require(rpart)
-		require(randomForest)
 	
 		#### get sample size and number of variables
 		nvars = length(vars)
@@ -168,8 +166,7 @@ rfInterp = function(object, nruns=20, nsd=1, importance="permutation",...){
 #' @aliases print.rfInterp
 #' @param x an rfInterp object
 #' @param ... ignored
-#' @method print rfInterp
-#' @S3method print rfInterp
+#' @export
 print.rfInterp = function(x,...){
 	print(names(x))
 	cat(paste("\n\nThe remaining variables (in order of importance) are:\n\n", sep=""))
@@ -228,11 +225,9 @@ print.rfInterp = function(x,...){
 #'    this can lead to quite long result strings.  Default depends on the
 #'    class of \code{x}.
 #' @param ... other arguments passed to xtable
-#' @method xtable rfInterp
-#' @S3method xtable rfInterp
-#' @import xtable
+#' @export
+#' @importFrom xtable xtable
 xtable.rfInterp = function(x,caption=NULL, label=NULL, align=NULL, digits=NULL, display=NULL,...){
-	require(xtable)
 	tab = data.frame(matrix(nrow=length(x$vars.considered), ncol=3))
 	names(tab) = c("Current Variable", "OOB Error", "Model Selected")
 	tab[,1] = x$vars.considered
@@ -274,8 +269,7 @@ xtable.rfInterp = function(x,caption=NULL, label=NULL, align=NULL, digits=NULL, 
 #' @param x an rfInterp object
 #' @param y igorned
 #' @param ... other parameters passed to plot
-#' @method plot rfInterp
-#' @S3method plot rfInterp
+#' @export
 plot.rfInterp = function(x, y, ...){
 	length.vars = length(x$varselect.interp)
 	

@@ -9,9 +9,9 @@
 ##' @author Dustin Fife
 ##' @examples
 ##' groups = sample(LETTERS[1:5], size=100, replace=TRUE)
-##' plot(rnorm(100), rnorm(100), col=string.to.color(groups))
-##' plot(rnorm(100), rnorm(100), col=string.to.color(groups), 
-##'    pch=as.numeric(string.to.color(groups, colors=c(16:20))))
+##' plot(rnorm(100), rnorm(100), col=string.to.colors(groups))
+##' plot(rnorm(100), rnorm(100), col=string.to.colors(groups), 
+##'    pch=as.numeric(string.to.colors(groups, colors=c(16:20))))
 ##' @note This function can also be used to specify pch values, cex values, or any other plotting values
 ##' the user may wish to differ across groups. See examples. 
 string.to.colors = function(string, colors=NULL){
@@ -62,7 +62,8 @@ number.to.colors = function(value, colors=c("red", "blue"), num=100){
 ##' @param cols The color gradients to be used that are passed to \code{\link{colorRampPalette}}.
 ##' @param location The location of the subplot, expressed in fractions of the entire plot (left x, right x,
 ##' bottom y, top y).
-##' n the number of values used for the gradient. Higher numbers make a higher resolution
+##' @param n the number of values used for the gradient. Higher numbers make a higher resolution
+##' @param ... other arguments passed to image
 ##' @aliases gradient
 ##' @seealso \code{\link{number.to.colors}} \code{\link{colorRampPalette}}
 ##' @author Dustin Fife

@@ -179,8 +179,7 @@ rfPred <-function(object, importance="permutation", nfor.pred=25, nmj=1, outfile
 #' @aliases print.rfPred
 #' @param x an rfPred object
 #' @param ... ignored
-#' @method print rfPred
-#' @S3method print rfPred
+#' @export
 print.rfPred = function(x,...){
 	print(names(x))
 	cat(paste("\n\nThe remaining variables (in order of importance) are:\n\n", sep=""))
@@ -240,11 +239,9 @@ print.rfPred = function(x,...){
 #'    this can lead to quite long result strings.  Default depends on the
 #'    class of \code{x}.
 #' @param ... other arguments passed to xtable
-#' @method xtable rfPred
-#' @S3method xtable rfPred
-#' @import xtable
+#' @export
+#' @importFrom xtable xtable
 xtable.rfPred = function(x,caption=NULL, label=NULL, align=NULL, digits=NULL, display=NULL,...){
-	require(xtable)
 	tab = data.frame(matrix(nrow=length(x$vars.considered), ncol=3))
 	names(tab) = c("Current Variable", "OOB Error", "Model Selected")
 	tab[,1] = x$vars.considered
@@ -286,8 +283,7 @@ xtable.rfPred = function(x,caption=NULL, label=NULL, align=NULL, digits=NULL, di
 #' @aliases summary.rfPred
 #' @param object an rfPred object
 #' @param ... additional arguments affecting the summary produced.
-#' @method summary rfPred
-#' @S3method summary rfPred
+#' @export 
 summary.rfPred = function(object, ...){
 	tab = data.frame(matrix(nrow=length(object$vars.considered), ncol=3))
 	names(tab) = c("Current Variable", "OOB Error", "Model Selected")
@@ -328,8 +324,7 @@ summary.rfPred = function(object, ...){
 #' @param x an rfPred object
 #' @param y igorned
 #' @param ... other parameters passed to plo
-#' @method plot rfPred
-#' @S3method plot rfPred
+#' @export
 plot.rfPred = function(x, y, ...){
 	length.vars = length(x$varselect.pred)
 

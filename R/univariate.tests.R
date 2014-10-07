@@ -38,6 +38,7 @@ comp.p = function(variable, group, test, parametric=T,...){
 ##' @param exclude.cols a vector indicating (either numeric or character) which columns should not have a significance test
 ##' @param group a string with the name of the grouping variable
 ##' @param parametric Should parametric tests be used? Defaults to TRUE. 
+##' @param ... other arguments passed to t.test or wilcox.test
 ##' @return a vector of p values
 ##' @author Dustin Fife
 ##' @export

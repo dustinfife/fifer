@@ -18,6 +18,8 @@
 ##' @author Dustin Fife
 ##' @export
 read.fife = function(file, file.type = ".csv", ...){
+	### set original.file to NULL so this passes R's check
+	original.file = NULL
 	data = read.csv(file, ...)
 	#### extract the meta data
 	meta = gsub(file.type, ".file", file, fixed=T)

@@ -60,7 +60,14 @@
 #'@return \item{oob}{the oob error of the entire model.}
 #'@return \item{time}{how long the algorithm ran for}
 #'@return \item{rfmodel}{The final model used, a randomForest object.}
-#'@import randomForest 
+#' @importFrom party cforest
+#' @importFrom party cforest_control
+#' @importFrom party varimp
+#' @importFrom randomForest randomForest
+#' @importFrom randomForestSRC var.select
+#' @importFrom rpart rpart
+#' @importFrom rpart rpart.control
+#' @importFrom rpart prune
 #' @author Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot, with modifications by Dustin Fife
 #' @references 
 #' Genuer, R. and Poggi, J.M. and Tuleau-Malot, C. (2010), Variable
@@ -85,10 +92,6 @@ rfThresh = function(formula, data, nruns = 50, silent=FALSE, importance="permuta
 	
 	start = Sys.time()
 
-	##### get important packages	
-	require(party)
-	require(rpart)
-	require(randomForest)
 	
 	##### check importance
 	importance = match.arg(importance, c("permutation", "gini", "minDepth",NULL))
@@ -131,7 +134,6 @@ rfThresh = function(formula, data, nruns = 50, silent=FALSE, importance="permuta
 	} else if (importance=="minDepth"){
 		thresh = 1:nrow(preds)
 		for (i in 1:nrow(preds)){
-			require(randomForestSRC)
 			rf_mindepth = var.select(formula, data=data, method="md", conservative="high")
 			varimp = rf_mindepth$threshold
 			
@@ -223,8 +225,7 @@ rfThresh = function(formula, data, nruns = 50, silent=FALSE, importance="permuta
 #' @aliases print.rfThresh
 #' @param x an rfThresh object
 #' @param ... ignored
-#' @method print rfThresh
-#' @S3method print rfThresh
+#' @export
 print.rfThresh = function(x,...){
 	print(names(x))
 	cat(paste("\n\nThe best variables (in order of importance) were:\n\n", sep=""))
@@ -238,8 +239,7 @@ print.rfThresh = function(x,...){
 #' @param x an rfThresh object
 #' @param y igorned
 #' @param ... other parameters passed to plo
-#' @method plot rfThresh
-#' @S3method plot rfThresh
+#' @export
 plot.rfThresh = function(x, y, ...){
 	length.vars = length(x$importance.mean)
 	var = x$importance.sd

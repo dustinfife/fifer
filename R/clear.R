@@ -4,7 +4,6 @@
 ##'	
 ##' @param obj The object (as a string) that needs to be removed (or kept)
 ##' @param keep Should \code{obj} be kept (i.e., everything but \code{obj} removed)? Or dropped?
-##' @param env The environment. Defaults to global environment
 ##' @author Dustin Fife
 ##' @export
 ##' @examples
@@ -16,12 +15,12 @@
 ##' ### create objects
 ##' a=1; b=2; c=3; d=4; e=5
 ##' ### remove c
-##' clear("c", keep=F)
+##' clear("c", keep=FALSE)
 ##' ls()
 ##' ### remove all but a and b
-##' clear(c("a", "b"), keep=T)
+##' clear(c("a", "b"), keep=TRUE)
 ##' ls()
-clear = function(obj=NULL, keep=T){
+clear = function(obj=NULL, keep=TRUE){
 
 	### remove everything if obj = null
 	if (!is.null(obj)){

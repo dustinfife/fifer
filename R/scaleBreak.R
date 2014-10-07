@@ -8,10 +8,12 @@
 ##' @param y The y variables to be plotted.
 ##' @param axis Which axis should have two different scales. Currently, only implemented for "2," which is the y axis.
 ##' @param breakpos At what point should the break occur? Defaults to 1.
-##' @import plotrix
-##' @aliases scale.break scalebreak scale.Break
+##' @param plot.numbers Which plots to include. Can be 1, 2, or c(1,2).
+##' @param ... other arguments passed to plot
+##' @importFrom plotrix axis.break
 ##' @author Dustin Fife
 ##' @export
+##' @aliases scale.break scalebreak scale.Break
 ##' @examples
 ##' # generate correlated data
 ##' d = data.frame(mvrnorm(1000, mu=c(0,0), Sigma=matrix(c(1,.6,.6,1), nrow=2)))
@@ -56,7 +58,6 @@ scaleBreak = function(x,y,axis=2, breakpos=1, plot.numbers=c(1,2),...){
 		plot(range(x), c(min2, max(y)), type="n", yaxt="n", xaxt="n", ylab="", axes=F, xlab="")
 		points(x_above, y_above, yaxt="n",...)
 		axis(2, pretty(y_above)[-1])
-		require(plotrix)
 		axis.break(axis=axis, breakpos)				
 	}
 }

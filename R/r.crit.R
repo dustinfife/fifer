@@ -4,6 +4,7 @@
 ##' @param n The sample size.
 ##' @param p the probability. Defaults to .025.
 ##' @param r The observed r value
+##' @param two.tailed Should the probability be cut in half?
 ##' @export
 ##' @return the critical r value or the observed p value for a given r
 ##' @author Dustin Fife
