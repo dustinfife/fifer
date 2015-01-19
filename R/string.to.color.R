@@ -7,6 +7,7 @@
 ##' @return a vector of colors, one for each element in \code{string} 
 ##' @aliases string.to.colors stringtocolor stringToColors string.to.color
 ##' @author Dustin Fife
+##' @seealso \code{\link{number.to.colors}}
 ##' @examples
 ##' groups = sample(LETTERS[1:5], size=100, replace=TRUE)
 ##' plot(rnorm(100), rnorm(100), col=string.to.colors(groups))
