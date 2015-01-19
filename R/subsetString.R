@@ -6,20 +6,20 @@
 ##' @param string a vector of strings
 ##' @param sep the separator that separates the parts of the strings
 ##' @param position the position of the element you wish to extract
-##' @param must Force the function to find the string "sep"? See details
+##' @param flexible Force the function to find the string "sep"? See details
 ##' @return the element the user wishes to extract
-##' @details The "must" function is for instances where a particular string (i.e., \code{sep}) is found in only some elements of \code{string}. For example,
-##' if the string is c("...call..ID", "...call..Gender", "ethnicity"), if \code{must} is false, it will search for the string "...call.." in the string "ethnicity", and, not 
-##' finding it, will return NA. To overcome this, \code{must} tells the function to only perform the operation on those parts of the vector that contain the string \code{sep}.
+##' @details The "flexible" function is for instances where a particular string (i.e., \code{sep}) is found in only some elements of \code{string}. For example,
+##' if the string is c("...call..ID", "...call..Gender", "ethnicity"), if \code{flexible} is false, it will search for the string "...call.." in the string "ethnicity", and, not 
+##' finding it, will return NA. To overcome this, \code{flexible} tells the function to only perform the operation on those parts of the vector that contain the string \code{sep}.
 ##' @author Dustin Fife
 ##' @export
 ##' @examples
 ##' barcode = c("Case-001-B", "Control-001-A", "Case-002-A", "001")
-##' subsetString(barcode, sep="-", position=2, must=TRUE)
-##' subsetString(barcode, sep="-", position=3, must=TRUE)
-##' subsetString(barcode, sep="-", position=3, must=FALSE)
-subsetString = function(string, sep=" ", position=3, must=FALSE){
-	if (must){
+##' subsetString(barcode, sep="-", position=2, flexible=TRUE)
+##' subsetString(barcode, sep="-", position=3, flexible=TRUE)
+##' subsetString(barcode, sep="-", position=3, flexible=FALSE)
+subsetString = function(string, sep=" ", position=3, flexible=FALSE){
+	if (flexible){
 		which.strings = grep(sep, string)
 	} else {
 		which.strings = 1:length(string)
