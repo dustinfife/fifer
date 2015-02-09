@@ -81,10 +81,10 @@ prism.plots = function(formula, data, centerfunc=median, interquartile=TRUE,spre
 	    points(jitter(iv.vals) + rep(start, times=nrow(data)), depvar, pch=16, col=col)
     }
     
-    segments(1:length(unique(data[,iv]))-.25 + start, centers, 1:length(unique(data[,iv]))+.25 + start, centers, lwd=2)
-    segments(1:length(unique(data[,iv])) + start, spread[,1], 1:length(unique(data[,iv])) + start, spread[,2], lwd=2)
-    segments(1:length(unique(data[,iv]))-.05 + start, spread[,1], 1:length(unique(data[,iv]))+.05 + start, spread[,1], lwd=2)    
-    segments(1:length(unique(data[,iv]))-.05 + start, spread[,2], 1:length(unique(data[,iv]))+.05 + start, spread[,2], lwd=2)         
+    segments(1:length(unique(data[,iv]))-.25 + start, centers, 1:length(unique(data[,iv]))+.25 + start, centers, lwd=2,...)
+    segments(1:length(unique(data[,iv])) + start, spread[,1], 1:length(unique(data[,iv])) + start, spread[,2], lwd=2,...)
+    segments(1:length(unique(data[,iv]))-.05 + start, spread[,1], 1:length(unique(data[,iv]))+.05 + start, spread[,1], lwd=2,...)    
+    segments(1:length(unique(data[,iv]))-.05 + start, spread[,2], 1:length(unique(data[,iv]))+.05 + start, spread[,2], lwd=2,...)         
 }
 
 ##' Add significance bars to a prism plot, corrected for multiple comparisons either using Tukey's HSD (parametric),

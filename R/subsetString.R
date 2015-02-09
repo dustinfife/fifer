@@ -20,7 +20,7 @@
 ##' subsetString(barcode, sep="-", position=3, flexible=FALSE)
 subsetString = function(string, sep=" ", position=3, flexible=FALSE){
 	if (flexible){
-		which.strings = grep(sep, string)
+		which.strings = grep(sep, string, fixed=TRUE)
 	} else {
 		which.strings = 1:length(string)
 	}
