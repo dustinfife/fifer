@@ -3,7 +3,7 @@
 \alias{xtable.rfPred}
 \title{Prepare xtable Summary}
 \usage{
-\method{xtable}{rfPred}(x, caption = NULL, label = NULL, align = NULL,
+xtable.rfPred(x, caption = NULL, label = NULL, align = NULL,
   digits = NULL, display = NULL, ...)
 }
 \arguments{

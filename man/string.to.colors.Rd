@@ -32,4 +32,7 @@ plot(rnorm(100), rnorm(100), col=string.to.colors(groups),
 \author{
 Dustin Fife
 }
+\seealso{
+\code{\link{number.to.colors}}
+}
 
