@@ -56,7 +56,7 @@ get.cols = function(string, names){
 	
 	#### first check to make sure they're all there
 	check = which(!(string %in% names))
-	if (length(check)>0){
+	if (length(check)==0){
 		msg = "The following variables could not be located in the names string:\n"
 		msg2 = paste(string[check], collapse=",")
 		warning(paste(msg, msg2))

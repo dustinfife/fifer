@@ -1,0 +1,52 @@
+\name{anchored.gradient}
+\alias{anchor.gradient}
+\alias{anchored.gradient}
+\alias{color.gradient}
+\title{Create a color gradient with a color for zero}
+\usage{
+  anchored.gradient(minColor = "blue", maxColor = "red",
+    zeroColor = "white", z = NULL, vals = 100)
+}
+\arguments{
+  \item{minColor}{what color corresponds to the minimum
+  value?}
+
+  \item{maxColor}{what color corresponds to the maximum
+  value?}
+
+  \item{zeroColor}{what color corresponds to the middle
+  point value?}
+
+  \item{z}{The vector of numbers corresponding to the
+  colors?}
+
+  \item{vals}{how many points should the final gradient
+  have?}
+}
+\value{
+  a gradient of color
+}
+\description{
+  Create a color gradient with a color for zero
+}
+\details{
+  Other functions (e.g., \code{\link{number.to.colors}})
+  create a color gradient by taking a range (min and max)
+  and begining with color 1 and ending with color 2. The
+  problem is that sometimes, there's a critical middle
+  point (e.g., zero) and the min and max are not symmetric
+  around the middle point. This function aleviates that
+  problem by creating a middle point for a fixed value (set
+  to zero).
+}
+\examples{
+#not shown yet
+}
+\author{
+  Dustin Fife
+}
+\seealso{
+  \code{\link{string.to.colors}},
+  \code{\link{number.to.colors}},
+}
+
