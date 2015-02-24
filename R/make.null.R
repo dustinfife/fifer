@@ -39,12 +39,11 @@ r = function(stringA, stringB, data.names, names=F){
 
 
 ##' Given a vector of strings and another reference vector, \code{get.cols} will search the reference
-##' vector for matches and return the column indices (or names) where each string was located. See examples. 
+##' vector for matches and return the column indices where each string was located. See examples. 
 ##'
 ##' @title Extract column index
 ##' @param string the name of a variable (string)
 ##' @param names the names of the variables for which you wish to extract the column
-##' @param return.names Logical. Should a vector of string names be returned? Or just the indices? Defaults to TRUE. 
 ##' @return an integer corresponding to the column index(indices)
 ##' @author Dustin Fife
 ##' @export 
@@ -53,11 +52,11 @@ r = function(stringA, stringB, data.names, names=F){
 ##' names = LETTERS[1:10]
 ##' get.cols(c("A", "B", "D"), LETTERS[1:10])  ### works
 ##' #get.cols(c("A", "B", "Z"), LETTERS[1:10])  ### doesn't work
-get.cols = function(string, names, return.names=T){
+get.cols = function(string, names){
 	
 	#### first check to make sure they're all there
 	check = which(!(string %in% names))
-	if (length(check)==0){
+	if (length(check)>0){
 		msg = "The following variables could not be located in the names string:\n"
 		msg2 = paste(string[check], collapse=",")
 		warning(paste(msg, msg2))
