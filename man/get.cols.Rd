@@ -3,21 +3,19 @@
 \alias{get.cols}
 \title{Extract column index}
 \usage{
-get.cols(string, names, return.names = T)
+get.cols(string, names)
 }
 \arguments{
 \item{string}{the name of a variable (string)}
 
 \item{names}{the names of the variables for which you wish to extract the column}
-
-\item{return.names}{Logical. Should a vector of string names be returned? Or just the indices? Defaults to TRUE.}
 }
 \value{
 an integer corresponding to the column index(indices)
 }
 \description{
 Given a vector of strings and another reference vector, \code{get.cols} will search the reference
-vector for matches and return the column indices (or names) where each string was located. See examples.
+vector for matches and return the column indices where each string was located. See examples.
 }
 \examples{
 names = LETTERS[1:10]

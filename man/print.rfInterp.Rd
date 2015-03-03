@@ -3,7 +3,7 @@
 \alias{print.rfInterp}
 \title{Print rfInterp Summary}
 \usage{
-print.rfInterp(x, ...)
+\method{print}{rfInterp}(x, ...)
 }
 \arguments{
 \item{x}{an rfInterp object}

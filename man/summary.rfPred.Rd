@@ -3,7 +3,7 @@
 \alias{summary.rfPred}
 \title{Print a Summary Table of rfPred}
 \usage{
-summary.rfPred(object, ...)
+\method{summary}{rfPred}(object, ...)
 }
 \arguments{
 \item{object}{an rfPred object}
