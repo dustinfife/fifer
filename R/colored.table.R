@@ -9,6 +9,7 @@
 ##' @param col.factor A vector of one or two elements, each of which is a string indicating the name of the col factor(s)
 ##' @param breaks The number of breaks in color. Defaults to 4.
 ##' @param round How many digits should the matrix be rounded to? Defaults to 2. 
+##' @param rng The range of values used for coloring the plot. 
 ##' @param ... Other arguments passed to Hmisc
 ##' @aliases color.table col.table
 ##' @seealso \code{\link{Hmisc:latex}}
@@ -17,7 +18,7 @@
 ##' @export
 ##' @examples
 ##' ## do this later
-colored.table = function(data, file, dep.var, row.factors, col.factors, breaks=4, round=2,...){
+colored.table = function(data, file, dep.var, row.factors, col.factors, breaks=4, round=2, rng=NULL,...){
 
 	#### average across conditions
 	f = make.formula(dep.var, c(row.factors, col.factors))
@@ -45,14 +46,21 @@ colored.table = function(data, file, dep.var, row.factors, col.factors, breaks=4
 			results[i,j] = k[,dep.var]
 		}
 	}
-	
-	
+
+	#### set colors
+	if (!is.null(rng)){
+		max.r = max(abs(results))/max(rng)
+	} else {
+		max.r = 1
+	}
+
 	#### color code results
-	cols = seq(from=1, to=.5, length.out=breaks)	
-	cols = paste0("cellcolor[gray]{", rev(seq(from=.5, to=1, length.out=breaks)), "}")	
-	col.mat = matrix(cut(abs(results), breaks=breaks, labels=cols), nrow=nrow(results))
+	cols =(seq(from=1, to = .5+ ((1-max.r)*.5), length.out=breaks)	)
+	cols = paste0("cellcolor[gray]{", cols, "}")	
+	col.mat = matrix(
+			cut(abs(results), breaks=seq(from=rng[1], to=rng[2], length.out=breaks), labels=cols[-8]), 
+			nrow=nrow(results))
 	results = round(results, digits=round)
-	
 	row.major = paste0(row.factors[1], "=", unique(row.vals[,1]))
 	if (length(row.factors)==2){
 		row.minor = paste0(row.factors[2], "=", unique(row.vals[,2]))
@@ -69,3 +77,5 @@ colored.table = function(data, file, dep.var, row.factors, col.factors, breaks=4
 				cgroup = col.major, n.cgroup = rep(ncol(results)/length(col.major), times=length(col.major)),
 				rowname=row.minor, colheads=col.minor, cellTexCmds = latexTranslate(col.mat), numeric.dollar=FALSE,...) 
 }
+
+

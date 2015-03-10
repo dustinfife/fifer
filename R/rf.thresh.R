@@ -209,7 +209,7 @@ rfThresh = function(formula, data, nruns = 50, silent=FALSE, importance="permuta
 	time = Sys.time()-start
 
 	##### make a list to store important info
-	ret = list(importance.mean=ord.imp[1:s], importance.sd=ord.sd[1:s], 
+	ret = list(importance.mean=ord.imp[1:s], importance.all=ord.imp, importance.sd=ord.sd[1:s], 
 			response=resp, remaining.variables=names(ord.imp)[1:s], nruns=nruns, formula = formula,
 			data=data, oob=oob, time=time, all.vars=names(ord.imp), model=model)
 	

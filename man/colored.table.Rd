@@ -5,7 +5,7 @@
 \alias{colored.table}
 \title{Create a color-coded table in latex}
 \usage{
-colored.table(data, file, dep.var, row.factor, col.factor, breaks = 4,
+colored.table(data, file, dep.var, row.factors, col.factors, breaks = 4,
   round = 2, ...)
 }
 \arguments{
@@ -15,15 +15,15 @@ colored.table(data, file, dep.var, row.factor, col.factor, breaks = 4,
 
 \item{dep.var}{A string naming the dependent variable}
 
-\item{row.factor}{A vector of one or two elements, each of which is a string indicating the name of the row factor(s)}
-
-\item{col.factor}{A vector of one or two elements, each of which is a string indicating the name of the col factor(s)}
-
 \item{breaks}{The number of breaks in color. Defaults to 4.}
 
 \item{round}{How many digits should the matrix be rounded to? Defaults to 2.}
 
 \item{...}{Other arguments passed to Hmisc}
+
+\item{row.factor}{A vector of one or two elements, each of which is a string indicating the name of the row factor(s)}
+
+\item{col.factor}{A vector of one or two elements, each of which is a string indicating the name of the col factor(s)}
 }
 \description{
 Create a color-coded table in latex
