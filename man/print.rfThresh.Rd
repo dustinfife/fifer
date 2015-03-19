@@ -3,7 +3,7 @@
 \alias{print.rfThresh}
 \title{Print rfThesh Summary}
 \usage{
-\method{print}{rfThresh}(x, ...)
+print.rfThresh(x, ...)
 }
 \arguments{
 \item{x}{an rfThresh object}

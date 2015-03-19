@@ -23,15 +23,14 @@
 ##' prism.plots(count ~ spray, data = InsectSprays, centerfunc=mean)
 ##' prism.plots(count ~ spray, data = InsectSprays, centerfunc=median)
 prism.plots = function(formula, data, centerfunc=median, interquartile=TRUE,spreadfunc=function(x){return(1.96*sd(x)/sqrt(length(x)))},
-		def.axis=TRUE, jitter.y=FALSE, add=FALSE, start=0, col="gray",...){
+		def.axis=TRUE, jitter.y=FALSE, add=FALSE, start=0, col="gray", ...){
 			
 	dv = as.character(formula[[2]])
     iv = as.character(formula[[3]])
 
 	#### make a vector of colors if they didn't supply one
-	if (col[1]=="gray"){
-		col = rep("gray", times=nrow(data))
-	}    
+	col = rep(col, times=nrow(data))
+
     
     #### resort so variables line up
     ord = order(data[,iv])
@@ -74,11 +73,11 @@ prism.plots = function(formula, data, centerfunc=median, interquartile=TRUE,spre
 	##### compute mean (or median)
     if (def.axis){
 	    if (!add){do.call("plot", args)}
-	    points(jitter(iv.vals) + rep(start, times=nrow(data)), depvar, pch=16, col=col)
+	    points(jitter(iv.vals) + rep(start, times=nrow(data)), depvar, col=col, ...)
 	    axis(1, at=(1:length(types))+start, labels=unique(data[,iv]))
     } else {
 	    if (!add){do.call("plot", args)}
-	    points(jitter(iv.vals) + rep(start, times=nrow(data)), depvar, pch=16, col=col)
+	    points(jitter(iv.vals) + rep(start, times=nrow(data)), depvar, col=col,...)
     }
     
     segments(1:length(unique(data[,iv]))-.25 + start, centers, 1:length(unique(data[,iv]))+.25 + start, centers, lwd=2,...)

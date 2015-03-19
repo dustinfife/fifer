@@ -18,32 +18,53 @@
 ##' @export
 ##' @examples
 ##' ## do this later
-colored.table = function(data, file, dep.var, row.factors, col.factors, breaks=4, round=2, rng=NULL,...){
+colored.table = function(data, file, dep.var, row.factors, col.factors, breaks=4, round=2, rng=NULL, FUN=mean, row.prefix=NULL, col.prefix=NULL,...){
 
 	#### average across conditions
 	f = make.formula(dep.var, c(row.factors, col.factors))
-	agg = aggregate(f, data=data, FUN=mean)
+	agg = aggregate(f, data=data, FUN=FUN)
 
 	if (length(row.factors)>2 | length(col.factors)>2){
 		stop("Only two factors are allowed in either the rows or columns of the matrix")
 	}
 
-	row.vals = unique(agg[,row.factors]); row.vals = row.vals[order(row.vals[,1], row.vals[,2]),]
-	col.vals = unique(agg[,col.factors]); col.vals = col.vals[order(col.vals[,1], col.vals[,2]),]	
-	
-	results = matrix(nrow=nrow(row.vals), ncol=nrow(col.vals))
-	for (i in 1:nrow(row.vals)){
-		for (j in 1:nrow(col.vals)){
+	row.vals = unique(agg[,row.factors]); 
+		if (length(row.factors)>1){
+			row.vals = row.vals[order(row.vals[,1], row.vals[,2]),]
+			nr = nrow(row.vals)
+		} else {
+			nr = length(row.vals)
+		}
+	col.vals = unique(agg[,col.factors]); 
+		if (length(col.factors)>1){
+			col.vals = col.vals[order(col.vals[,1], col.vals[,2]),]	
+			nc = nrow(col.vals)
+		} else {
+			nc = length(col.vals)
+		}
+
+	results = matrix(nrow=nr, ncol=nc)
+	for (i in 1:nr){
+		for (j in 1:nc){
 	
 			ag.row = matrix(data=unlist(c(agg[,row.factors])), nrow=nrow(agg))
 			ag.col = matrix(data=unlist(c(agg[,col.factors])), nrow=nrow(agg))		
-			row.match =(apply(ag.row, 1, identical, as.vector(unlist(c(row.vals[i,])))))
-			col.match =(apply(ag.col, 1, identical, as.vector(unlist(c(col.vals[j,]))))) 		
+			if (length(row.factors)>1){
+				row.match =(apply(ag.row, 1, identical, as.vector(unlist(c(row.vals[i,])))))
+			} else {
+				row.match =(apply(ag.row, 1, identical, as.vector(unlist(c(row.vals[i])))))
+			}
+			if (length(col.factors)>1){
+				col.match =(apply(ag.col, 1, identical, as.vector(unlist(c(col.vals[j,]))))) 		
+			} else {
+				col.match =(apply(ag.col, 1, identical, as.vector(unlist(c(col.vals[j]))))) 		
+			}
+	
 			
 			k = agg[row.match & col.match,]
 			
 			
-			results[i,j] = k[,dep.var]
+			results[i,j] =(k[,dep.var])
 		}
 	}
 
@@ -52,30 +73,57 @@ colored.table = function(data, file, dep.var, row.factors, col.factors, breaks=4
 		max.r = max(abs(results))/max(rng)
 	} else {
 		max.r = 1
+		rng = range(abs(results))
 	}
 
 	#### color code results
 	cols =(seq(from=1, to = .5+ ((1-max.r)*.5), length.out=breaks)	)
-	cols = paste0("cellcolor[gray]{", cols, "}")	
+	cols = paste0("cellcolor[gray]{", round(cols, digits=2), "}")	
 	col.mat = matrix(
-			cut(abs(results), breaks=seq(from=rng[1], to=rng[2], length.out=breaks), labels=cols[-8]), 
+			cut(abs(results), breaks=seq(from=rng[1], to=rng[2], length.out=breaks+1), labels=cols, include.lowest=T), 
 			nrow=nrow(results))
 	results = round(results, digits=round)
-	row.major = paste0(row.factors[1], "=", unique(row.vals[,1]))
-	if (length(row.factors)==2){
-		row.minor = paste0(row.factors[2], "=", unique(row.vals[,2]))
-		row.minor = rep(row.minor, times=length(row.minor))
-	} 
 	
-	col.major = paste0(col.factors[1], "=", unique(col.vals[,1]))
-	if (length(col.factors)==2){
-		col.minor = paste0(col.factors[2], "=", unique(col.vals[,2]))
-		col.minor = rep(col.minor, times=length(col.major))
+	if (is.null(row.prefix)){
+		row.prefix = paste0(row.factors,"=")
 	}
 	
-	latex(results, file=file,rgroup = row.major, title='', n.rgroup = rep(nrow(results)/length(row.major), times=length(row.major)), 
-				cgroup = col.major, n.cgroup = rep(ncol(results)/length(col.major), times=length(col.major)),
-				rowname=row.minor, colheads=col.minor, cellTexCmds = latexTranslate(col.mat), numeric.dollar=FALSE,...) 
+	if (is.null(col.prefix)){
+		col.prefix= paste0(col.factors, "=")
+	}
+
+	if (length(row.factors)==2){
+		row.major = paste0(row.prefix[1], unique(row.vals[,1]))
+		row.minor = paste0(row.prefix[2], unique(row.vals[,2]))
+		row.minor = rep(row.minor, times=length(row.minor))
+	} else {
+		row.major = paste0(row.prefix[1], unique(row.vals))
+		row.minor=NA
+	}
+	
+	if (length(col.factors)==2){
+		col.major = paste0(col.prefix[1], unique(col.vals[,1]))		
+		col.minor = paste0(col.prefix[2], unique(col.vals[,2]))
+		col.minor = rep(col.minor, times=length(col.major))
+	} else {
+		col.major = paste0(col.prefix[1], unique(col.vals))	
+		col.minor=NA
+	}
+	
+	if (length(col.factors)==2 & length(row.factors)==2){
+		latex(results, file=file,rgroup = row.major, title='', n.rgroup = rep(nrow(results)/length(row.major), times=length(row.major)), 
+					cgroup = col.major, n.cgroup = rep(ncol(results)/length(col.major), times=length(col.major)),
+					rowname=row.minor, colheads=col.minor, cellTexCmds = latexTranslate(col.mat), numeric.dollar=FALSE,...) 
+	} else if (length(col.factors)==2){
+		latex(results, file=file,title='',  
+					cgroup = col.major, n.cgroup = rep(ncol(results)/length(col.major), times=length(col.major)),
+					rowname=row.major, colheads=col.minor, cellTexCmds = latexTranslate(col.mat), numeric.dollar=FALSE,...) 
+	} else if (length(row.factors)==2){
+		latex(results, file=file,rgroup = row.major, title='', n.rgroup = rep(nrow(results)/length(row.major), times=length(row.major)), 
+					rowname=row.minor, colheads=col.major, cellTexCmds = latexTranslate(col.mat), numeric.dollar=FALSE,...) 
+	} else {
+		latex(results, file=file, title='', rowname=row.major, colheads=col.major, cellTexCmds = latexTranslate(col.mat), numeric.dollar=FALSE,...) 		
+	}
 }
 
 

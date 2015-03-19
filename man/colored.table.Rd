@@ -6,7 +6,8 @@
 \title{Create a color-coded table in latex}
 \usage{
 colored.table(data, file, dep.var, row.factors, col.factors, breaks = 4,
-  round = 2, ...)
+  round = 2, rng = NULL, FUN = mean, row.prefix = NULL,
+  col.prefix = NULL, ...)
 }
 \arguments{
 \item{data}{the dataset in "long" format, where the conditions are on columns.}
@@ -18,6 +19,8 @@ colored.table(data, file, dep.var, row.factors, col.factors, breaks = 4,
 \item{breaks}{The number of breaks in color. Defaults to 4.}
 
 \item{round}{How many digits should the matrix be rounded to? Defaults to 2.}
+
+\item{rng}{The range of values used for coloring the plot.}
 
 \item{...}{Other arguments passed to Hmisc}
 

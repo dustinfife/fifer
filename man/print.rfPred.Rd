@@ -3,7 +3,7 @@
 \alias{print.rfPred}
 \title{Print rfPred Summary}
 \usage{
-\method{print}{rfPred}(x, ...)
+print.rfPred(x, ...)
 }
 \arguments{
 \item{x}{an rfPred object}
