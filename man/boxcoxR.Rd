@@ -4,12 +4,14 @@
 \alias{boxcoxR}
 \title{Transform data using a boxcox transformation}
 \usage{
-boxcoxR(x, minval = 0.01, ...)
+boxcoxR(x, minval = 0.01, lam = F, ...)
 }
 \arguments{
 \item{x}{a numerical vector}
 
 \item{minval}{before a transformation is performed, the variables must often be positive. This tells R what the minimum value should be. Defaults to .01.}
+
+\item{lam}{Should the lambda value be returned?}
 
 \item{...}{additional parameters to be used in the model fitting.}
 }

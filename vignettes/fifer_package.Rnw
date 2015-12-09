@@ -1,0 +1,416 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   Original by                                   %
+% Athanassios Protopapas, October 2005 %
+% Mini-example for using apa.cls       %
+%                                      %
+% modified by William Revelle, August, 2007 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[doc, babel,english]{apa}%can be jou (for journal), man (manuscript) or doc (document)
+%
+%
+%these next packages extend the apa class to allow for including statistical and graphic commands
+\usepackage{hyperref}  %this allows us to cite URLs in the text
+\usepackage{graphicx}  %allows for graphic to float when doing jou or doc style
+\usepackage{amssymb}  %use formatting tools  for math symbols
+\usepackage{amssymb,amsmath}
+\usepackage{apacite}
+
+%\VignetteIndexEntry{Using the fifer package}
+% type setting of functions, packages, and R follows a particular style
+\let\proglang=\textsf
+\newcommand{\R}{\proglang{R}}
+\newcommand{\pkg}[1]{{\normalfont\fontseries{b}\selectfont #1}}
+\newcommand{\Rfunction}[1]{{\texttt{#1}}} 
+\newcommand{\fun}[1]{{\texttt{#1}}} 
+\newcommand{\Robject}[1]{{\texttt{#1}}} 
+%
+%
+%Here is where we start the important APA stuff
+%
+%
+%Here is where we start the important APA stuff
+
+\title{An Introduction to the \texttt{fifer} Package in R}
+\author{Dustin A. Fife}
+\affiliation{Department of Arthritis and Clinical Immunology \\ Oklahoma Medical Research Foundation}
+%taken from AP's user notes
+% John Vokey uses something like this
+
+\ifapamodeman{%
+
+\note{\begin{flushleft}
+
+ Dustin Fife\\
+
+    Department of Psychology\\
+
+  University of Oklahoma\\
+
+ Norman, OK\\
+
+	73071\\
+
+	e-mail: dfife@ou.edu\\
+
+   
+
+   \end{flushleft}}}
+
+{%else, i.e., in jou and doc mode 
+
+\note{Draft of \today}
+}
+
+
+
+%\abstract{}
+
+\acknowledgements{Dustin Fife may be contacted at \url{email:fife.dustin@gmail.com}}
+
+\shorttitle{\texttt{fifer} Package in R}
+\rightheader{\texttt{fifer} Package in R}
+\leftheader{Dustin A. Fife}
+
+%\journal{Manuscript Under Third Review, Feb. 2013}
+
+\begin{document}
+\maketitle   
+
+\section{Introduction}
+The development of this package began in July of 2013. I found myself spending the majority of my time manipulating the dataset and very little of my time actually analyzing the data. As I did, Figure \ref{fig:ttest} came to mind, and I thought ``There's got to be a more efficient way of doing this." Since then I have diligently labored to create an R package for basic data manipulation, as well as preliminary analyses and plotting. 
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=5.25in]{images/nerdsRule.jpg}
+\caption{Relationship between time spent and the size of the task for nerds and non-nerds. Pulled from \url{http://www.globalnerdy.com/2012/04/24/geeks-and-repetitive-tasks/}} 
+\label{fig:ttest}
+\end{figure}
+
+The purpose of this paper is to introduce the \texttt{fifer} package and familiarize the reader with the basic functions and how they can be used to simplify data analysis. In the first part, I talk about installing the package. In the second part, I introduce some of the basic data manipulation functions. Next, I show some of the basic functions for data analysis. I end by introducing several plotting functions. Throughout the paper, I try to keep the commentary to a minimum so the user can easily breeze through this without having to digest my witty banter. 
+
+
+\section{Installation}
+\subsection{Code}
+<<echo=FALSE>>=
+options(prompt=" ", continue=" ")
+@
+<<echo=TRUE, eval=FALSE>>=
+### 1. first the package devtools must be installed
+install.packages("devtools")
+
+### 2. then we must 'load' the package
+require(devtools)
+
+### 3. all that rigamarole to get the function install_github, 
+### which is how we will install fifer
+install_github("fifer", username="dustinfife")
+
+### 4. now load the fifer package
+require(fifer)
+@
+\subsection{Explanation of Code}
+Currently, \texttt{fifer} is located on github and to install from github requires a special function called \texttt{install\_github} that is a part of another package \texttt{devtools}. The first two steps are simply there to install the \texttt{devtools} package so \texttt{fifer} can be installed. 
+
+\section{Data Manipulation}
+\subsection{Introduction}
+Most of the data manipulation I do involves retrieving an excel file with $16.4\times10^{18}$ columns. In reality, I only need about ten of those columns. In the past, this required opening a massive excel file, waiting, waiting, watching my computer crash, waiting for a restart, opening again, rinse and repeat. When I finally get it open, then I started deleting columns I didn't need until I only had the ten remaining columns.
+
+This method is problematic for two reasons: (1) it is time consuming, and (2) (more importantly) if a change is made at the excel file level, those changes are not reflected in my condensed matrix. With this in mind, I created a series of functions that make it simple to extract only the columns you need. 
+
+\subsection{The \texttt{r} Function}
+Often times, the variables of interest are listed consecutively (e.g., there's a section of demographics that covers 8 columns, there's a section of certain types of biomarkers for 60 columns, then there's a section of clinical information for 18 columns). The \texttt{r} function is used to select a consecutive range of columns and requires three arguments: the name of the starting variable, the name of the ending variable, and the names of the dataset. An optional argument tells the computer to return the string names or the column indices. 
+
+<<echo = FALSE>>=
+require(fifer)
+data(fakeMedicalData)
+@
+<<echo = TRUE>>=
+### first load the fakeMedicalData dataset
+data(fakeMedicalData)
+### show all the column names (well, the first 60 at least)
+names(fakeMedicalData)[1:60]
+### extract all column indices between B_regs_10A and B_regs_9B
+bregs = r("B_regs_10A", "B_regs_9E", data.names=names(fakeMedicalData))
+bregs
+### return the names instead of the column indices
+bregs = r("B_regs_10A", "B_regs_9E", data.names=names(fakeMedicalData), names=T)
+bregs
+@
+
+But we haven't reached the cool part yet. So far, we have a vector of variable names (or a vector of column indices). What we'd like to do is subset the dataset so that it only gives us the names we want. That brings us to the \texttt{make.null} function.
+
+\subsection{The make.null Function}
+The \texttt{make.null} function takes a series of column names (or indices) and either retains or deletes those columns. 
+
+<<echo = TRUE>>=
+### keep only the demographic/b_regs data
+newData = make.null("ID","gender", "ethnicity", "age", 
+				bregs, 
+				data=fakeMedicalData, keep=TRUE)
+### or we could drop everything between bregs and the end
+newData2 = make.null(
+			r("BCI_10A", "TNF_9E", data.names=names(fakeMedicalData)), 
+			data=fakeMedicalData, keep=FALSE)
+### check the dimensions of the dataset
+dim(fakeMedicalData) 
+dim(newData)
+dim(newData2) 
+@
+
+For more information, type \texttt{?make.null} to access the documentation for this function. 
+
+\subsection{The excelMatch Function}
+
+Sometimes when people give me data requests, it goes something like this:
+
+\begin{quote}
+Can you see if disease activity, Column BQ, is related to Blood Pressure (Column MX), Red Blood Cell counts (Column AF), and/or age (Column F)?
+\end{quote}
+
+The \texttt{excelMatch} function allows the user to specify a string (or a vector of strings) corresponding to Excel columns. It will then return the column indices or the actual names of the variables.
+
+<<echo=TRUE>>=
+### extract the variable names corresponding to Excel Columns AA, CD, and FF
+excel.names = excelMatch("AA", "CD", "FF", names=names(fakeMedicalData))
+excel.names
+### or, we can extract the column indices instead 
+### (note it doesn't require names in original dataset)
+excel.names = excelMatch("AA", "CD", "FF", n=length(names(fakeMedicalData)))
+excel.names
+### now subset the matrix to just those using make.null
+new.dat = make.null(excel.names, data=fakeMedicalData, keep=T)
+head(new.dat)
+@
+
+\subsection{The subsetString function}
+Often when I import a dataset, the names are just miserable to look at. This is often because the researchers I work with make strange notes to themselves in the columns (e.g., ``ANA by IFA  0=neg  $>$40=pos''). R does its best to make sense of it, but it inevitably comes out looking like this: \texttt{ANA.by.IFA.0.neg...40.pos}. Often, only the first chunk of information is useful to me (in this case \texttt{ANA}). So, I created a function that looks for a separator (in this case a period), then extracts only the first (or only the second, third, etc.) element of a string. 
+
+<<echo=TRUE>>==
+#### generate random data (normally this would come from importing a file)
+data = data.frame(matrix(rnorm(10*3), ncol=3))
+names(data) = c("ANA.by.IFA.0.neg.40...pos", 
+	"dsDNA....Calculated.", 
+	"IgG..10.neg..10.19.low..20.89.mod...90.high")
+#### print the names (so we can see how messy they are)	
+names(data)
+#### rename the column names, taking only the first element
+names(data) = subsetString(names(data), sep=".", position=1)
+names(data)
+@
+
+\noindent Here, I specified that the separator is a period and that I should take the first element. 
+
+I do recommend using caution with this one. Sometimes the naming isn't consistent and applying the same rule across the entire dataset may not work. For example, if the original name was something like ``anti-dsDNA, pos>10, neg<10'', it would come out as \texttt{anti.dsDNA..pos.10..neg.10}, and using the code above would produce \texttt{anti}, which isn't what we want. 
+
+\subsection{The write.fife and read.fife functions}
+
+Let us suppose that we have used the above functions to create a subsetted dataset (we'll call it \texttt{formattedMatrix.csv}). Let us also suppose that some unsavory researcher in our lab decided to update the data matrix and didn't tell us. Unbeknownst to us, our entire analysis is wrong because we are using an outdated matrix. After basking in pride when we see our publication in print, some young arrogant biostatistician accuses you of fabricating your data because he cannot reproduce your results. It isn't until then that you realize with horror the error that you made. After dozens of lawsuits, several public addresses of apology, a half-dozen grant funding removals, and moving to Haiti, you decide something needs to change. So you start using the write.fife and read.fife functions!
+
+What write.fifer does is create a separate file (kinda like meta data) that allows the user to specify the location of the original data file. Then, read.fifer will output that information. This way, the statistician is never too far removed from knowing what the original data file was that created the subsetted matrix. 
+
+The example below shows how one might use it.
+
+<<echo=TRUE, eval=FALSE>>==
+original.path = "documents/research/medical_data_apr_2014.xlsx"
+require(xlxx)
+d = read.xlsx(original.path, sheetIndex=1, startRow=3)
+#### do some data manipulation and create a dataset 
+#### called d_new (not actually shown)
+write.fife(d_new, newfile="documents/research/medicalFormatted.csv", 
+		originalfile=original.path, fullpath=T)
+@
+
+Now, when we read that file back in, we get the following message:
+
+\begin{verbatim}
+Loading objects:
+  original.file
+Original File Name: documents/research/medical_data_apr_2014.xlsx
+\end{verbatim}
+
+Hopefully this will lead to less confusion (and zero lawsuits). 
+
+\clearpage
+\section{Basic Data Analysis}
+Hopefully that brief introduction will make data manipulation easier. In this section, I will introduce a series of function that make basic data analysis easier. 
+
+\subsection{The missing.vals Function}
+My background is in handling missing data, so often the first thing I want to know is what variables have missing information. I created a function called \texttt{missing.vals} that does just that. It only requires one argument (a dataset) and it will return a list that indicates which variables have missing values (and how many are missing). 
+
+<<echo=TRUE>>==
+missing.vals(fakeMedicalData)
+@
+
+\subsection{The demographics Function}
+Often times, the first step in any paper is to display the demographics. I borrowed a demographics function from the \texttt{day2day} package. The user specifies a formula (in this case disease = age + gender + ethnicity) and the function returns the demographics, with disease on the columns and the other variables on the rows. Note the command \texttt{latex=FALSE}. When \texttt{latex=TRUE}, this function can be easily used to export into a \LaTeX document for easy table display (see Table 1). 
+
+<<echo=TRUE>>==
+demographics(disease~age + gender + ethnicity, data=fakeMedicalData, latex=FALSE)
+@
+
+
+<<echo=FALSE, results=tex>>==
+print(xtable(demographics(disease~age + gender + ethnicity, data=fakeMedicalData, latex=TRUE), caption="Demographics of the Fake Medical Dataset"), sanitize.text.function=identity, caption.placement="top")
+@
+
+\subsection{The make.formula Function}
+
+I probably use the \texttt{make.formula} function more than anything else. With many analyses, a formula is required to perform the analysis (e.g., \texttt{lm(y\texttildelow x + z)}). Oftentimes, I'm doing data mining where the list of variables is quite extensive. Rather than writing a big long formula, I use the \texttt{make.formula} function. It requires two strings as arguments: the response variable name and the name of the predictor variable(s). Combining this with the \texttt{r} function makes formula specification quite easy.
+
+<<echo=TRUE>>==
+#### list all the variables I want to use using the r function
+predictors = r("Glucose_10A", "Glucose_9E", names(fakeMedicalData), names=T)
+### make sure it worked!
+predictors
+### now write the formula
+formula = make.formula("disease", predictors)
+### and look at it
+formula
+@
+
+\subsection{The univariate.tests Function}
+
+In biostatistics, we often deal with large p/small n datasets (i.e., lots of variables with few people). Often a first filtering step is to perform univariate tests on each of the predictor variables, then narrow down to those that pass statistical significance. The \texttt{univariate.tests} function automatically detects which test to use (t-test, ANOVA, or chi-square). See documentation (\texttt{?univariate.tests}) for details. 
+
+<<echo=TRUE>>=
+#### compute significance tests for each variable in dataset but the ID column
+p.values = univariate.tests(dataframe=fakeMedicalData, exclude.cols=1, group="disease")
+#### adjust those p-values using FDR (false discovery rate)
+p.adjusted = p.adjust(p.values, method="fdr")
+#### display only those that exceed statistical significance
+p.adjusted[p.adjusted<.05]
+@
+
+
+\clearpage
+\section{Plotting}
+Rather than talking about each plotting function individually, I've included a table (Table \ref{tab:fifer}) that lists many of the plotting functions in the \texttt{fifer} package. What follows is sample code showing the many plotting functions. 
+
+
+
+\begin{table}[h]
+\caption{List of functions and their purposes in the \texttt{fifer} package. \label{tab:fifer}} 
+\begin{center}
+\begin{tabular}{ lll } 
+ \hline
+ Function Name & What it does \\
+ \hline
+\texttt{auto.layout} & Automatically sets the layout for multiple plots on one page. \\ 
+			 & Good for odd number of plots. \\
+\texttt{densityPlotR} & Plot the densities (distributions) of a quantitative variable, \\
+		& conditional on a grouping variable. \\
+\texttt{par1} & Automatically sets plotting parameters to my favorite default. \\
+\texttt{par2} & Automatically sets plotting parameters to another default. \\
+\texttt{prism.plots} & Mimicks the behavior of prism plots where the jittered grouping variable \\
+		& is located on the x-axis and the quantitative variable is on the y-axis, \\
+		& with bars for means or medians \\
+\texttt{plotSigBars} & Used in conduction with \texttt{prism.plots} to mark which differences are \\
+		& statistically significant. \\
+\texttt{string.to.color} & Given a vector of group labels (e.g., ``male", ``female", ``female", ``male", etc.)   \\
+		& \texttt{string.to.color} will automatically generate a vector of colors to correspond to \\
+		& the group labels. \\
+ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
+\begin{figure}
+\begin{center}
+<<label=fig2,fig=TRUE,echo=TRUE>>=
+best.five = names(sort(p.adjusted)[1:5])
+### prepare the layout
+auto.layout(5)
+for (i in 1:length(best.five)){
+	### do my favorite default plotting parameters
+	par1() 
+	### make a formula
+	formula = make.formula(best.five[i], "disease")
+	### plot them
+	densityPlotR(formula, data=fakeMedicalData, main="")	
+}
+@
+\end{center}
+\caption{The top five predictors for the fakeMedicalDataset}
+\label{fig:two}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+<<label=fig3,fig=TRUE,echo=TRUE>>=
+#### set layout again (but only first four)
+auto.layout(4)
+for (i in 1:4){
+	### do my favorite default plotting parameters
+	par1() 
+	### make a formula
+	formula = make.formula(best.five[i], "disease")
+	### plot them
+	prism.plots(formula, data=fakeMedicalData)
+	### show significance bars
+	plotSigBars(formula, data=fakeMedicalData, type="tukey")
+
+}
+@
+\end{center}
+\caption{The top four predictors for the fakeMedicalDataset, plotted using densities instead of prism plots}
+\label{fig:three}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+<<label=fig4,fig=TRUE,echo=TRUE>>=
+	### change default parameters
+par2() 
+	#### color code according to disease status
+colors = string.to.color(fakeMedicalData$disease, colors=c("blue", "red"))
+	#### change symbol according to disease status
+pch = as.numeric(string.to.color(fakeMedicalData$disease, colors=c(15, 16)))
+	#### plot it
+plot(fakeMedicalData[,best.five[1]], fakeMedicalData[,best.five[2]], col=colors, 
+		pch=pch, xlab = best.five[1], ylab=best.five[2])
+legend("bottomright", c("Case", "Control"), pch=c(15,16), 
+		col=c("blue", "red"), bty="n")
+@		
+\end{center}
+\caption{A scatterplot showing that color-codes (and codes with different symbols) the different groups.}
+\label{fig:four}
+\end{figure}
+
+
+\begin{figure}
+\begin{center}
+<<label=fig5,fig=TRUE,echo=TRUE>>=
+	#### simulate skewed data (just for the demo)
+x = rnorm(100)^2
+y = rnorm(100)^2
+
+	### induce a correlation of .6 (approx) with choselski decomp
+cor = matrix(c(1, .6, .6, 1), nrow=2)	
+skewed.data = cbind(x,y)%*%chol(cor)
+names(skewed.data) = c("x", "y")
+
+	#### show original plot
+par2()	
+plot(skewed.data, xlab="x", ylab="y")
+@		
+\end{center}
+\caption{A scatter plot of the skewed data.}
+\label{fig:five}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+<<label=fig6,fig=TRUE,echo=TRUE>>=
+#### now show the spearman version of the plot
+par2()
+spearman.plot(skewed.data, xlab="rank(x)", ylab="rank(y)", pch=16)
+@		
+\end{center}
+\caption{A spearman plot of the skewed data.}
+\label{fig:six}
+\end{figure}
+		
+\end{document}

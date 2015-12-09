@@ -8,6 +8,7 @@
 #' transformed version of the original variable. 
 #' @param x a numerical vector
 #' @param minval before a transformation is performed, the variables must often be positive. This tells R what the minimum value should be. Defaults to .01. 
+#' @param lam Should the lambda value be returned?
 #' @param ... additional parameters to be used in the model fitting.
 #' @export
 #' @importFrom MASS boxcox
@@ -22,7 +23,7 @@
 #' @references  Venables, W. N. & Ripley, B. D. (2002) Modern Applied Statistics with S. Fourth Edition. Springer, New York. ISBN 0-387-95457-0
 #' @note This function calls the boxcox function in the MASS package. To avoid loading the package, I have branched the function directly into
 #' the fifer package. 
-boxcoxR = function(x, minval=.01, ...){
+boxcoxR = function(x, minval=.01, lam=F,...){
 	variable = x
 	if (min(variable, na.rm=T)<=0){
 		variable = ((variable + (minval-min(variable, na.rm=T))))		#### make positive
@@ -34,5 +35,9 @@ boxcoxR = function(x, minval=.01, ...){
 	} else {
 		variable = (variable^lambda-1)/lambda
 	}
-	return(variable)
+	if (lam){
+		list(lambda=lambda, variable=variable)
+	} else {
+		return(variable)
+	}
 }

@@ -18,7 +18,7 @@
 ##' @export
 ##' @examples
 ##' ## do this later
-colored.table = function(data, file, dep.var, row.factors, col.factors, breaks=4, round=2, rng=NULL, FUN=mean, row.prefix=NULL, col.prefix=NULL,...){
+colored.table = function(data, file, dep.var, row.factors, col.factors, breaks=4, round=2, rng=NULL, FUN=mean, row.prefix=NULL, col.prefix=NULL, custom.breaks=NULL, return.table=F, ...){
 
 	#### average across conditions
 	f = make.formula(dep.var, c(row.factors, col.factors))
@@ -76,12 +76,22 @@ colored.table = function(data, file, dep.var, row.factors, col.factors, breaks=4
 		rng = range(abs(results))
 	}
 
+
 	#### color code results
-	cols =(seq(from=1, to = .5+ ((1-max.r)*.5), length.out=breaks)	)
-	cols = paste0("cellcolor[gray]{", round(cols, digits=2), "}")	
-	col.mat = matrix(
-			cut(abs(results), breaks=seq(from=rng[1], to=rng[2], length.out=breaks+1), labels=cols, include.lowest=T), 
-			nrow=nrow(results))
+	if (!is.null(custom.breaks)){
+		custom.breaks = c(-Inf, custom.breaks, Inf)
+		cols =(seq(from=1, to = .4+ ((1-max.r)*.4), length.out=length(custom.breaks)-1)	)
+		cols = paste0("cellcolor[gray]{", round(cols, digits=2), "}")	
+		col.mat = matrix(
+				cut(abs(results), breaks=custom.breaks, labels=cols, right=F),
+				nrow=nrow(results))		
+	} else {
+		cols =(seq(from=1, to = .2+ ((1-max.r)*.2), length.out=breaks)	)
+		cols = paste0("cellcolor[gray]{", round(cols, digits=2), "}")	
+		col.mat = matrix(
+				cut(abs(results), breaks=seq(from=rng[1], to=rng[2], length.out=breaks+1), labels=cols, include.lowest=T), 
+				nrow=nrow(results))
+	}			
 	results = round(results, digits=round)
 	
 	if (is.null(row.prefix)){
@@ -93,17 +103,25 @@ colored.table = function(data, file, dep.var, row.factors, col.factors, breaks=4
 	}
 
 	if (length(row.factors)==2){
-		row.major = paste0(row.prefix[1], unique(row.vals[,1]))
-		row.minor = paste0(row.prefix[2], unique(row.vals[,2]))
-		row.minor = rep(row.minor, times=length(row.minor))
+		row.major = paste0(row.prefix[1], sprintf("%.2f", unique(row.vals[,1])))
+		row.minor = paste0(row.prefix[2], sprintf("%.2f", unique(row.vals[,2])))
+		row.minor = rep(row.minor, times=length(row.major))
 	} else {
 		row.major = paste0(row.prefix[1], unique(row.vals))
 		row.minor=NA
 	}
 	
 	if (length(col.factors)==2){
-		col.major = paste0(col.prefix[1], unique(col.vals[,1]))		
-		col.minor = paste0(col.prefix[2], unique(col.vals[,2]))
+		if (is.numeric(col.vals[,1])){
+			col.major = paste0(col.prefix[1], sprintf("%.2f", unique(col.vals[,1])))
+		} else {
+			col.major = col.vals[,1]
+		}
+		if (is.numeric(col.vals[,2])){
+			col.minor = paste0(col.prefix[2], sprintf("%.2f", unique(col.vals[,2])))
+		} else {
+			col.minor = col.vals[,2]
+		}
 		col.minor = rep(col.minor, times=length(col.major))
 	} else {
 		col.major = paste0(col.prefix[1], unique(col.vals))	
@@ -124,6 +142,7 @@ colored.table = function(data, file, dep.var, row.factors, col.factors, breaks=4
 	} else {
 		latex(results, file=file, title='', rowname=row.major, colheads=col.major, cellTexCmds = latexTranslate(col.mat), numeric.dollar=FALSE,...) 		
 	}
+	return(results)
 }
 
 
