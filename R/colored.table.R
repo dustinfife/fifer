@@ -61,19 +61,21 @@ colored.table = function(data, file, dep.var, row.factors, col.factors, breaks=4
 			}
 	
 			
-			k = agg[row.match & col.match,]
-			
-			
-			results[i,j] =(k[,dep.var])
+			if (length(which(row.match & col.match))>0){
+				k = agg[row.match & col.match,]
+				
+				
+				results[i,j] =(k[,dep.var])
+			}
 		}
 	}
 
 	#### set colors
 	if (!is.null(rng)){
-		max.r = max(abs(results))/max(rng)
+		max.r = max(abs(results), na.rm=T)/max(rng,na.rm=T)
 	} else {
 		max.r = 1
-		rng = range(abs(results))
+		rng = range(abs(results),na.rm=T)
 	}
 
 
@@ -83,7 +85,7 @@ colored.table = function(data, file, dep.var, row.factors, col.factors, breaks=4
 		cols =(seq(from=1, to = .4+ ((1-max.r)*.4), length.out=length(custom.breaks)-1)	)
 		cols = paste0("cellcolor[gray]{", round(cols, digits=2), "}")	
 		col.mat = matrix(
-				cut(abs(results), breaks=custom.breaks, labels=cols, right=F),
+				cut(abs(results), breaks=(custom.breaks), labels=cols, right=F),
 				nrow=nrow(results))		
 	} else {
 		cols =(seq(from=1, to = .2+ ((1-max.r)*.2), length.out=breaks)	)
