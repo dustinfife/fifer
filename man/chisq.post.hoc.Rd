@@ -7,12 +7,12 @@ chi-square test.}
 \usage{
 chisq.post.hoc(tbl, test = c("fisher.test"), popsInRows = TRUE,
   control = c("fdr", "BH", "BY", "bonferroni", "holm", "hochberg", "hommel"),
-  digits = 4)
+  digits = 4, ...)
 }
 \arguments{
 \item{tbl}{A \code{table} object.}
 
-\item{test}{What sort of test will be used? Defaults to "fisher.test"}
+\item{test}{What sort of test will be used? This must have an object called p.value so it can correct the p-values. Defaults to "fisher.test"}
 
 \item{popsInRows}{A logical indicating whether the populations form the rows
 (default; \code{=TRUE}) of the table or not (\code{=FALSE}).}
@@ -22,7 +22,7 @@ details.}
 
 \item{digits}{A numeric that controls the number of digits to print.}
 
-\item{\dots}{Other arguments sent to \code{print}.}
+\item{\dots}{Other arguments sent to whatever test the user specifies.}
 }
 \value{
 A data.frame with a description of the pairwise comparisons, the raw

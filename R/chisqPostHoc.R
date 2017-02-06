@@ -15,13 +15,13 @@
 #'should be consulted for further description of the methods used.
 #'
 #'@param tbl A \code{table} object.
-#'@param test What sort of test will be used? Defaults to "fisher.test"
+#'@param test What sort of test will be used? This must have an object called p.value so it can correct the p-values. Defaults to "fisher.test"
 #'@param popsInRows A logical indicating whether the populations form the rows
 #'(default; \code{=TRUE}) of the table or not (\code{=FALSE}).
 #'@param control A string indicating the method of control to use.  See
 #'details.
 #'@param digits A numeric that controls the number of digits to print.
-#'@param \dots Other arguments sent to \code{print}.
+#'@param \dots Other arguments sent to whatever test the user specifies.
 #'@return A data.frame with a description of the pairwise comparisons, the raw
 #'p-values, and the adjusted p-values.
 #'@seealso \code{chisq.test} and \code{p.adjust}.
@@ -35,7 +35,7 @@
 #'# Shows post-hoc pairwise comparisons using fdr method
 #'chisq.post.hoc(M)
 #'@export
-chisq.post.hoc <- function(tbl,test=c("fisher.test"), popsInRows=TRUE,control=c("fdr","BH","BY","bonferroni","holm","hochberg","hommel"),digits=4) {
+chisq.post.hoc <- function(tbl,test=c("fisher.test"), popsInRows=TRUE,control=c("fdr","BH","BY","bonferroni","holm","hochberg","hommel"),digits=4, ...) {
 	#### extract correction method
   control <- match.arg(control)
 	
@@ -54,7 +54,7 @@ chisq.post.hoc <- function(tbl,test=c("fisher.test"), popsInRows=TRUE,control=c(
   pvals <- numeric(tests)
   lbls <- character(tests)
   for (i in 1:tests) {
-    pvals[i] <- test(tbl[prs[,i],])$p.value
+    pvals[i] <- test(tbl[prs[,i],], ...)$p.value
     lbls[i] <- paste(popsNames[prs[,i]],collapse=" vs. ")
   }
   adj.pvals <- p.adjust(pvals,method=control)

@@ -247,6 +247,6 @@ plot.rfThresh = function(x, y, ...){
 	labels = list(xlab="", ylab="Variable Importance", pch=16, cex=.8, xlim=range(.5, length.vars+.5), xaxt="n") 
 	args = modifyList(labels, list(x=1:length.vars, y=vimp,...))
 	do.call("plot", args)	
-	text(1:length.vars, vimp, names(vimp), pos=4, cex=.8)
+	text(1:length.vars, vimp, names(vimp), pos=4, cex=1.2)
 	segments(1:length.vars, vimp+1.96*var, 1:length.vars, vimp-1.96*var, col="lightgray")
 }
