@@ -4,7 +4,7 @@
 \alias{image.interaction}
 \title{Plot an two-way quantitative interaction in an image plot}
 \usage{
-\method{image}{interaction}(data, x, y, z, plot = TRUE, legend = TRUE, ...)
+image.interaction(data, x, y, z, plot = TRUE, legend = TRUE, ...)
 }
 \arguments{
 \item{data}{a data matrix with columns indicating the values of x, y, and z}
