@@ -63,4 +63,7 @@ class of \code{x}.}
 
 \item{...}{other arguments passed to xtable}
 }
+\description{
+Print xtable Summary
+}
 

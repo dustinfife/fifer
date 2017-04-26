@@ -11,4 +11,7 @@
 
 \item{...}{ignored}
 }
+\description{
+Print a rfThresh object
+}
 

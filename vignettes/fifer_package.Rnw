@@ -99,7 +99,7 @@ options(prompt=" ", continue=" ")
 ### 1. first the package devtools must be installed
 install.packages("devtools")
 
-### 2. then we must 'load' the package
+### 2. then we must load the package
 require(devtools)
 
 ### 3. all that rigamarole to get the function install_github, 
@@ -175,7 +175,7 @@ The \texttt{excelMatch} function allows the user to specify a string (or a vecto
 excel.names = excelMatch("AA", "CD", "FF", names=names(fakeMedicalData))
 excel.names
 ### or, we can extract the column indices instead 
-### (note it doesn't require names in original dataset)
+### (note it does not require names in original dataset)
 excel.names = excelMatch("AA", "CD", "FF", n=length(names(fakeMedicalData)))
 excel.names
 ### now subset the matrix to just those using make.null
@@ -251,12 +251,13 @@ demographics(disease~age + gender + ethnicity, data=fakeMedicalData, latex=FALSE
 
 
 <<echo=FALSE, results=tex>>==
+require(xtable)
 print(xtable(demographics(disease~age + gender + ethnicity, data=fakeMedicalData, latex=TRUE), caption="Demographics of the Fake Medical Dataset"), sanitize.text.function=identity, caption.placement="top")
 @
 
 \subsection{The make.formula Function}
 
-I probably use the \texttt{make.formula} function more than anything else. With many analyses, a formula is required to perform the analysis (e.g., \texttt{lm(y\texttildelow x + z)}). Oftentimes, I'm doing data mining where the list of variables is quite extensive. Rather than writing a big long formula, I use the \texttt{make.formula} function. It requires two strings as arguments: the response variable name and the name of the predictor variable(s). Combining this with the \texttt{r} function makes formula specification quite easy.
+I probably use the \texttt{make.formula} function more than anything else. With many analyses, a formula is required to perform the analysis (e.g., \texttt{lm(y~ x + z)}). Oftentimes, I am doing data mining where the list of variables is quite extensive. Rather than writing a big long formula, I use the \texttt{make.formula} function. It requires two strings as arguments: the response variable name and the name of the predictor variable(s). Combining this with the \texttt{r} function makes formula specification quite easy.
 
 <<echo=TRUE>>==
 #### list all the variables I want to use using the r function
@@ -307,8 +308,8 @@ Rather than talking about each plotting function individually, I've included a t
 		& with bars for means or medians \\
 \texttt{plotSigBars} & Used in conduction with \texttt{prism.plots} to mark which differences are \\
 		& statistically significant. \\
-\texttt{string.to.color} & Given a vector of group labels (e.g., ``male", ``female", ``female", ``male", etc.)   \\
-		& \texttt{string.to.color} will automatically generate a vector of colors to correspond to \\
+\texttt{string.to.colors} & Given a vector of group labels (e.g., ``male", ``female", ``female", ``male", etc.)   \\
+		& \texttt{string.to.colors} will automatically generate a vector of colors to correspond to \\
 		& the group labels. \\
  \hline
 \end{tabular}
@@ -365,9 +366,9 @@ for (i in 1:4){
 	### change default parameters
 par2() 
 	#### color code according to disease status
-colors = string.to.color(fakeMedicalData$disease, colors=c("blue", "red"))
+colors = string.to.colors(fakeMedicalData$disease, colors=c("blue", "red"))
 	#### change symbol according to disease status
-pch = as.numeric(string.to.color(fakeMedicalData$disease, colors=c(15, 16)))
+pch = as.numeric(string.to.colors(fakeMedicalData$disease, colors=c(15, 16)))
 	#### plot it
 plot(fakeMedicalData[,best.five[1]], fakeMedicalData[,best.five[2]], col=colors, 
 		pch=pch, xlab = best.five[1], ylab=best.five[2])

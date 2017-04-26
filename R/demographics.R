@@ -16,7 +16,7 @@
 SummarizeContinuousDefault <- function(x, group=rep(1, length(x)), decimal=2, latex=TRUE, na.rm=TRUE, ...){
   mu <- formatC(tapply(x, group, mean, na.rm=na.rm), format="f", digits=decimal)
   sd <- formatC(tapply(x, group, sd, na.rm=na.rm), format="f", digits=decimal)
-  return(paste(mu, ifelse(latex, "$\\pm$", "\u00B1"), sd, sep=" ")) ## ±
+  return(paste(mu, ifelse(latex, "$\\pm$", "\u00B1"), sd, sep=" "))
 }
 
 ##' Summarize a factor variable with count and percentages.

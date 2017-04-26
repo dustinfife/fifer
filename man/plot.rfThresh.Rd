@@ -2,7 +2,7 @@
 % Please edit documentation in R/rf.thresh.R
 \name{plot.rfThresh}
 \alias{plot.rfThresh}
-\title{Plot rf.thesh Summary}
+\title{rfThesh Summary}
 \usage{
 \method{plot}{rfThresh}(x, y, ...)
 }
@@ -12,5 +12,8 @@
 \item{y}{igorned}
 
 \item{...}{other parameters passed to plo}
+}
+\description{
+Plot a rfThresh object
 }
 

@@ -5,14 +5,19 @@
 ##' @param data the dataset in "long" format, where the conditions are on columns.
 ##' @param file the location where the file should be exported. 
 ##' @param dep.var A string naming the dependent variable
-##' @param row.factor A vector of one or two elements, each of which is a string indicating the name of the row factor(s)
-##' @param col.factor A vector of one or two elements, each of which is a string indicating the name of the col factor(s)
+##' @param row.factors A vector of one or two elements, each of which is a string indicating the name of the row factor(s)
+##' @param col.factors A vector of one or two elements, each of which is a string indicating the name of the col factor(s)
 ##' @param breaks The number of breaks in color. Defaults to 4.
 ##' @param round How many digits should the matrix be rounded to? Defaults to 2. 
 ##' @param rng The range of values used for coloring the plot. 
+##' @param FUN The function used to summarize the table (defaults to mean)
+##' @param row.prefix Any values that precede the rows (e.g., "r^2 = ").
+##' @param col.prefix Any values that precede the columns.
+##' @param custom.breaks The points at which the colored table changes colors. If left to NULL, the function will automatically choose them.
+##' @param return.table Should the function return the table as output?
 ##' @param ... Other arguments passed to Hmisc
 ##' @aliases color.table col.table
-##' @seealso \code{\link{Hmisc:latex}}
+##' @seealso \code{Hmisc::latex}
 ##' @author Dustin Fife
 ##' @importFrom Hmisc latex
 ##' @export
@@ -144,7 +149,7 @@ colored.table = function(data, file, dep.var, row.factors, col.factors, breaks=4
 	} else {
 		latex(results, file=file, title='', rowname=row.major, colheads=col.major, cellTexCmds = latexTranslate(col.mat), ...) 		
 	}
-	list(results=results, colors=col.mat)
+	list(results=results, colors=col.mat, aggregated=agg)
 }
 
 

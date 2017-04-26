@@ -13,4 +13,7 @@
 
 \item{...}{other parameters passed to plo}
 }
+\description{
+Plot rfPred Summary
+}
 

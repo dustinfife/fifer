@@ -175,7 +175,9 @@ rfPred <-function(object, importance="permutation", nfor.pred=25, nmj=1, outfile
 
 
 
-#' @title Print rfPred Summary
+#' Print rfPred Summary
+#' 
+#' Print rfPred Summary
 #' @aliases print.rfPred
 #' @param x an rfPred object
 #' @param ... ignored
@@ -189,7 +191,9 @@ print.rfPred = function(x,...){
 }	
 
 
-#' @title Prepare xtable Summary
+#' Prepare xtable Summary
+#'
+#' Print xtable Summary
 #' @aliases xtable.rfPred
 #' @param x an rfPred object
 #' @param caption Character vector of length 1 or 2 containing the table's caption or title. If length 2, the second item 
@@ -277,7 +281,9 @@ xtable.rfPred = function(x,caption=NULL, label=NULL, align=NULL, digits=NULL, di
 
 }
 
-#' @title Print a Summary Table of rfPred
+#' Print a Summary Table of rfPred
+#'
+#' Print a Summary Table of rfPred
 #' @description summary.rfPred is best for those non-Latex users to produce a table
 #' that shows each stage of the variable selection algorithm.
 #' @aliases summary.rfPred
@@ -319,7 +325,9 @@ summary.rfPred = function(object, ...){
 }
 	
 	
-#' @title Plot rfPred Summary
+#' Plot rfPred Summary
+#'
+#' Plot rfPred Summary
 #' @aliases plot.rfPred
 #' @param x an rfPred object
 #' @param y igorned

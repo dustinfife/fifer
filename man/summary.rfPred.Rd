@@ -15,4 +15,7 @@
 summary.rfPred is best for those non-Latex users to produce a table
 that shows each stage of the variable selection algorithm.
 }
+\details{
+Print a Summary Table of rfPred
+}
 

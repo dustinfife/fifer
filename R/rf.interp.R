@@ -162,7 +162,9 @@ rfInterp = function(object, nruns=20, nsd=1, importance="permutation",...){
 }
 
 
-#' @title Print rfInterp Summary
+#' Print rfInterp Summary
+#'
+#' Print rfInterp Summary
 #' @aliases print.rfInterp
 #' @param x an rfInterp object
 #' @param ... ignored
@@ -175,7 +177,9 @@ print.rfInterp = function(x,...){
 	print(x$comput.time)
 }
 
-#' @title Prepare xtable Summary
+#' Prepare xtable Summary
+#'
+#' Prepare xtable Summary
 #' @aliases xtable.rfInterp
 #' @param x an rfInterp object
 #' @param caption Character vector of length 1 or 2 containing the table's caption or title. If length 2, the second item 
@@ -264,7 +268,9 @@ xtable.rfInterp = function(x,caption=NULL, label=NULL, align=NULL, digits=NULL, 
 }
 	
 
-#' @title Plot rfInterp Summary
+#' Plot rfInterp Summary
+#'
+#' Plot rfInterp Summary
 #' @aliases plot plot.rfInterp
 #' @param x an rfInterp object
 #' @param y igorned

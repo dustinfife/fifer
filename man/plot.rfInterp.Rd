@@ -14,4 +14,7 @@
 
 \item{...}{other parameters passed to plot}
 }
+\description{
+Plot rfInterp Summary
+}
 

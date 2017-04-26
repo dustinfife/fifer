@@ -221,7 +221,9 @@ rfThresh = function(formula, data, nruns = 50, silent=FALSE, importance="permuta
 
 
 
-#' @title Print rfThesh Summary
+#' Print rfThesh Summary
+#'
+#' Print a rfThresh object
 #' @aliases print.rfThresh
 #' @param x an rfThresh object
 #' @param ... ignored
@@ -234,7 +236,9 @@ print.rfThresh = function(x,...){
 	print(x$time)
 }	
 
-#' @title Plot rf.thesh Summary
+#' rfThesh Summary
+#'
+#' Plot a rfThresh object
 #' @aliases plot.rfThresh
 #' @param x an rfThresh object
 #' @param y igorned

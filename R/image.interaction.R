@@ -13,13 +13,14 @@
 ##' @param ... other arguments passed to \code{\link{anchored.gradient}}.
 ##' @param plot Should an image be plotted?
 ##' @param legend add a legend to the plot?
+##' @importFrom fields image.plot
 ##' @seealso \code{\link{image}}
 ##' @return the x range, y range, and image matrix
 ##' @author Dustin Fife
 ##' @export
 ##' @examples
 ##' ## do this later
-image.interaction = function(data, x, y, z, plot=TRUE, legend=TRUE,...){
+imageInteraction = function(data, x, y, z, plot=TRUE, legend=TRUE,...){
 	x.range = sort(unique(data[,x]))
 	y.range = sort(unique(data[,y]))
 	image = matrix(nrow=length(x.range), ncol=length(y.range))
@@ -35,7 +36,6 @@ image.interaction = function(data, x, y, z, plot=TRUE, legend=TRUE,...){
 	### plot that foo
 	if (plot){
 		if (legend){
-			require(fields)
 			image.plot(x.range, y.range, image,  
 							col = anchored.gradient(minColor="red", maxColor="blue", zeroColor="white", z=c(image), vals=100),...)
 		} else {

@@ -44,7 +44,7 @@ unadjusted \dQuote{raw} p-values from each pair-wise chi-square test to the
 should be consulted for further description of the methods used.
 }
 \note{
-This code was adapted and modified from the NCStats package (see \url{http://www.rforge.net/doc/packages/NCStats/chisqPostHoc.html})
+This code was adapted and modified from the NCStats package
 }
 \examples{
 # Makes a table of observations -- similar to first example in chisq.test

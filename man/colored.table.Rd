@@ -17,17 +17,27 @@ colored.table(data, file, dep.var, row.factors, col.factors, breaks = 4,
 
 \item{dep.var}{A string naming the dependent variable}
 
+\item{row.factors}{A vector of one or two elements, each of which is a string indicating the name of the row factor(s)}
+
+\item{col.factors}{A vector of one or two elements, each of which is a string indicating the name of the col factor(s)}
+
 \item{breaks}{The number of breaks in color. Defaults to 4.}
 
 \item{round}{How many digits should the matrix be rounded to? Defaults to 2.}
 
 \item{rng}{The range of values used for coloring the plot.}
 
+\item{FUN}{The function used to summarize the table (defaults to mean)}
+
+\item{row.prefix}{Any values that precede the rows (e.g., "r^2 = ").}
+
+\item{col.prefix}{Any values that precede the columns.}
+
+\item{custom.breaks}{The points at which the colored table changes colors. If left to NULL, the function will automatically choose them.}
+
+\item{return.table}{Should the function return the table as output?}
+
 \item{...}{Other arguments passed to Hmisc}
-
-\item{row.factor}{A vector of one or two elements, each of which is a string indicating the name of the row factor(s)}
-
-\item{col.factor}{A vector of one or two elements, each of which is a string indicating the name of the col factor(s)}
 }
 \description{
 Create a color-coded table in latex
@@ -39,6 +49,6 @@ Create a color-coded table in latex
 Dustin Fife
 }
 \seealso{
-\code{\link{Hmisc:latex}}
+\code{Hmisc::latex}
 }
 
