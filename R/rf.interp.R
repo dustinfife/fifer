@@ -50,11 +50,21 @@ rfInterp = function(object, nruns=20, nsd=1, importance="permutation",...){
 	
 	#### set function depending on whether permutations are used
 	if (importance == "permutation"){
-		rfcall = function(form, data, mt){
-			y = row.names(attr(terms(formula), "factors"))[1]
-			rf = cforest(form, data=data, controls=cforest_control(ntree=1000, mtry=mt),...)
-			oob = predict(rf, OOB=T); oob = 1-length(which(oob==data[,y]))/length(data[,y])
-			return(oob)
+		
+		if (is.numeric(data[,y])){
+			rfcall = function(form, data, mt){
+				y = row.names(attr(terms(formula), "factors"))[1]
+				rf = cforest(form, data=data, controls=cforest_control(ntree=1000, mtry=mt),...)
+				oob = predict(rf, OOB=T); oob = sum((oob-data[,y])^2)
+				return(oob)
+			}			
+		} else {
+			rfcall = function(form, data, mt){
+				y = row.names(attr(terms(formula), "factors"))[1]
+				rf = cforest(form, data=data, controls=cforest_control(ntree=1000, mtry=mt),...)
+				oob = predict(rf, OOB=T); oob = 1-length(which(oob==data[,y]))/length(data[,y])
+				return(oob)
+			}
 		}
 	} else {
 		rfcall = function(form, data, mt){
@@ -66,7 +76,7 @@ rfInterp = function(object, nruns=20, nsd=1, importance="permutation",...){
 			return(oob)
 		}
 	}	
-	
+
 	#### quit if there's only one variable
 	if (length(object$remaining.variables)<=1){
 		warning("The threshold step only yielded one variable. I'm returning the results of the threshold step.")

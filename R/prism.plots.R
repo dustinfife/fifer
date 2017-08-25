@@ -64,7 +64,7 @@ prism.plots = function(formula, data, centerfunc=median, interquartile=TRUE,spre
     }
 	
 	labels = list(xlab="", ylab=dv, ylim=range(depvar, na.rm=T)+c(-.25*sd(depvar, na.rm=T), .25*sd(depvar, na.rm=T)), 
-					xlim=c(.5,(length(types)+.5)), xaxt="n", x=NA, y=NA)
+					xlim=c(.5,(length(types)+.5)), xaxt="n", x=NA, y=NA, ...)
 	args = modifyList(labels, list(x=NA,...))
 	
 	
@@ -74,7 +74,7 @@ prism.plots = function(formula, data, centerfunc=median, interquartile=TRUE,spre
     if (def.axis){
 	    if (!add){do.call("plot", args)}
 	    points(jitter(iv.vals) + rep(start, times=nrow(data)), depvar, col=col, ...)
-	    axis(1, at=(1:length(types))+start, labels=unique(data[,iv]))
+	    axis(1, at=(1:length(types))+start, labels=unique(data[,iv]),...)
     } else {
 	    if (!add){do.call("plot", args)}
 	    points(jitter(iv.vals) + rep(start, times=nrow(data)), depvar, col=col,...)

@@ -4,7 +4,8 @@
 \alias{chisq.plot}
 \title{Plot Expected and Observed Frequencies (Chi Square)}
 \usage{
-chisq.plot(list = NULL, v1 = NULL, v2 = NULL, standardize = F)
+chisq.plot(list = NULL, v1 = NULL, v2 = NULL, standardize = F,
+  sqrt.y = F)
 }
 \arguments{
 \item{list}{A table containing the variables. If not included, user can include raw data as v1 or v2}

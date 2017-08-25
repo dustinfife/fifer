@@ -17,7 +17,7 @@
 ##' dimnames(M) = list(gender = c("F", "M"),
 ##'                     party = c("Democrat","Independent", "Republican"))
 ##' chisq.plot(list=M, standardize=F)              
-chisq.plot = function(list=NULL, v1=NULL, v2=NULL, standardize=F){
+chisq.plot = function(list=NULL, v1=NULL, v2=NULL, standardize=F, sqrt.y=F){
 	
 	if (!is.null(v1) & !is.null(v2)){
 	if (!is.factor(v1) | !is.factor(v2)){
@@ -35,9 +35,10 @@ chisq.plot = function(list=NULL, v1=NULL, v2=NULL, standardize=F){
 		cols = levels(v2)	
 		chi = chisq.test(v1, v2)
 	}
-	
+
 	obs = chi$observed
 	exp = chi$expected
+
 	
 	if (standardize){
 		obs = obs/sum(obs)
@@ -73,24 +74,31 @@ chisq.plot = function(list=NULL, v1=NULL, v2=NULL, standardize=F){
 	for (i in 1:length(cols)){
 		par(mar=c(1,1,3,1))			
 		plot(1, type="n", axes=F, xlab="", ylab="", xlim=c(0,1), ylim=c(0,1))
-		text(.5, .5, cols[i], cex=2)	
+		text(.5, .5, cols[i], cex=1.5)	
 	}
 	
 	##### plot the row labels
 	for (i in 1:length(rows)){
 		par(mar=c(1,1,1,1))			
 		plot(1, type="n", axes=F, xlab="", ylab="", xlim=c(0,1), ylim=c(0,1))
-		text(.5, .5, rows[i], cex=2)	
+		text(.5, .5, rows[i], cex=1.5)	
 		
 	}
 	
 	#### now plot the actual numbers
 	for (i in 1:length(rows)){
 		for (j in 1:length(cols)){
-			par(mar=c(2,2,1,1))
+			par(mar=c(2,3.5,1,1))
 			coords = c(obs[i,j], exp[i,j])
-			ylim = c(0, max(obs, exp))
-			barplot(coords, names.arg=c("Observed", "Expected"), col=c("gray", "white"), ylim=ylim)
+			if (sqrt.y){
+				coords = sqrt(coords)
+				ylab=expression(sqrt('count'))
+				ylim = sqrt(c(0, max(obs, exp))				)
+			} else {
+				ylab=""
+				ylim = c(0, max(obs, exp))				
+			}
+			barplot(coords, names.arg=c("Observed", "Expected"), col=c("gray", "white"), ylim=ylim, ylab=ylab)
 		}
 	}
 }
