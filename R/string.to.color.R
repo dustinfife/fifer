@@ -3,6 +3,7 @@
 ##' @title Convert between strings to colors
 ##' @param string a vector of strings representing groups. 
 ##' @param colors a vector of colors, one for each unique element in \code{string}.
+##' @param transparency a transparency value to apply to all colors (or a vector of transparency values)
 ##' @export
 ##' @return a vector of colors, one for each element in \code{string} 
 ##' @aliases string.to.colors stringtocolor stringToColors string.to.color
@@ -15,7 +16,7 @@
 ##'    pch=as.numeric(string.to.colors(groups, colors=c(16:20))))
 ##' @note This function can also be used to specify pch values, cex values, or any other plotting values
 ##' the user may wish to differ across groups. See examples. 
-string.to.colors = function(string, colors=NULL){
+string.to.colors = function(string, colors=NULL, transparency=0){
 	if (is.factor(string)){
 		string = as.character(string)
 	}
@@ -24,10 +25,12 @@ string.to.colors = function(string, colors=NULL){
 			break("The number of colors must be equal to the number of unique elements.")
 		}
 		else {
-			conv = cbind(unique(string), colors)
+			conv = cbind(unique(string), colors, alpha=transparency)
+			cols = rgb(t(col2rgb(colors)), alpha = rep(transparency, times=length(colors)), maxColorValue=255)
+			conv = cbind(unique(string), cols)
 		}
 	} else {
-		conv = cbind(unique(string), rainbow(length(unique(string))))
+		conv = cbind(unique(string), rainbow(length(unique(string))), alpha=transparency)
 	}
 	unlist(lapply(string, FUN=function(x){conv[which(conv[,1]==x),2]}))
 }

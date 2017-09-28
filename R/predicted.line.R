@@ -14,15 +14,17 @@
 ##' @export
 ##' @examples
 ##' ## do this later
-predicted.line = function(model, outcome, IV, data, covariates=c("mean", "median", "min", "max"), length=100, add=F,...){
+predicted.line = function(model, outcome, IV, covs = NA, data, cov.func=c("mean", "median", "min", "max"), length=100, add=F,...){
 	### mathc argument
-	covariates=match.arg(covariates, c("mean", "median", "min", "max"))
+	covariates=match.arg(cov.func, c("mean", "median", "min", "max"))
 
 	##### replace data with means of each column
 	new.dat = d
-	means = apply(new.dat, 2, covariates)
-	new.dat = data.frame(matrix(means, nrow=length, ncol=ncol(new.dat), byrow=T))
-	names(new.dat) = names(d)
+	if (!is.na(covs)){
+		means = apply(new.dat, 2, covariates)
+		new.dat = data.frame(matrix(means, nrow=length, ncol=ncol(new.dat), byrow=T))
+	}
+			names(new.dat) = names(d)
 
 	#### replace IV
 	iv.vals = d[,IV]
