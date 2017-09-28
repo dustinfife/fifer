@@ -3,12 +3,12 @@
 ##' @title Convert between strings to colors
 ##' @param string a vector of strings representing groups. 
 ##' @param colors a vector of colors, one for each unique element in \code{string}.
-##' @param transparency a transparency value to apply to all colors (or a vector of transparency values)
+##' @param alpha a transparency value to apply to all colors (or a vector of transparency values)
 ##' @export
 ##' @return a vector of colors, one for each element in \code{string} 
 ##' @aliases string.to.colors stringtocolor stringToColors string.to.color
 ##' @author Dustin Fife
-##' @seealso \code{\link{number.to.colors}}
+##' @seealso \code{\link{number.to.colors}}alpha
 ##' @examples
 ##' groups = sample(LETTERS[1:5], size=100, replace=TRUE)
 ##' plot(rnorm(100), rnorm(100), col=string.to.colors(groups))
@@ -16,7 +16,7 @@
 ##'    pch=as.numeric(string.to.colors(groups, colors=c(16:20))))
 ##' @note This function can also be used to specify pch values, cex values, or any other plotting values
 ##' the user may wish to differ across groups. See examples. 
-string.to.colors = function(string, colors=NULL, transparency=0){
+string.to.colors = function(string, colors=NULL, alpha=0){
 	if (is.factor(string)){
 		string = as.character(string)
 	}
@@ -25,16 +25,17 @@ string.to.colors = function(string, colors=NULL, transparency=0){
 			break("The number of colors must be equal to the number of unique elements.")
 		}
 		else {
-			conv = cbind(unique(string), colors, alpha=transparency)
-			cols = rgb(t(col2rgb(colors)), alpha = rep(transparency, times=length(colors)), maxColorValue=255)
+			cols = rgb(t(col2rgb(colors)), alpha = rep(alpha*255, times=length(colors)), maxColorValue=255)
 			conv = cbind(unique(string), cols)
 		}
 	} else {
-		conv = cbind(unique(string), rainbow(length(unique(string))), alpha=transparency)
+		colors = rainbow(length(unique(string)))
+		cols = rgb(t(col2rgb(colors)), alpha = rep(alpha*255, times=length(colors)), maxColorValue=255)
+		conv = cbind(unique(string), cols)
+
 	}
 	unlist(lapply(string, FUN=function(x){conv[which(conv[,1]==x),2]}))
 }
-
 
 ##' Automatically convert a vector of numbers into a color for easy plotting
 ##'
