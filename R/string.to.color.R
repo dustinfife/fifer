@@ -16,7 +16,7 @@
 ##'    pch=as.numeric(string.to.colors(groups, colors=c(16:20))))
 ##' @note This function can also be used to specify pch values, cex values, or any other plotting values
 ##' the user may wish to differ across groups. See examples. 
-string.to.colors = function(string, colors=NULL, alpha=0){
+string.to.colors = function(string, colors=NULL, alpha=1){
 	if (is.factor(string)){
 		string = as.character(string)
 	}
