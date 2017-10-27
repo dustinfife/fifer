@@ -15,23 +15,28 @@
 ##' @examples
 ##' ## do this later
 predicted.line = function(model, outcome, IV, covs = NA, data, cov.func=c("mean", "median", "min", "max"), length=100, add=F,...){
+
+	d = data
+	##### extract terms
+	dv = all.vars(model$terms)[1]
+	ivs = all.vars(model$terms)[2:length(all.vars(model$terms))]	
+
+	##### create new dataset (with same names as d)
+	new.dat = d[1:100,c(dv, ivs)]
+
 	### mathc argument
 	covariates=match.arg(cov.func, c("mean", "median", "min", "max"))
 
-	##### replace data with means of each column
-	new.dat = d
-	if (!is.na(covs)){
-		means = apply(new.dat, 2, covariates)
-		new.dat = data.frame(matrix(means, nrow=length, ncol=ncol(new.dat), byrow=T))
-	}
-			names(new.dat) = names(d)
-
+	#### repeat the mean for all variables
+	means = apply(new.dat, 2, covariates)
+	new.dat = data.frame(matrix(means, nrow=100, ncol=ncol(new.dat), byrow=T))		
+	names(new.dat) = c(dv, ivs)
+	
 	#### replace IV
 	iv.vals = d[,IV]
 	new.dat[,IV] = seq(from=min(iv.vals, na.rm=T), to=max(iv.vals, na.rm=T), length.out=100)
 	
 	#### predict DV
-	dv.vals = d[,outcome]
 	new.dat[,outcome] = predict(model, new.dat, ...)
 	
 	##### plot the line

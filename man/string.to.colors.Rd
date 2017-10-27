@@ -7,12 +7,14 @@
 \alias{stringtocolor}
 \title{Convert between strings to colors}
 \usage{
-string.to.colors(string, colors = NULL)
+string.to.colors(string, colors = NULL, alpha = 1)
 }
 \arguments{
 \item{string}{a vector of strings representing groups.}
 
 \item{colors}{a vector of colors, one for each unique element in \code{string}.}
+
+\item{alpha}{a transparency value to apply to all colors (or a vector of transparency values)}
 }
 \value{
 a vector of colors, one for each element in \code{string}
@@ -34,6 +36,6 @@ plot(rnorm(100), rnorm(100), col=string.to.colors(groups),
 Dustin Fife
 }
 \seealso{
-\code{\link{number.to.colors}}
+\code{\link{number.to.colors}}alpha
 }
 
