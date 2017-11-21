@@ -5,7 +5,7 @@
 \title{Create and plot a fitted line for a generalized linear model}
 \usage{
 predicted.line(model, outcome, IV, covs = NA, data, cov.func = c("mean",
-  "median", "min", "max"), length = 100, add = F, ...)
+  "median", "min", "max"), length = 100, add = F, ret.pred = F, ...)
 }
 \arguments{
 \item{model}{A model (e.g., lmer model, or any type of model that supports the "predict" command)}
@@ -17,6 +17,8 @@ predicted.line(model, outcome, IV, covs = NA, data, cov.func = c("mean",
 \item{data}{The original dataset used to fit the model}
 
 \item{length}{The number of predicted points used for plotting the line. Defaults to 100.}
+
+\item{ret.pred}{Should the fits be returned as a matrix?}
 
 \item{...}{Other arguments passed to plot, lines, or predict}
 
