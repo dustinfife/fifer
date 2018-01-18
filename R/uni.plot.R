@@ -54,14 +54,20 @@ uni.plot = function(variable, d=NULL, numeric=NULL){
 	if (condition == "numeric"){
 		require(tidyverse)
 		p = ggplot(data=d, aes(get(variable))) + geom_histogram(fill="lightgray", col="black", bins=min(30, round(levels/2))) + theme_bw() + labs(x=variable)
-		p
 
+		
+		### now create the code that created it
+		output = paste0("R Code to generate plots: \n\n ggplot(data=", deparse(substitute(d)), ", aes(", variable, ")) + geom_histogram(fill='lightgray', col='black') + theme_bw() + labs(x=", variable, ")")
+		cat(output)
 
+		return(p)
 
 	} else {
 		require(tidyverse)
 		p = ggplot(data=d, aes(get(variable))) + geom_bar() + theme_bw() + labs(x=variable)
-		p			
+		output = paste0("R Code to generate plots: \n\n ggplot(data=", deparse(substitute(d)), ", aes(", variable, ")) + geom_bar() + theme_bw() + labs(x=", variable, ")")
+		cat(output)		
+		return(p)			
 	} 
 
 }
