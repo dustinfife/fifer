@@ -161,6 +161,7 @@ rfInterp = function(object, nruns=20, nsd=1, importance="permutation",...){
 	output = list('varselect.interp'=varselect,
 				'vars.considered' = vars,	
 				 'err.interp'=err.interp,
+				 'sd.interp' = sd.interp,
 				 'sd.min'=sd.min,
 				 'num.varselect.interp'=nvarselect,
 				 'comput.time'=comput.time,
