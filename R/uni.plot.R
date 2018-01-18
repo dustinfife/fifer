@@ -8,9 +8,7 @@
 ##' @param variable A string indicating the name of the variable to plot
 ##' @param d The name of the dataset (which contains the variable the user wishes to plot)
 ##' @param numeric Logical. Is the variable of interest numeric? (Meaning, should a histogram be plotted?)
-##' @aliases
 ##' @seealso \code{\link{MASS}}
-##' @references
 ##' @return A plot
 ##' @author Dustin Fife
 ##' @export

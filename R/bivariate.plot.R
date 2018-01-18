@@ -11,9 +11,7 @@
 ##' @param x.numeric Logical. Is the predictor variable of interest numeric?
 ##' @param y.numeric Logical. Is the outcome variable of interest numeric?
 ##' @param ... Other arguments passed to ggplot functions
-##' @aliases
 ##' @seealso \code{\link{uni.plot}}
-##' @references
 ##' @return A plot
 ##' @author Dustin Fife
 ##' @export

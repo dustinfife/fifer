@@ -18,8 +18,6 @@ A list of residuals
 This function will create an approximate fitted function for a lowess line, then residualize the Y based on the fit of the model
 }
 \examples{
-
-
 data(airquality)
 head(airquality)
 attach(airquality)

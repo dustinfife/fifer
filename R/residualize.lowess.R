@@ -4,14 +4,11 @@
 ##'	
 ##' @param x The predictor of interest
 ##' @param y The outcome of interest
-##' @aliases
 ##' @references This function was developed by Glen_b on \href{https://stats.stackexchange.com/questions/126699/residuals-from-lowess-curve}{Stack Overflow}
 ##' @return A list of residuals
 ##' @author Dustin Fife
 ##' @export
 ##' @examples
-##' 
-##' 
 ##' data(airquality)
 ##' head(airquality)
 ##' attach(airquality)
