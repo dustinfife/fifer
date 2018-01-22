@@ -80,7 +80,7 @@ ellipse = function(x0, y0, axisX, axisY, color="lightgray"){
 ##' @return returns the theta, expressed in radians.
 ##' @author Dustin Fife
 ##' @export
-compute.theta = function(x){
+computeTheta = function(x){
 	if ((x[2]>0 & x[1]<0) | (x[2]<0 & x[1]<0)){
 		t = atan(x[2]/x[1]) + pi
 	} else if (x[2]<0 & x[1]<0){
