@@ -23,6 +23,10 @@ uni.plot = function(variable, d=NULL, numeric=NULL){
 		} else if (!is.null(d)){
 			#### try finding that variable in the dataset
 			tryCatch(d[,variable], error=function(error){paste0("I couldn't find '", variable, "' in your dataset")})
+			out = tryCatch(length(d[,variable])>0, error=function(error){paste0("I couldn't find '", variable,"' in your dataset"); return(FALSE)})			
+			if (!out){
+				stop(paste0("I couldn't find either '", x, "' or '", y , "' in your dataset"))
+			}			
 		} else if (is.null(d[,variable]) & !is.character(variable)){
 			d = data.frame(variable); names(d) = deparse(substitute(variable))
 			variable = deparse(substitute(variable))
@@ -53,19 +57,19 @@ uni.plot = function(variable, d=NULL, numeric=NULL){
 		#### if they specified a numeric variable...
 	if (condition == "numeric"){
 		require(tidyverse)
-		p = ggplot(data=d, aes(get(variable))) + geom_histogram(fill="lightgray", col="black", bins=min(30, round(levels/2))) + theme_bw() + labs(x=variable)
+		p = ggplot(data=d, aes_string(variable)) + geom_histogram(fill="lightgray", col="black", bins=min(30, round(levels/2))) + theme_bw() + labs(x=variable)
 
 		
 		### now create the code that created it
-		output = paste0("R Code to generate plots: \n\n ggplot(data=", deparse(substitute(d)), ", aes(", variable, ")) + geom_histogram(fill='lightgray', col='black') + theme_bw() + labs(x=", variable, ")")
+		output = paste0("R Code to generate plots: \n\n ggplot(data=", deparse(substitute(d)), ", aes(", variable, ")) + geom_histogram(fill='lightgray', col='black') + theme_bw() + labs(x='", variable, "')")
 		cat(output)
 
 		return(p)
 
 	} else {
 		require(tidyverse)
-		p = ggplot(data=d, aes(get(variable))) + geom_bar() + theme_bw() + labs(x=variable)
-		output = paste0("R Code to generate plots: \n\n ggplot(data=", deparse(substitute(d)), ", aes(", variable, ")) + geom_bar() + theme_bw() + labs(x=", variable, ")")
+		p = ggplot(data=d, aes_string(variable)) + geom_bar() + theme_bw() + labs(x=variable)
+		output = paste0("R Code to generate plots: \n\n ggplot(data=", deparse(substitute(d)), ", aes(", variable, ")) + geom_bar() + theme_bw() + labs(x='", variable, "')")
 		cat(output)		
 		return(p)			
 	} 
