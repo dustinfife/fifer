@@ -45,7 +45,7 @@ uni.plot = function(variable, d=NULL, numeric=NULL){
 			condition = "categorical"
 		} 
 	} else {
-		if (is.numeric(variable) & levels>5){
+		if (is.numeric(d[,variable]) & levels>5){
 			condition = "numeric"
 		} else if (is.factor(variable)){
 			condition = "categorical"

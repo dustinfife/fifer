@@ -5,7 +5,7 @@
 \alias{compute.theta}
 \title{Calculate inverse tangent.}
 \usage{
-compute.theta(x)
+\method{compute}{theta}(x)
 }
 \arguments{
 \item{x}{a vector of size two that give the cartesian coordinates}
