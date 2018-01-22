@@ -12,6 +12,7 @@
 ##' @return A plot
 ##' @author Dustin Fife
 ##' @export
+##' @import tidyverse
 ##' @examples
 ##' distress = sample(1:10, size=22, replace=T)
 ##' uni.plot(distress, numeric=T, d=NULL)

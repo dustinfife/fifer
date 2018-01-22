@@ -15,6 +15,7 @@
 ##' @return A plot
 ##' @author Dustin Fife
 ##' @export
+##' @import tidyverse
 ##' @examples
 ##' x = rnorm(100)
 ##' y = rnorm(100)
