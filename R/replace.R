@@ -14,7 +14,10 @@
 ##' table(d$category)
 ##' d$category = replace(d$category, "Men", "Male")
 ##' table(d$category)
-replace = function(x, old.value, new.value){
+replace = function(x, old.value, new.value, factor=F){
 	x[x==old.value] = new.value
+	if (factor){
+		x = factor(x)
+		}
 	return(x)
 }
