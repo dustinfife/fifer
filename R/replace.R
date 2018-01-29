@@ -6,6 +6,7 @@
 ##' @param x The vector that has values that need replacing
 ##' @param old.value The value that needs replacing
 ##' @param new.value The value that will replace old.value
+##' @param factor Should the vector be "refactored" (so old values no longer show up as a factor level)?
 ##' @return A new vector where old.values are replaced by new.values
 ##' @author Dustin Fife
 ##' @export
