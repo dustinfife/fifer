@@ -16,6 +16,11 @@
 ##' d$category = replace(d$category, "Men", "Male")
 ##' table(d$category)
 replace = function(x, old.value, new.value, factor=F){
+	
+	#### change x to character if needed
+	if (is.factor(x)){
+		x =as.character(x)
+	}
 	x[x==old.value] = new.value
 	if (factor){
 		x = factor(x)
