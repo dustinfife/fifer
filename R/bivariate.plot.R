@@ -48,10 +48,9 @@ bivariate.plot = function(x, y, x.numeric=NULL, y.numeric=NULL, d=NULL,  ...){
 	} else {
 		if (is.numeric(d[,x]) & length.x > 5){ 
 			x.type="numeric"
-		} else if (is.factor(x)){
-			x.type = "categorical"; d[,x] = factor(d[,x])
 		} else {
-			x.type = "categorical"; d[,x] = factor(d[,x])
+			x.type = "categorical"
+			
 		}
 		
 	}
@@ -60,27 +59,14 @@ bivariate.plot = function(x, y, x.numeric=NULL, y.numeric=NULL, d=NULL,  ...){
 	} else {
 		if (is.numeric(d[,y]) & length.y > 5){ 
 			y.type="numeric"
-		} else if (is.factor(d[,y])){
-			y.type = "categorical"; d[,y] = factor(d[,y])
 		} else {
-			y.type = "categorical"; d[,y] = factor(d[,y])
+			y.type = "categorical"
 		}
 		
 	}
 	
-	
-
-	##### scatterplot for both numeric
-	if (x.type=="numeric" & y.type == "numeric"){
-		call = paste0("ggplot(data=", deparse(substitute(d)), ", aes(x=", x, ", y=", y, ")) +
-		geom_jitter() + geom_smooth() + theme_bw()") 
-		cat(paste0("R Code to Generate These Plots: \n\n"))
-		cat(call)
-		p <- eval(parse(text = call))			
-		print(p)
-	}
-	
-
+				##### big bug fixed via this answer: https://stackoverflow.com/questions/23563510/deparsesubstitute-within-function-using-data-table-as-argument
+				##### I just got rid of every instance of d[,y] = factor(d[,y]) (or whatever)
 	
 	##### mean plot for one numeric
 	if (x.type=="categorical" & y.type == "numeric" | x.type=="numeric" & y.type == "categorical"){
@@ -88,56 +74,48 @@ bivariate.plot = function(x, y, x.numeric=NULL, y.numeric=NULL, d=NULL,  ...){
 		if (x.type=="numeric" & y.type == "categorical"){
 			ynew = y;y = x;	x = ynew
 		}
-
-		call = paste0('ggplot(data=', deparse(substitute(d)), ', aes(x=', x, ", y=", y, ")) + 
+		call = paste0("
+		
+		ggplot(data=d", ", aes(x=", x, ", y=", y, ")) +
 			geom_jitter(alpha=.05, width=.05, size=.75) +
 			stat_summary(fun.y='median', geom='point', size=2, color='red') +
-			stat_summary(", 'aes_string(x=', deparse(substitute(x)), ", y=", deparse(substitute(y)), "), geom='errorbar', fun.ymin=function(z) {quantile(z, .25)}, fun.ymax = function(z) {quantile(z, .75)}, fun.y=median, color='red', width=.2)")
+			stat_summary(aes(x=", x, ", y=", y, "), geom='errorbar', fun.ymin=function(z) {quantile(z, .25)}, fun.ymax = function(z) {quantile(z, .75)}, fun.y=median, color='red', width=.2)
+			")
+		cat(paste0("R Code to Generate These Plots: \n\n"))
+		cat(call)
+		p <- eval(parse(text = call))			
+		print(p)		
+
+	}		
+
+	##### scatterplot for both numeric
+	if (x.type=="numeric" & y.type == "numeric"){
+		call = paste0("
+		
+		ggplot(data=", deparse(substitute(d)), ", aes(x=", x, ", y=", y, ")) +
+		geom_jitter() + geom_smooth() + theme_bw()
+		") 
 		cat(paste0("R Code to Generate These Plots: \n\n"))
 		cat(call)
 		p <- eval(parse(text = call))			
 		print(p)
+	}
+	
 
-	}	
+	
+
 		#### if they specified both are categorical
 	if ((x.type=="categorical" & y.type == "categorical")){
 		call = paste0("
 		m = as.data.frame(table(", deparse(substitute(d)), "[,'", x, "'],", deparse(substitute(d)), "[,'", y, "'])); names(m)[1:2] = c('", x, "', '", y, "')
 		Freq = 'Freq'
-		ggplot(data=m, aes(x=", x, ", y=Freq, fill=", y, ")) + geom_bar(stat='identity', position='dodge')")
-		cat(paste0("R Code to Generate These Plots: \n\n"))
-		cat(call)
+		ggplot(data=m, aes(x=", x, ", y=Freq, fill=", y, ")) + geom_bar(stat='identity', position='dodge')
+		")
 		p <- eval(parse(text = call))			
 		print(p)
+		cat(paste0("R Code to Generate These Plots: \n\n"))
+		cat(call)		
 
 	}		
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#
