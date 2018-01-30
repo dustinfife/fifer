@@ -72,8 +72,11 @@ bivariate.plot = function(x, y, x.numeric=NULL, y.numeric=NULL, d=NULL,  ...){
 
 	##### scatterplot for both numeric
 	if (x.type=="numeric" & y.type == "numeric"){
-		require(tidyverse)
-		p = ggplot(data=d, aes_string(x=x, y=y)) + geom_jitter(...) + geom_smooth(...)+ theme_bw()
+		call = paste0("ggplot(data=", deparse(substitute(d)), ", aes(x=", x, ", y=", y, ")) +
+		geom_jitter() + geom_smooth() + theme_bw()") 
+		cat(paste0("R Code to Generate These Plots: \n\n"))
+		cat(call)
+		p <- eval(parse(text = call))			
 		print(p)
 	}
 	
@@ -85,24 +88,56 @@ bivariate.plot = function(x, y, x.numeric=NULL, y.numeric=NULL, d=NULL,  ...){
 		if (x.type=="numeric" & y.type == "categorical"){
 			ynew = y;y = x;	x = ynew
 		}
-	
-		require(tidyverse)
-		m = aggregate(d[,y]~d[,x], FUN=median); names(m) = c(x,y)
-		upper = aggregate(d[,y]~d[,x], FUN =quantile, probs=.75); m$upper = upper[,ncol(upper)]
-		lower = aggregate(d[,y]~d[,x], FUN =quantile,probs=.25); m$lower = lower[,ncol(lower)]
 
-		p = ggplot(data=m, aes_string(x=x, y=y)) + geom_point(...) + geom_errorbar(aes(ymin=lower, ymax=upper), width=0.05) +
-			geom_jitter(data=d, aes_string(x,y), alpha=.1, width=.05, size=.75,...)  + scale_x_discrete(labels=levels(d[,x]))
+		call = paste0('ggplot(data=', deparse(substitute(d)), ', aes(x=', x, ", y=", y, ")) + 
+			geom_jitter(alpha=.05, width=.05, size=.75) +
+			stat_summary(fun.y='median', geom='point', size=2, color='red') +
+			stat_summary(", 'aes_string(x=', deparse(substitute(x)), ", y=", deparse(substitute(y)), "), geom='errorbar', fun.ymin=function(z) {quantile(z, .25)}, fun.ymax = function(z) {quantile(z, .75)}, fun.y=median, color='red', width=.2)")
+		cat(paste0("R Code to Generate These Plots: \n\n"))
+		cat(call)
+		p <- eval(parse(text = call))			
 		print(p)
 
 	}	
 		#### if they specified both are categorical
 	if ((x.type=="categorical" & y.type == "categorical")){
-		require(tidyverse)
-		m = as.data.frame(table(d[,x], d[,y])); names(m)[1:2] = c(x,y)
-		Freq = "Freq"
-		p = ggplot(data=m, aes_string(x=x, y=Freq, fill=y)) + geom_bar(stat="identity", position="dodge") 
+		call = paste0("
+		m = as.data.frame(table(", deparse(substitute(d)), "[,'", x, "'],", deparse(substitute(d)), "[,'", y, "'])); names(m)[1:2] = c('", x, "', '", y, "')
+		Freq = 'Freq'
+		ggplot(data=m, aes(x=", x, ", y=Freq, fill=", y, ")) + geom_bar(stat='identity', position='dodge')")
+		cat(paste0("R Code to Generate These Plots: \n\n"))
+		cat(call)
+		p <- eval(parse(text = call))			
 		print(p)
+
 	}		
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#
