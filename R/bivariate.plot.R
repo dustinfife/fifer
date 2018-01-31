@@ -78,7 +78,7 @@ bivariate.plot = function(x, y, x.numeric=NULL, y.numeric=NULL, d=NULL,  ...){
 		call = paste0("
 		
 		ggplot(data=d", ", aes(x=", x, ", y=", y, ")) +
-			geom_jitter(alpha=.05, width=.05, size=.75) +
+			geom_jitter(alpha=.15, width=.05, size=.75) +
 			stat_summary(fun.y='median', geom='point', size=2, color='red') +
 			stat_summary(aes(x=", x, ", y=", y, "), geom='errorbar', fun.ymin=function(z) {quantile(z, .25)}, fun.ymax = function(z) {quantile(z, .75)}, fun.y=median, color='red', width=.2)
 			")
