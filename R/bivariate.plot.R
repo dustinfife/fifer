@@ -86,7 +86,7 @@ bivariate.plot = function(x, y, x.numeric=NULL, y.numeric=NULL, d=NULL,  ...){
 		cat(call)
 		p <- eval(parse(text = call))			
 		print(p)		
-
+		return(p)
 	}		
 
 	##### scatterplot for both numeric
@@ -100,6 +100,7 @@ bivariate.plot = function(x, y, x.numeric=NULL, y.numeric=NULL, d=NULL,  ...){
 		cat(call)
 		p <- eval(parse(text = call))			
 		print(p)
+		return(p)
 	}
 	
 
@@ -116,7 +117,7 @@ bivariate.plot = function(x, y, x.numeric=NULL, y.numeric=NULL, d=NULL,  ...){
 		print(p)
 		cat(paste0("R Code to Generate These Plots: \n\n"))
 		cat(call)		
-
+		return(p)
 	}		
 
 }
