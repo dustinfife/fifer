@@ -4,7 +4,7 @@
 \alias{plot.rfPred}
 \title{Plot rfPred Summary}
 \usage{
-plot.rfPred(x, y, ...)
+\method{plot}{rfPred}(x, y, ...)
 }
 \arguments{
 \item{x}{an rfPred object}

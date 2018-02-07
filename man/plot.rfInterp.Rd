@@ -5,7 +5,7 @@
 \alias{plot.rfInterp}
 \title{Plot rfInterp Summary}
 \usage{
-plot.rfInterp(x, y, ...)
+\method{plot}{rfInterp}(x, y, ...)
 }
 \arguments{
 \item{x}{an rfInterp object}

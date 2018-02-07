@@ -4,7 +4,7 @@
 \alias{replace}
 \title{Replace values in a vector}
 \usage{
-replace(x, old.value, new.value)
+replace(x, old.value, new.value, factor = F)
 }
 \arguments{
 \item{x}{The vector that has values that need replacing}
@@ -12,6 +12,8 @@ replace(x, old.value, new.value)
 \item{old.value}{The value that needs replacing}
 
 \item{new.value}{The value that will replace old.value}
+
+\item{factor}{Should the vector be "refactored" (so old values no longer show up as a factor level)?}
 }
 \value{
 A new vector where old.values are replaced by new.values
