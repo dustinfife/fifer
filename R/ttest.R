@@ -11,7 +11,6 @@
 ##' @return Two objects: cohen's d and a table of estimates (means and difference between groups)
 ##' @author Dustin Fife
 ##' @export
-##' @import cowplot
 ##' @examples
 ##' # where y and x are scores for group 1 and group 2 (respectively)
 ##' y = rnorm(30, 10, 5)
@@ -38,8 +37,6 @@ ttest = function(y, x){
 		n = length(y)
 	}
 	
-	x.name = subsetString(deparse(substitute(x)), "$", 2, flexible=T)
-	y.name = subsetString(deparse(substitute(y)), "$", 2, flexible=T)
 
 	##### do a t test	
 	test = t.test(y~x, data=m)
@@ -56,28 +53,14 @@ ttest = function(y, x){
 	names(estimates) = c("Group", "Mean", "Lower 95% CI", "Upper 95% CI")
 	rownames(estimates) = c()
 	
-	##### do a plot
-	t.test = ggplot(data=m, aes(x=x, y=y)) + geom_jitter(alpha = .15, width=.05, size=.75) + stat_summary(fun.y='median', geom='point', size=2, color='red') + 
-		stat_summary(aes(x=x, y=y), geom='errorbar', fun.ymin=function(z) {quantile(z, .25)}, fun.ymax = function(z) {quantile(z, .75)}, fun.y=median, color='red', width=.2) +
-		theme_bw() + labs(x=x.name, y=y.name, title="Median (+ IQR) Plot")
-	
-	##### and a histogram of residuals
+	#### output information for plotting:
 	fitted = rep(estimates$Mean[1], times=nrow(m))
 	fitted[m$x==levels(m$x)[2]] = estimates$Mean[2]
 	m$residuals = m$y - fitted
-	histo = ggplot(data=m, aes(x=residuals)) + geom_histogram(fill='lightgray', col='black') + theme_bw() + labs(x="Residuals", title="Histogram of Residuals")
-
-	##### and a residual dependence plot
-	p = m
-	p$residuals = abs(p$residuals)
-	res.dep = ggplot(data=p, aes(y=residuals, x=x)) + geom_jitter(alpha=.15, width=.05, size=.75) + stat_summary(fun.y=median, color="red", geom="line", aes(group=1)) + theme_bw() + labs(x=x.name, y="Absolute Value of Residuals", title="S-L Plot")
+	m$abs.resids = abs(m$residuals)
 	
-	##### put into a single plot
-	require(cowplot)
-	final.plot = plot_grid(t.test, histo, res.dep)
-	(final.plot)
 	
-	output = list('cohens.d' = d, 'estimates'=estimates)
+	output = list('cohens.d' = d, 'estimates'=estimates, 'data' = m, 'x' = x.name, 'y' = y.name)
 	attr(output, "class") = "ttest"
 	return(output)
 }
@@ -92,6 +75,38 @@ ttest = function(y, x){
 #' @param ... ignored
 #' @export
 print.ttest = function(x,...){
-	print(names(x))
-	cat(paste("Cohen's d:\n", x$cohens.d, "\n\nParameter Estimates:\n", x$estimates, sep=""))
+	cat(paste("Cohen's d:\n", round(x$cohens.d, digits=2), "\n\nParameter Estimates:\n",sep=""))
+	print(x$estimates, row.names=F)
 }
+
+
+#' Plot ttest Summary
+#'
+#' Plot ttest Summary
+#' @aliases plot plot.ttest
+#' @param x a ttest object
+#' @param y igorned
+#' @param ... other parameters passed to plot
+#' @import cowplot
+#' @export
+plot.ttest = function(x, ...){
+	m = x$data
+	
+	x.name = x$x.name
+	y.name = x$y.name
+	
+	##### do a plot
+	t.test = ggplot(data=m, aes(x=x, y=y)) + geom_jitter(alpha = .15, width=.05, size=.75) + stat_summary(fun.y='median', geom='point', size=2, color='red') + 
+		stat_summary(aes(x=x, y=y), geom='errorbar', fun.ymin=function(z) {quantile(z, .25)}, fun.ymax = function(z) {quantile(z, .75)}, fun.y=median, color='red', width=.2) +
+		theme_bw() + labs(x=x.name, y=y.name, title="Median (+ IQR) Plot")
+
+	##### and a residual dependence plot
+	res.dep = ggplot(data=p, aes(y=residuals, x=x)) + geom_jitter(alpha=.15, width=.05, size=.75) + stat_summary(fun.y=median, color="red", geom="line", aes(group=1)) + theme_bw() + labs(x=x.name, y="Absolute Value of Residuals", title="S-L Plot")
+	
+	##### put into a single plot
+	require(cowplot)
+	plot_grid(t.test, histo, res.dep)
+
+}
+?plot.lm
+
