@@ -103,7 +103,7 @@ plot.ttest = function(x, ...){
 		theme_bw() + labs(x=x.name, y=y.name, title="Median (+ IQR) Plot")
 
 	##### and a residual dependence plot
-	res.dep = ggplot(data=p, aes(y=residuals, x=x)) + geom_jitter(alpha=.15, width=.05, size=.75) + stat_summary(fun.y=median, color="red", geom="line", aes(group=1)) + theme_bw() + labs(x=x.name, y="Absolute Value of Residuals", title="S-L Plot")
+	res.dep = ggplot(data=m, aes(y=residuals, x=x)) + geom_jitter(alpha=.15, width=.05, size=.75) + stat_summary(fun.y=median, color="red", geom="line", aes(group=1)) + theme_bw() + labs(x=x.name, y="Absolute Value of Residuals", title="S-L Plot")
 	
 	##### put into a single plot
 	require(cowplot)
