@@ -102,6 +102,9 @@ plot.ttest = function(x, ...){
 		stat_summary(aes(x=x, y=y), geom='errorbar', fun.ymin=function(z) {quantile(z, .25)}, fun.ymax = function(z) {quantile(z, .75)}, fun.y=median, color='red', width=.2) +
 		theme_bw() + labs(x=x.name, y=y.name, title="Median (+ IQR) Plot")
 
+	histo = ggplot(data=m, aes(x=residuals)) + geom_histogram(fill='lightgray', col='black') + theme_bw() + labs(x=x.name, title="Histogram of Residuals")
+
+
 	##### and a residual dependence plot
 	res.dep = ggplot(data=m, aes(y=residuals, x=x)) + geom_jitter(alpha=.15, width=.05, size=.75) + stat_summary(fun.y=median, color="red", geom="line", aes(group=1)) + theme_bw() + labs(x=x.name, y="Absolute Value of Residuals", title="S-L Plot")
 	
