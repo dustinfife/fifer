@@ -75,12 +75,14 @@ ttest = function(y, x){
 	##### put into a single plot
 	require(cowplot)
 	final.plot = plot_grid(t.test, histo, res.dep)
-	print(final.plot)
+	(final.plot)
 	
 	output = list('cohens.d' = d, 'estimates'=estimates)
 	attr(output, "class") = "ttest"
 	return(output)
 }
+
+
 
 #' Print ttest Summary
 #'
