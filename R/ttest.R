@@ -47,9 +47,21 @@ ttest = function(y, x){
 	d = test$statistic/sqrt(n)
 	names(d) = "Cohen's d"
 	
+	#### figure out reference group
+	means = test$estimate
+	diff.1 = means[1]-means[2]
+	diff.2 = means[2]-means[1]
+	if (diff.1-test$conf.int[1] == test$conf.int[2] - diff.1){
+		### reference group is first group
+		diff = diff.1
+	} else {
+		diff = diff.2
+	}
+
+	
 	#### save estimates
 	estimates = ci.mean(m$y, m$x)
-	diff = data.frame(x="Difference", y=abs(diff(estimates[,2])), lower=test$conf.int[1], upper = test$conf.int[2])
+	diff = data.frame(x="Difference", y=diff, lower=test$conf.int[1], upper = test$conf.int[2])
 	names(diff)[2] = "y mean"
 	estimates = rbind(estimates, diff)
 	names(estimates) = c("Group", "Mean", "Lower 95% CI", "Upper 95% CI")
@@ -60,9 +72,11 @@ ttest = function(y, x){
 	fitted[m$x==levels(m$x)[2]] = estimates$Mean[2]
 	m$residuals = m$y - fitted
 	m$abs.resids = abs(m$residuals)
-	
-	
-	output = list('cohens.d' = d, 'estimates'=estimates, 'data' = m, 'x' = x.name, 'y' = y.name)
+
+	p.report = ifelse(test$p.value<.001, "p < 0.001", paste0("p = ", round(p.value, digits=3)))
+
+	report = paste0("t(", round(test$parameter, digits=2), ") = ", round(test$statistic, digits=2), ", ", p.report)
+	output = list('cohens.d' = d, 'estimates'=estimates, 'report' = report, t.test.object = test, 'data' = m, 'x' = x.name, 'y' = y.name)
 	attr(output, "class") = "ttest"
 	return(output)
 }
@@ -77,8 +91,12 @@ ttest = function(y, x){
 #' @param ... ignored
 #' @export
 print.ttest = function(x,...){
+
+	file.name = deparse(substitute(x))
 	cat(paste("Cohen's d:\n", round(x$cohens.d, digits=2), "\n\nParameter Estimates:\n",sep=""))
 	print(x$estimates, row.names=F)
+	cat(paste("\n\n Objects within this object:\n"))
+	print(names(x))	
 }
 
 
