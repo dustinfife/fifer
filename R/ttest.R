@@ -75,8 +75,21 @@ ttest = function(y, x){
 	##### put into a single plot
 	require(cowplot)
 	final.plot = plot_grid(t.test, histo, res.dep)
-	
-	list(cohens.d = d, estimates=estimates)
 	print(final.plot)
+	
+	output = list('cohens.d' = d, 'estimates'=estimates)
+	attr(output, "class") = "ttest"
+	return(output)
+}
 
+#' Print ttest Summary
+#'
+#' Print ttest Summary
+#' @aliases print.ttest
+#' @param x a ttest object
+#' @param ... ignored
+#' @export
+print.ttest = function(x,...){
+	print(names(x))
+	cat(paste("Cohen's d:\n", x$cohens.d, "\n\nParameter Estimates:\n", x$estimates, sep=""))
 }
