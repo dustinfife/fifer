@@ -3,6 +3,7 @@
 S3method(plot,rfInterp)
 S3method(plot,rfPred)
 S3method(plot,rfThresh)
+S3method(plot,ttest)
 S3method(print,rfInterp)
 S3method(print,rfPred)
 S3method(print,rfThresh)

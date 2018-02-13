@@ -37,7 +37,9 @@ ttest = function(y, x){
 		n = length(y)
 	}
 	
-
+	x.name = deparse(substitute(x))
+	y.name = deparse(substitute(y))	
+	
 	##### do a t test	
 	test = t.test(y~x, data=m)
 	
@@ -108,5 +110,3 @@ plot.ttest = function(x, ...){
 	plot_grid(t.test, histo, res.dep)
 
 }
-?plot.lm
-
