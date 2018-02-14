@@ -1,3 +1,5 @@
+unique(c(11, 12, 14, NA), incomparables=NA)
+
 ##' Perform a two-independent sample t-test
 ##'
 ##' This function performs a t-test, but does so in a way that adheres to the 7 steps of data analysis (it reports residuals/effect sizes/parameter estimates before showing significance). 
@@ -22,7 +24,6 @@
 ##' x = sample(c(1:2), size=length(y), replace=T)
 ##' ttest(y,x)
 ttest = function(y, x){
-	
 
 	if(length(x) != length(y)){
 		stop(paste0(deparse(substitute(x)), " and ", deparse(substitute(y))), " need to be the same length!")	
@@ -31,9 +32,16 @@ ttest = function(y, x){
 	if(length(unique(x))!=2){
 		print(paste0("Note: there are ", length(unique(x)), " unique values for ", deparse(substitute(x)), ". I am assuming ", deparse(substitute(x)), " is the scores for one group, while ", deparse(substitute(y)), " is the scores of the other. If not, you need to make sure ", deparse(substitute(x)), " has only two levels."))
 		m = data.frame(y=c(x,y), x=c(rep(1, times=length(x)), rep(2, times=length(x))))
+		miss = which(is.na(m$y))
+		if (length(miss)>0){
+			m = m[-miss,]
+		}
 		n = length(x)*2
 	} else {
-		m = data.frame(y=y, x=x)
+		m = data.frame(y=y, x=x)		
+		if (length(miss)>0){
+			m = m[-miss,]
+		}		
 		n = length(y)
 	}
 	
