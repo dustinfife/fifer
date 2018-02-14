@@ -25,11 +25,12 @@ unique(c(11, 12, 14, NA), incomparables=NA)
 ##' ttest(y,x)
 ttest = function(y, x){
 
+
 	if(length(x) != length(y)){
 		stop(paste0(deparse(substitute(x)), " and ", deparse(substitute(y))), " need to be the same length!")	
 	}
 	#### if they specify y and x as continuous (i.e., y is group 1, x is group 2)
-	if(length(unique(x))!=2){
+	if(length(unique(x))!=2 & !(NA %in% unique(y))){
 		print(paste0("Note: there are ", length(unique(x)), " unique values for ", deparse(substitute(x)), ". I am assuming ", deparse(substitute(x)), " is the scores for one group, while ", deparse(substitute(y)), " is the scores of the other. If not, you need to make sure ", deparse(substitute(x)), " has only two levels."))
 		m = data.frame(y=c(x,y), x=c(rep(1, times=length(x)), rep(2, times=length(x))))
 		miss = which(is.na(m$y))
