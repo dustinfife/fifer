@@ -40,6 +40,7 @@ ttest = function(y, x){
 		n = length(x)*2
 	} else {
 		m = data.frame(y=y, x=x)		
+		miss = which(is.na(m$y) | is.na(m$x))
 		if (length(miss)>0){
 			m = m[-miss,]
 		}		
