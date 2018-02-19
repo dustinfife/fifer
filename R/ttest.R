@@ -53,10 +53,6 @@ ttest = function(y, x){
 	##### do a t test	
 	test = t.test(y~x, data=m)
 	
-	#### compute cohen's d
-	d = test$statistic/sqrt(n)
-	names(d) = "Cohen's d"
-	
 	#### figure out reference group
 	means = test$estimate
 	diff.1 = means[1]-means[2]
@@ -66,7 +62,25 @@ ttest = function(y, x){
 		diff = diff.1
 	} else {
 		diff = diff.2
-	}
+	}	
+	
+	##### compute cohen's d
+	ns = aggregate(y~x, data=m, FUN=length)$y
+	vars = aggregate(y~x, data=m, FUN=var)$y
+	pooled.var = sqrt(((ns[1]- 1) * vars[1] + (ns[2] - 1) * vars[2])/(ns[1] + ns[2] - 
+        2))
+    d = diff/pooled.var 
+	
+	#### CI for Cohen's d
+	
+	var.d = (ns[1] + ns[2])/(ns[1]*ns[2]) + d^2/(2*(ns[1]+ns[2]))
+	tcrit = qt(.025, sum(ns)-2, lower.tail=F)
+	d.lower = d-tcrit*sqrt(var.d)
+	d.upper = d+tcrit*sqrt(var.d)
+	d = c(d, d.lower, d.upper)
+	names(d) = c("d", "lower", "upper")
+	
+
 
 	
 	#### save estimates
@@ -83,7 +97,7 @@ ttest = function(y, x){
 	m$residuals = m$y - fitted
 	m$abs.resids = abs(m$residuals)
 
-	p.report = ifelse(test$p.value<.001, "p < 0.001", paste0("p = ", round(p.value, digits=3)))
+	p.report = ifelse(test$p.value<.001, "p < 0.001", paste0("p = ", round(test$p.value, digits=3)))
 
 	report = paste0("t(", round(test$parameter, digits=2), ") = ", round(test$statistic, digits=2), ", ", p.report)
 	output = list('cohens.d' = d, 'estimates'=estimates, 'report' = report, t.test.object = test, 'data' = m, 'x' = x.name, 'y' = y.name)
@@ -103,7 +117,7 @@ ttest = function(y, x){
 print.ttest = function(x,...){
 
 	file.name = deparse(substitute(x))
-	cat(paste("Cohen's d:\n", round(x$cohens.d, digits=2), "\n\nParameter Estimates:\n",sep=""))
+	cat(paste("Cohen's d:\n", round(x$cohens.d[1], digits=2), " (", round(x$cohens.d[2], digits=2),", ", round(x$cohens.d[3], digits=2),")\n\nParameter Estimates:\n",sep=""))
 	print(x$estimates, row.names=F)
 	cat(paste("\n\n Objects within this object:\n"))
 	print(names(x))	
