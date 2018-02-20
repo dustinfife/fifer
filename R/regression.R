@@ -66,7 +66,7 @@ regression = function(y,x){
 	##### make a report of statistical significance
 	correl = cor(m)[1,2]
 	p.value = summary(mod)$coef[2,4]
-	p.report = ifelse(p.value<.001, "p < 0.001", paste0("p = ", round(test$p.value, digits=3)))
+	p.report = ifelse(p.value<.001, "p < 0.001", paste0("p = ", round(p.value, digits=3)))
 	report = paste0("r(", n-2, ") = ", round(correl, digits=3), ", ", p.report)
 							
 	output = list('Estimates' = estimates, 'Sigma' = sigma, 'R.squared' = r.squared, 'r' = correl, "Report" = report,
