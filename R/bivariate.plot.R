@@ -94,7 +94,7 @@ bivariate.plot = function(x, y, x.numeric=NULL, y.numeric=NULL, d=NULL,  ...){
 		call = paste0("
 		
 		ggplot(data=", deparse(substitute(d)), ", aes(x=", x, ", y=", y, ")) +
-		geom_jitter() + geom_smooth() + theme_bw()
+		geom_point() + geom_smooth() + theme_bw()
 		") 
 		cat(paste0("R Code to Generate These Plots: \n\n"))
 		cat(call)
