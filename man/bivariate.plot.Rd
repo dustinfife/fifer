@@ -4,7 +4,8 @@
 \alias{bivariate.plot}
 \title{Plot bivariate plot of two variables}
 \usage{
-bivariate.plot(x, y, x.numeric = NULL, y.numeric = NULL, d = NULL, ...)
+bivariate.plot(x, y, x.numeric = NULL, y.numeric = NULL, d = NULL,
+  jitter = FALSE, ...)
 }
 \arguments{
 \item{x}{A string indicating the name of the IV to plot. Alternatively, an object can be used.}
@@ -14,6 +15,8 @@ bivariate.plot(x, y, x.numeric = NULL, y.numeric = NULL, d = NULL, ...)
 \item{x.numeric}{Logical. Is the predictor variable of interest numeric?}
 
 \item{y.numeric}{Logical. Is the outcome variable of interest numeric?}
+
+\item{jitter}{Logical. Should variables be jittered?}
 
 \item{...}{Other arguments passed to ggplot functions}
 }

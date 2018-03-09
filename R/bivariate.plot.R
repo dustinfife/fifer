@@ -10,6 +10,7 @@
 ##' @param y A string indicating the name of the DV to plot. Alternatively, an object can be used. 
 ##' @param x.numeric Logical. Is the predictor variable of interest numeric?
 ##' @param y.numeric Logical. Is the outcome variable of interest numeric?
+##' @param jitter Logical. Should variables be jittered?
 ##' @param ... Other arguments passed to ggplot functions
 ##' @seealso \code{\link{uni.plot}}
 ##' @return A plot
@@ -20,7 +21,7 @@
 ##' x = rnorm(100)
 ##' y = rnorm(100)
 ##' bivariate.plot(x,y)
-bivariate.plot = function(x, y, x.numeric=NULL, y.numeric=NULL, d=NULL,  ...){
+bivariate.plot = function(x, y, x.numeric=NULL, y.numeric=NULL, d=NULL,  jitter=FALSE, ...){
 	
 	require(tidyverse)
 	#### first try to find the variable
@@ -91,11 +92,20 @@ bivariate.plot = function(x, y, x.numeric=NULL, y.numeric=NULL, d=NULL,  ...){
 
 	##### scatterplot for both numeric
 	if (x.type=="numeric" & y.type == "numeric"){
-		call = paste0("
 		
-		ggplot(data=", deparse(substitute(d)), ", aes(x=", x, ", y=", y, ")) +
-		geom_point() + geom_smooth() + theme_bw()
-		") 
+		if (jitter){
+			call = paste0("
+			
+			ggplot(data=", deparse(substitute(d)), ", aes(x=", x, ", y=", y, ")) +
+			geom_jitter(width=.2) + geom_smooth() + theme_bw()
+			") 			
+		} else {
+			call = paste0("
+			
+			ggplot(data=", deparse(substitute(d)), ", aes(x=", x, ", y=", y, ")) +
+			geom_point() + geom_smooth() + theme_bw()
+			") 
+		}
 		cat(paste0("R Code to Generate These Plots: \n\n"))
 		cat(call)
 		p <- eval(parse(text = call))			
