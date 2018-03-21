@@ -75,31 +75,31 @@ regression = function(y,x){
 	return(output)
 }
 
-#' Report regression object Estimates (effect sizes and parameters)
+#' Report Estimates (effect sizes and parameters)
 #'
-#' Report regression object Estimates
-#' @aliases estimates.regression estimates estimates.default
-#' @param object a regression object
+#' Report object Estimates
+#' @aliases estimates.regression estimates estimates.ttest estimates.default
+#' @param object a object
 #' @export
 estimates = function(object,...){
 	UseMethod("estimates")
 }
 
-#' Output APA style statistical significance from a regression object 
+#' Output APA style statistical significance from an object 
 #'
-#' Output APA style statistical significance from a regression object
-#' @aliases report.regression report report.default
-#' @param object a regression object
+#' Output APA style statistical significance from an object
+#' @aliases report.regression report report.ttest report.default
+#' @param object a object
 #' @export
 report = function(object,...){
 	UseMethod("report")
 }
 
-#' Report regression object Estimates (effect sizes and parameters)
+#' Output APA style statistical significance from an object 
 #'
-#' Report regression object Estimates
-#' @aliases estimates.regression estimates estimates.default
-#' @param object a regression object
+#' Output APA style statistical significance from an object
+#' @aliases report.regression report report.ttest report.default
+#' @param object a object
 #' @export
 estimates.default = function(object){
 	out = coef(object)
@@ -107,11 +107,11 @@ estimates.default = function(object){
 	out
 }
 
-#' Output APA style statistical significance from a regression object
+#' Output APA style statistical significance from an object 
 #'
-#' Output APA style statistical significance from a regression object
-#' @aliases report.regression report report.default
-#' @param object a regression object
+#' Output APA style statistical significance from an object
+#' @aliases report.regression report report.ttest report.default
+#' @param object a object
 #' @export
 report.default = function(object){
 	out = coef(object)
@@ -131,6 +131,8 @@ estimates.regression = function(object){
 	print(object$Estimates)
 	cat(paste("\n\nr = ", round(object$r, digits=4), "\nsigma = ", round(object$Sigma, digits=4)))
 }
+
+
 
 #' Output APA style statistical significance from a regression object
 #'

@@ -76,7 +76,7 @@ ttest = function(y, x, related=F){
 		group1 = which(m$x==unique(m$x)[1])
 		group2 = which(m$x!=unique(m$x)[1])		
 		sd = sd(m$y[group1] - m$y[group2])
-		d = means/sd
+		d = diff/sd
 		
 		#### CI for Cohen's d (see https://stats.stackexchange.com/questions/87068/conflict-in-confidence-intervals-for-mean-difference-and-confidence-interval-for)
 		tval = test$statistic
@@ -131,6 +131,30 @@ ttest = function(y, x, related=F){
 }
 
 
+
+
+#' Report ttest object Estimates (effect sizes and parameters)
+#'
+#' Report ttest object Estimates
+#' @aliases estimates.ttest estimates
+#' @param object a ttest object
+#' @export
+estimates.ttest = function(object){
+	file.name = deparse(substitute(object))
+	cat(paste("Cohen's d:\n", round(object$cohens.d[1], digits=3), " (", round(object$cohens.d[2], digits=2),", ", round(object$cohens.d[3], digits=2),")\n\nParameter Estimates:\n",sep=""))
+	print(object$estimates)
+}
+
+
+#' Output APA style statistical significance from a ttest object
+#'
+#' Output APA style statistical significance from a ttest object
+#' @aliases report.ttest report report.default
+#' @param object a ttest object
+#' @export
+report.ttest = function(object){
+	print(object$report)
+}
 
 #' Print ttest Summary
 #'
