@@ -80,8 +80,9 @@ bivariate.plot = function(x, y, x.numeric=NULL, y.numeric=NULL, d=NULL,  jitter=
 		
 		ggplot(data=d", ", aes(x=", x, ", y=", y, ")) +
 			geom_jitter(alpha=.15, width=.05, size=.75) +
-			stat_summary(fun.y='median', geom='point', size=2, color='red') +
-			stat_summary(aes(x=", x, ", y=", y, "), geom='errorbar', fun.ymin=function(z) {quantile(z, .25)}, fun.ymax = function(z) {quantile(z, .75)}, fun.y=median, color='red', width=.2)
+			stat_summary(fun.y='median', geom='point', size=2, color='red') 
+			stat_summary(aes(x=", x, ", y=", y, "), geom='errorbar', fun.ymin=function(z) {quantile(z, .25)}, fun.ymax = function(z) {quantile(z, .75)}, fun.y=median, color='red', width=.2)+
+			theme_bw()
 			")
 		cat(paste0("R Code to Generate These Plots: \n\n"))
 		cat(call)
