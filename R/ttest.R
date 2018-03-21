@@ -9,6 +9,7 @@ unique(c(11, 12, 14, NA), incomparables=NA)
 ##' the user to focus on estimation as model appropriateness. 
 ##' @param y Either a vector containing the Dependent variable scores, or a vector containing the scores of group 1
 ##' @param x Either a vector containing the group categories, or a vector containing the scores of group 2
+##' @param related Are the two groups related (paired)? Specify true if the people are matched or if there's repeated measures. 
 ##' @seealso \code{\link{t.test}}
 ##' @return Two objects: cohen's d and a table of estimates (means and difference between groups)
 ##' @author Dustin Fife
@@ -23,7 +24,7 @@ unique(c(11, 12, 14, NA), incomparables=NA)
 ##' y = rnorm(300, 10, 5)
 ##' x = sample(c(1:2), size=length(y), replace=T)
 ##' ttest(y,x)
-ttest = function(y, x){
+ttest = function(y, x, related=F){
 
 
 	if(length(x) != length(y)){
@@ -51,37 +52,61 @@ ttest = function(y, x){
 	y.name = deparse(substitute(y))	
 	
 	##### do a t test	
-	test = t.test(y~x, data=m)
+	test = t.test(y~x, data=m, paired=related)
+
 	
 	#### figure out reference group
-	means = test$estimate
-	diff.1 = means[1]-means[2]
-	diff.2 = means[2]-means[1]
-	if (diff.1-test$conf.int[1] == test$conf.int[2] - diff.1){
-		### reference group is first group
-		diff = diff.1
-	} else {
-		diff = diff.2
-	}	
+
+	if (related){
+		diff = 	test$estimate
+	} else {		
+		means = test$estimate		
+		diff.1 = means[1]-means[2]
+		diff.2 = means[2]-means[1]
+		if (diff.1-test$conf.int[1] == test$conf.int[2] - diff.1){
+			### reference group is first group
+			diff = diff.1
+		} else {
+			diff = diff.2
+		}	
+	}
 	
 	##### compute cohen's d
-	ns = aggregate(y~x, data=m, FUN=length)$y
-	vars = aggregate(y~x, data=m, FUN=var)$y
-	pooled.var = sqrt(((ns[1]- 1) * vars[1] + (ns[2] - 1) * vars[2])/(ns[1] + ns[2] - 
-        2))
-    d = diff/pooled.var 
-	
-	#### CI for Cohen's d
-	
-	var.d = (ns[1] + ns[2])/(ns[1]*ns[2]) + d^2/(2*(ns[1]+ns[2]))
-	tcrit = qt(.025, sum(ns)-2, lower.tail=F)
-	d.lower = d-tcrit*sqrt(var.d)
-	d.upper = d+tcrit*sqrt(var.d)
-	d = c(d, d.lower, d.upper)
-	names(d) = c("d", "lower", "upper")
-	
+	if (related){
+		group1 = which(m$x==unique(m$x)[1])
+		group2 = which(m$x!=unique(m$x)[1])		
+		sd = sd(m$y[group1] - m$y[group2])
+		d = means/sd
+		
+		#### CI for Cohen's d (see https://stats.stackexchange.com/questions/87068/conflict-in-confidence-intervals-for-mean-difference-and-confidence-interval-for)
+		tval = test$statistic
+		ns = nrow(m)/2
+		ns.=ns
+		f = function(ci, ns.=ns){
+			lower = pt(tval, df=ns-1, ncp=ci[1] * sqrt(ns.), lower.tail=F)
+			upper = pt(tval, df=ns-1, ncp=ci[2] * sqrt(ns.), lower.tail=T)			
+			return((lower-.025)^2 + (upper-.025)^2)
+		}
+		vals = as.numeric(test$conf.int)/sd
+		op = optim(vals, f)
+		d = c(d, d.lower=op$par[1], d.upper=op$par[2])
+		names(d) = c("d", "lower", "upper")		
 
-
+	} else {
+		ns = aggregate(y~x, data=m, FUN=length)$y
+		vars = aggregate(y~x, data=m, FUN=var)$y
+		pooled.var = sqrt(((ns[1]- 1) * vars[1] + (ns[2] - 1) * vars[2])/(ns[1] + ns[2] - 
+	        2))
+	    d = diff/pooled.var 
+	    
+		#### CI for Cohen's d		
+		var.d = (ns[1] + ns[2])/(ns[1]*ns[2]) + d^2/(2*(ns[1]+ns[2]))
+		tcrit = qt(.025, sum(ns)-2, lower.tail=F)
+		d.lower = d-tcrit*sqrt(var.d)
+		d.upper = d+tcrit*sqrt(var.d)
+		d = c(d, d.lower, d.upper)
+		names(d) = c("d", "lower", "upper")	    
+    }
 	
 	#### save estimates
 	estimates = ci.mean(m$y, m$x)
