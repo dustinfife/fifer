@@ -4,14 +4,15 @@
 \alias{estimates}
 \alias{estimates.default}
 \alias{estimates.regression}
-\title{Report regression object Estimates (effect sizes and parameters)}
+\alias{estimates.ttest}
+\title{Report Estimates (effect sizes and parameters)}
 \usage{
 estimates(object, ...)
 }
 \arguments{
-\item{object}{a regression object}
+\item{object}{a object}
 }
 \description{
-Report regression object Estimates
+Report object Estimates
 }
 

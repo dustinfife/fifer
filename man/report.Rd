@@ -4,14 +4,15 @@
 \alias{report}
 \alias{report.default}
 \alias{report.regression}
-\title{Output APA style statistical significance from a regression object}
+\alias{report.ttest}
+\title{Output APA style statistical significance from an object}
 \usage{
 report(object, ...)
 }
 \arguments{
-\item{object}{a regression object}
+\item{object}{a object}
 }
 \description{
-Output APA style statistical significance from a regression object
+Output APA style statistical significance from an object
 }
 

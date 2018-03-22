@@ -4,12 +4,14 @@
 \alias{ttest}
 \title{Perform a two-independent sample t-test}
 \usage{
-ttest(y, x)
+ttest(y, x, related = F)
 }
 \arguments{
 \item{y}{Either a vector containing the Dependent variable scores, or a vector containing the scores of group 1}
 
 \item{x}{Either a vector containing the group categories, or a vector containing the scores of group 2}
+
+\item{related}{Are the two groups related (paired)? Specify true if the people are matched or if there's repeated measures.}
 }
 \value{
 Two objects: cohen's d and a table of estimates (means and difference between groups)
