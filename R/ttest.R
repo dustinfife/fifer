@@ -59,6 +59,7 @@ ttest = function(y, x, related=F){
 
 	if (related){
 		diff = 	test$estimate
+		means = diff
 	} else {		
 		means = test$estimate		
 		diff.1 = means[1]-means[2]
@@ -76,7 +77,10 @@ ttest = function(y, x, related=F){
 		group1 = which(m$x==unique(m$x)[1])
 		group2 = which(m$x!=unique(m$x)[1])		
 		sd = sd(m$y[group1] - m$y[group2])
+		hist(m$y[group1] - m$y[group2])
 		d = diff/sd
+		
+		difference.scores = m$y[group1] - m$y[group2]
 		
 		#### CI for Cohen's d (see https://stats.stackexchange.com/questions/87068/conflict-in-confidence-intervals-for-mean-difference-and-confidence-interval-for)
 		tval = test$statistic
@@ -106,7 +110,10 @@ ttest = function(y, x, related=F){
 		d.upper = d+tcrit*sqrt(var.d)
 		d = c(d, d.lower, d.upper)
 		names(d) = c("d", "lower", "upper")	    
+		difference.scores = NULL
     }
+    
+
 	
 	#### save estimates
 	estimates = ci.mean(m$y, m$x)
@@ -125,7 +132,7 @@ ttest = function(y, x, related=F){
 	p.report = ifelse(test$p.value<.001, "p < 0.001", paste0("p = ", round(test$p.value, digits=3)))
 
 	report = paste0("t(", round(test$parameter, digits=2), ") = ", round(test$statistic, digits=2), ", ", p.report)
-	output = list('cohens.d' = d, 'estimates'=estimates, 'report' = report, t.test.object = test, 'data' = m, 'x' = x.name, 'y' = y.name)
+	output = list('cohens.d' = d, 'estimates'=estimates, 'report' = report, t.test.object = test, 'data' = m, 'x' = x.name, 'y' = y.name, difference.scores=difference.scores)
 	attr(output, "class") = "ttest"
 	return(output)
 }
@@ -189,10 +196,24 @@ plot.ttest = function(x, ...){
 	y.name = x$y.name
 	
 	##### do a plot
-	t.test = ggplot(data=m, aes(x=x, y=y)) + geom_jitter(alpha = .15, width=.05, size=.75) + stat_summary(fun.y='median', geom='point', size=2, color='red') + 
-		stat_summary(aes(x=x, y=y), geom='errorbar', fun.ymin=function(z) {quantile(z, .25)}, fun.ymax = function(z) {quantile(z, .75)}, fun.y=median, color='red', width=.2) +
-		theme_bw() + labs(x=x.name, y=y.name, title="Median (+ IQR) Plot")
-
+	
+	if (is.null(x$difference.scores)){
+		t.test = ggplot(data=m, aes(x=x, y=y)) + geom_jitter(alpha = .15, width=.05, size=.75) + stat_summary(fun.y='median', geom='point', size=2, color='red') + 
+			stat_summary(aes(x=x, y=y), geom='errorbar', fun.ymin=function(z) {quantile(z, .25)}, fun.ymax = function(z) {quantile(z, .75)}, fun.y=median, color='red', width=.2) +
+			theme_bw() + labs(x=x.name, y=y.name, title="Median (+ IQR) Plot")
+	} else {
+		k = data.frame(differences=x$difference.scores, x=1)
+		t.test = ggplot(data=k, aes(x=x, y=differences)) + geom_jitter(alpha=.15, width=.05, size=.75) + stat_summary(fun.y='median', geom='point', size=2, color='red') + 
+			stat_summary(aes(x=x, y=differences), geom='errorbar', fun.ymin=function(z) {quantile(z, .25)}, fun.ymax = function(z) {quantile(z, .75)}, fun.y=median, color='red', width=.2) +
+			theme_bw() + labs(x="", y="Difference Between Group (Jittered)", title="Median (+ IQR) Plot") +
+			theme(axis.title.x=element_blank(),
+			        axis.text.x=element_blank(),
+			        axis.ticks.x=element_blank()) +
+			coord_cartesian(xlim=c(.5,1.5)) + 
+			geom_hline(yintercept=0)					
+			
+			
+	}
 	histo = ggplot(data=m, aes(x=residuals)) + geom_histogram(fill='lightgray', col='black') + theme_bw() + labs(x=x.name, title="Histogram of Residuals")
 
 
