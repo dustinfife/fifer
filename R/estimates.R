@@ -43,6 +43,8 @@ estimates.regression = function(object){
 #' @export
 estimates.lm = function(object){
 
+	n = nrow(model.frame(object)) 
+	
 	#### report R squared
 	r.squared = summary(object)$r.squared
 	t.crit = qt(.975, df=n-2)	
@@ -81,7 +83,7 @@ estimates.lm = function(object){
 	
 	#### extract parameter estimates
 	if (length(numeric)>0){
-		rows = c(1, which(row.names(summary(object)$coef)==names(numeric)))
+		rows = c(1, which(row.names(summary(object)$coef)%in%names(numeric)))
 		betas = standardized.beta(object)[rows]
 		params = data.frame(summary(object)$coef[rows,])
 		params$beta =betas
@@ -90,7 +92,6 @@ estimates.lm = function(object){
 	}	
 
 
-	n = nrow(model.frame(object)) 
 	#### report R squared
 	r.squared = summary(object)$r.squared
 	t.crit = qt(.975, df=n-2)	
@@ -102,7 +103,7 @@ estimates.lm = function(object){
 	cat(paste("Model R squared:\n", round(r.squared[1], digits=3), " (", round(r.squared[2], digits=2),", ", round(r.squared[3], digits=2),")\n\nSemi-Partial R squared:\n",sep=""))
 	print(semi.p)
 	if (length(numeric)>0){
-		cat(paste("Coefficients:\n"))
+		cat(paste("\nCoefficients:\n"))
 		print(params)
 	}
 	if (length(factors)>0){
