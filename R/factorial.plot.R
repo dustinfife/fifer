@@ -9,7 +9,7 @@
 ##' @return A plot
 ##' @author Dustin Fife
 ##' @export
-factorial.plot = function(y, x1, x2){
+factorial.plot = function(y, x1, x2, yname=NULL, x1name=NULL, x2name=NULL){
 	
 	##### check if y/x are same length
 	if ((length(x1) != length(y)) | (length(y) != length(x2))) {
@@ -37,9 +37,9 @@ factorial.plot = function(y, x1, x2){
 
 	#### name variables
 	x.name = deparse(substitute(x1))
-	x.name = subsetString(x.name, "$", 2, T) 
+	x.name = ifelse(is.null(x1name),subsetString(x.name, "$", 2, T), x1name) 
 	y.name = deparse(substitute(y)) 
-	y.name = subsetString(y.name, "$", 2, T) 
+	y.name = ifelse(is.null(yname),subsetString(y.name, "$", 2, T), yname)
 
 	##### do a plot
 	ggplot(data=m, aes(x=x1, y=y)) + geom_jitter(alpha = .35, size=.25, width=.2) + geom_smooth(method="loess") + 

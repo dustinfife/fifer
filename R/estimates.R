@@ -56,7 +56,7 @@ estimates.lm = function(object){
 	#### compute change in r squared
 	ssr = drop1(aov(object))[-1,"Sum of Sq"]
 	if (length(ssr)<(nrow(anova(object))-1)){
-		cat("Note: I am not reporting the semi-partial R squared for the main effects because an interaction is present. To obtain main effect sizes, drop the interaction from your model. ")
+		cat("Note: I am not reporting the semi-partial R squared for the main effects because an interaction is present. To obtain main effect sizes, drop the interaction from your model. \n\n")
 	}
 	sst = sum(anova(object)[,"Sum Sq"])
 	semi.p = ssr/sst	
