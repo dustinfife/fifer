@@ -4,7 +4,7 @@
 \alias{factorial.plot}
 \title{Plot a Factorial ANOVA}
 \usage{
-factorial.plot(y, x1, x2)
+factorial.plot(y, x1, x2, yname = NULL, x1name = NULL, x2name = NULL)
 }
 \arguments{
 \item{y}{The outcome of interest}

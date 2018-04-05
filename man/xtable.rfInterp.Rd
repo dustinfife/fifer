@@ -4,7 +4,7 @@
 \alias{xtable.rfInterp}
 \title{Prepare xtable Summary}
 \usage{
-xtable.rfInterp(x, caption = NULL, label = NULL, align = NULL,
+\method{xtable}{rfInterp}(x, caption = NULL, label = NULL, align = NULL,
   digits = NULL, display = NULL, ...)
 }
 \arguments{
