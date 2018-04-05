@@ -28,10 +28,9 @@ See examples.
 var.names = LETTERS[1:20]
 r("C", "F", var.names)
 }
-\author{
-Dustin Fife
-}
 \seealso{
 \code{\link{make.null}}, \code{\link{get.cols}}
 }
-
+\author{
+Dustin Fife
+}

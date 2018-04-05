@@ -66,4 +66,3 @@ class of \code{x}.}
 \description{
 Prepare xtable Summary
 }
-

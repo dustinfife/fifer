@@ -26,4 +26,3 @@ Scale a variable to have a particular mean/sd (or min/max)
 \author{
 Dustin Fife
 }
-

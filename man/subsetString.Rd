@@ -38,4 +38,3 @@ subsetString(barcode, sep="-", position=3, flexible=FALSE)
 \author{
 Dustin Fife
 }
-

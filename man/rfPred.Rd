@@ -49,10 +49,9 @@ interp = rfInterp(thresh, importance="permutation");
 predic = rfPred(interp, importance="gini")
 predic}
 }
-\author{
-Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot, with modifications by Dustin Fife
-}
 \seealso{
 \code{\link{rfInterp}}, \code{\link{rfThresh}}
 }
-
+\author{
+Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot, with modifications by Dustin Fife
+}

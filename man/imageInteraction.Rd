@@ -36,10 +36,9 @@ takes a data matrix, conditions as well as z in the columns, and returns an imag
 \examples{
 ## do this later
 }
-\author{
-Dustin Fife
-}
 \seealso{
 \code{\link{image}}
 }
-
+\author{
+Dustin Fife
+}

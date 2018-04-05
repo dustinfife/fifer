@@ -1,8 +1,8 @@
 #'Tests for significant differences among all pairs of populations in a
-#'chi-square test.
+#'chi-square test, correcting for multiple comparisons.
 #'
 #'Tests for significant differences among all pairs of populations in a
-#'chi-square test.
+#'chi-square test, correcting for multiple comparisons.
 #'
 #'Post-hoc tests for which pairs of populations differ following a significant
 #'chi-square test can be constructed by performing all chi-square tests for all

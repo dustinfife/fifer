@@ -15,4 +15,3 @@
 \description{
 Print regression Summary
 }
-

@@ -3,7 +3,7 @@
 \name{chisq.post.hoc}
 \alias{chisq.post.hoc}
 \title{Tests for significant differences among all pairs of populations in a
-chi-square test.}
+chi-square test, correcting for multiple comparisons.}
 \usage{
 chisq.post.hoc(tbl, test = c("fisher.test"), popsInRows = TRUE,
   control = c("fdr", "BH", "BY", "bonferroni", "holm", "hochberg", "hommel"),
@@ -30,7 +30,7 @@ p-values, and the adjusted p-values.
 }
 \description{
 Tests for significant differences among all pairs of populations in a
-chi-square test.
+chi-square test, correcting for multiple comparisons.
 }
 \details{
 Post-hoc tests for which pairs of populations differ following a significant
@@ -58,4 +58,3 @@ chisq.post.hoc(M)
 \code{chisq.test} and \code{p.adjust}.
 }
 \keyword{htest}
-

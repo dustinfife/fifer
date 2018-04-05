@@ -2,9 +2,9 @@
 % Please edit documentation in R/regression.R
 \name{report}
 \alias{report}
-\alias{report.default}
 \alias{report.regression}
 \alias{report.ttest}
+\alias{report.default}
 \title{Output APA style statistical significance from an object}
 \usage{
 report(object, ...)
@@ -15,4 +15,3 @@ report(object, ...)
 \description{
 Output APA style statistical significance from an object
 }
-

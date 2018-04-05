@@ -38,7 +38,6 @@ estimates.regression = function(object){
 #' Report regression object Estimates
 #' @aliases estimates.lm estimates
 #' @param object a lm object
-#' @importFrom lmSupport modelEffectSizes
 #' @importFrom lsmeans lsmeans
 #' @export
 estimates.lm = function(object){
@@ -55,7 +54,12 @@ estimates.lm = function(object){
 
 
 	#### compute change in r squared
-	semi.p = modelEffectSizes(object, Print=F)$Effects[-1,"dR-sqr"]
+	ssr = drop1(aov(object))[-1,"Sum of Sq"]
+	if (length(ssr)<(nrow(anova(object))-1)){
+		cat("Note: I am not reporting the semi-partial R squared for the main effects because an interaction is present. To obtain main effect sizes, drop the interaction from your model. ")
+	}
+	sst = sum(anova(object)[,"Sum Sq"])
+	semi.p = ssr/sst	
 	# z = 1.96
 	# mult0 = r.squared[1] - semi.p 
 	# zr <- log((1 + sqrt(semi.p))/(1 - sqrt(semi.p)))/2

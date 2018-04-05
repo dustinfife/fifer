@@ -41,4 +41,3 @@ spearman.plot(x=iris$Sepal.Length, y=iris$Sepal.Width)
 \author{
 Dustin Fife
 }
-

@@ -12,10 +12,9 @@ roxtemp()
 \description{
 Generate a Roxygen Template
 }
-\author{
-Dustin Fife
-}
 \seealso{
 \\code{\\link{MASS}}
 }
-
+\author{
+Dustin Fife
+}

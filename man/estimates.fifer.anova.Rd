@@ -13,4 +13,3 @@
 \description{
 Report fifer.anova object Estimates
 }
-

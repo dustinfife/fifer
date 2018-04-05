@@ -166,7 +166,7 @@ print.regression = function(x,...){
 #' @param x a regression object
 #' @param y igorned
 #' @param ... other parameters passed to plot
-#' @import cowplot
+#' @importFrom cowplot plot_grid
 #' @export
 plot.regression = function(x, ...){
 	m = x$data
@@ -188,7 +188,6 @@ plot.regression = function(x, ...){
 			theme_bw() + labs(x=x.name, y="Absolute Value of Residuals", title="S-L Plot")
 	
 	##### put into a single plot
-	require(cowplot)
 	plot_grid(scatter, histo, res.dep, sl, nrow=2)
 
 }

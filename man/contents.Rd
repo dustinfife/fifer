@@ -28,4 +28,3 @@ contents()
 \author{
 Dustin Fife
 }
-

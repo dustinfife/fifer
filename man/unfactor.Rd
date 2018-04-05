@@ -26,10 +26,9 @@ Analogous to the function \code{\link{factor}}, \code{unfactor}	will convert a f
 x = as.factor(sample(c("Male", "Female"), 12, replace=TRUE))
 unfactor(x, levels=c(0,1), labels=c("Male", "Female"))
 }
-\author{
-Dustin Fife
-}
 \seealso{
 \code{\link{factor}}
 }
-
+\author{
+Dustin Fife
+}

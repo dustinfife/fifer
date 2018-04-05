@@ -120,7 +120,7 @@ report.fifer.anova = function(object){
 #' @param x a fifer.anova object
 #' @param y igorned
 #' @param ... other parameters passed to plot
-#' @import cowplot
+#' @importFrom cowplot plot_grid
 #' @export
 plot.fifer.anova = function(x, ...){
 	m = x$data
@@ -140,7 +140,6 @@ plot.fifer.anova = function(x, ...){
 	res.dep = ggplot(data=m, aes(y=residuals, x=group)) + geom_jitter(alpha=.15, width=.05, size=.75) + stat_summary(fun.y=median, color="red", geom="line", aes(group=1)) + theme_bw() + labs(x=x.name, y="Absolute Value of Residuals", title="S-L Plot")
 	
 	##### put into a single plot
-	require(cowplot)
 	plot_grid(t.test, histo, res.dep)
 
 }

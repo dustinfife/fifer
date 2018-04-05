@@ -29,10 +29,9 @@ references Patrick Giraudoux (2013). pgirmess: Data analysis in ecology. R packa
 prism.plots(Sepal.Length ~ Species, data = iris, centerfunc=mean)
 plotSigBars(Sepal.Length ~ Species, data = iris, type="tukey")
 }
-\author{
-Dustin Fife
-}
 \seealso{
 \code{\link{boxplot}}, \code{\link{densityPlotR}}, \code{\link{prism.plots}}
 }
-
+\author{
+Dustin Fife
+}

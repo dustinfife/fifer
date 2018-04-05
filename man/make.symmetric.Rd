@@ -24,4 +24,3 @@ make.symmetric(a, lower.tri=FALSE)
 \author{
 Dustin Fife
 }
-

@@ -27,10 +27,9 @@ plot(a)
 estimates(a)
 report(a)
 }
-\author{
-Dustin Fife
-}
 \seealso{
 \code{\link{anova}}
 }
-
+\author{
+Dustin Fife
+}

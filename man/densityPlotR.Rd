@@ -23,10 +23,9 @@ Given two groups with scores on a quantitative variable, \code{densityPlotR} wil
 \examples{
 densityPlotR(Petal.Width~Species, data=iris)
 }
-\author{
-Dustin Fife
-}
 \seealso{
 \code{\link{boxplot}}, \code{\link{prism.plots}}, \code{\link{plotSigBars}}
 }
-
+\author{
+Dustin Fife
+}

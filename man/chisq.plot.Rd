@@ -27,13 +27,12 @@ dimnames(M) = list(gender = c("F", "M"),
                     party = c("Democrat","Independent", "Republican"))
 chisq.plot(list=M, standardize=F)              
 }
-\author{
-Dustin Fife
-}
 \references{
 Agresti, A. (2007) An Introduction to Categorical Data Analysis, 2nd ed., New York: John Wiley & Sons. Page 38.
 }
 \seealso{
 \code{\link{barchart}}
 }
-
+\author{
+Dustin Fife
+}

@@ -28,10 +28,9 @@ it will generate a histogram. If the variable is a factor OR it has five or less
 distress = sample(1:10, size=22, replace=T)
 uni.plot(distress, numeric=T, d=NULL)
 }
-\author{
-Dustin Fife
-}
 \seealso{
 \code{\link{MASS}}
 }
-
+\author{
+Dustin Fife
+}

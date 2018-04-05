@@ -35,10 +35,9 @@ y = rnorm(300, 10, 5)
 x = sample(c(1:2), size=length(y), replace=T)
 ttest(y,x)
 }
-\author{
-Dustin Fife
-}
 \seealso{
 \code{\link{t.test}}
 }
-
+\author{
+Dustin Fife
+}

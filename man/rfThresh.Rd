@@ -92,9 +92,6 @@ absolute difference between mean OOB errors of one model and its first
 following model.  Hence a variable is included in the model if the mean OOB
 error decrease is larger than \code{nmj} * \code{mean.jump}.  }
 }
-\author{
-Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot, with modifications by Dustin Fife
-}
 \references{
 Genuer, R. and Poggi, J.M. and Tuleau-Malot, C. (2010), Variable
 selection using random forests, Pattern Recognition Letters 31(14),
@@ -105,4 +102,6 @@ BMC Bioinformatics, 8(1): 1-21, 2007. doi: 10.1186/1471-2105-8-25. URL http://dx
 \seealso{
 \code{\link{rfInterp}}, \code{\link{rfPred}}
 }
-
+\author{
+Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot, with modifications by Dustin Fife
+}

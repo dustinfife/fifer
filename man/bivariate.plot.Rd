@@ -37,10 +37,9 @@ x = rnorm(100)
 y = rnorm(100)
 bivariate.plot(x,y)
 }
-\author{
-Dustin Fife
-}
 \seealso{
 \code{\link{uni.plot}}
 }
-
+\author{
+Dustin Fife
+}

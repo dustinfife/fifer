@@ -35,4 +35,3 @@ Create and plot a fitted line for a generalized linear model
 \author{
 Dustin Fife
 }
-

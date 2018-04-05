@@ -2,9 +2,13 @@
 % Please edit documentation in R/estimates.R, R/regression.R
 \name{estimates}
 \alias{estimates}
-\alias{estimates.default}
 \alias{estimates.regression}
 \alias{estimates.ttest}
+\alias{estimates.default}
+\alias{estimates}
+\alias{estimates.regression}
+\alias{estimates.ttest}
+\alias{estimates.default}
 \title{Report Estimates (effect sizes and parameters)}
 \usage{
 estimates(object, ...)
@@ -21,4 +25,3 @@ Report object Estimates
 
 Report object Estimates
 }
-

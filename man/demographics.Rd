@@ -42,4 +42,3 @@ demographics(trt~., data=df, decimalFactor=2)
 \author{
 Vinh Nguyen
 }
-

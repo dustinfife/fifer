@@ -23,7 +23,7 @@
 ##' bivariate.plot(x,y)
 bivariate.plot = function(x, y, x.numeric=NULL, y.numeric=NULL, d=NULL,  jitter=FALSE, ...){
 	
-	require(tidyverse)
+
 	#### first try to find the variable
 		if (is.null(d) & (is.character(x) | is.character(y))){
 			stop("You must specify a dataset if you surround the variable name in quotes")
