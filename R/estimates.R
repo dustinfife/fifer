@@ -60,6 +60,9 @@ estimates.lm = function(object){
 	}
 	sst = sum(anova(object)[,"Sum Sq"])
 	semi.p = ssr/sst	
+	nms = row.names(anova(object))
+	names(semi.p) = nms[-length(nms)]
+	
 	# z = 1.96
 	# mult0 = r.squared[1] - semi.p 
 	# zr <- log((1 + sqrt(semi.p))/(1 - sqrt(semi.p)))/2
