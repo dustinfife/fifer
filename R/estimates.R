@@ -119,7 +119,7 @@ estimates.lm = function(object){
 		cat(paste("\n\nLS Means = \n"))
 		print(lsmeans)		
 	}
-	cat(paste("\nsigma = ", round(summary(object)$sigma, digits=4)))
+	cat(paste("\nsigma = ", round(summary(object)$sigma, digits=4), "\n\n"))
 	
 	ret = list(r.squared=r.squared, semi.p=semi.p, params=params, lsmeans=lsmeans)
 	return(ret)
