@@ -82,7 +82,7 @@ estimates.lm = function(object){
 	classes = attr(terms(object), "dataClasses")[-1]
 
 		#### extract which variables are factors and which are numeric
-	factors = which(classes=="factor")
+	factors = which(classes=="factor" | classes=="ordered")
 	numeric = which(classes=="numeric")
 	predictors = attr(terms(object),"term.labels")
 	#### extract lsmeans for factors
