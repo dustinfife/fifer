@@ -26,7 +26,7 @@ estimates.default = function(object){
 #' @param object a object
 #' @importFrom cowplot plot_grid
 #' @export
-visualize.lm = function(object, plot=c("bivariate", "residuals", "all"), linetype="loess"){
+visualize.lm = function(object, plot="bivariate", linetype="loess"){
 	
 
 	plot = match.arg(plot, c("all", "residuals", "bivariate"))

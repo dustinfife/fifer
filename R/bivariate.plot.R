@@ -21,7 +21,7 @@
 ##' x = rnorm(100)
 ##' y = rnorm(100)
 ##' bivariate.plot(x,y)
-bivariate.plot = function(x, y, x.numeric=NULL, y.numeric=NULL, d=NULL,  jitter=FALSE, ...){
+bivariate.plot = function(x, y, x.numeric=NULL, y.numeric=NULL, d=NULL,  jitter=FALSE, method="loess",...){
 	
 
 	#### first try to find the variable
@@ -98,7 +98,7 @@ bivariate.plot = function(x, y, x.numeric=NULL, y.numeric=NULL, d=NULL,  jitter=
 			call = paste0("
 			
 			ggplot(data=", deparse(substitute(d)), ", aes(x=", x, ", y=", y, ")) +
-			geom_jitter(width=.2) + geom_smooth() + theme_bw()
+			geom_jitter(width=.2) + geom_smooth(method=", method, ") + theme_bw()
 			") 			
 		} else {
 			call = paste0("
