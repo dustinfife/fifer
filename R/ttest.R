@@ -108,8 +108,8 @@ ttest = function(y, x, related=F){
 		tcrit = qt(.025, sum(ns)-2, lower.tail=F)
 		d.lower = d-tcrit*sqrt(var.d)
 		d.upper = d+tcrit*sqrt(var.d)
-		d = c(d, d.lower, d.upper)
-		names(d) = c("d", "lower", "upper")	    
+		d = c(d, d.lower, d.upper, sqrt(var.d))
+		names(d) = c("d", "lower", "upper", "se")	    
 		difference.scores = NULL
     }
     
