@@ -16,61 +16,32 @@
 ##' @examples
 ##' distress = sample(1:10, size=22, replace=T)
 ##' uni.plot(distress, numeric=T, d=NULL)
-uni.plot = function(variable, d=NULL, numeric=NULL){
+uni.plot = function(variable, data=NULL, ...){
 	
-	#### first try to find the variable
-		if (is.null(d) & is.character(variable)){
-			stop("You must specify a dataset if you surround the variable name in quotes")
-		} else if (!is.null(d)){
-			#### try finding that variable in the dataset
-			tryCatch(d[,variable], error=function(error){paste0("I couldn't find '", variable, "' in your dataset")})
-			out = tryCatch(length(d[,variable])>0, error=function(error){paste0("I couldn't find '", variable,"' in your dataset"); return(FALSE)})			
-			if (!out){
-				stop(paste0("I couldn't find either '", x, "' or '", y , "' in your dataset"))
-			}			
-		} else if (is.null(d[,variable]) & !is.character(variable)){
-			d = data.frame(variable); names(d) = deparse(substitute(variable))
-			variable = deparse(substitute(variable))
-		}
+	#levels = unique(data[,variable])
 
-
-
-	levels = length(unique(d[,variable]))	
+	#### identify whether it's numeric
+	if (is.numeric(data[,variable])){
 		
-	#### specify conditions
-	if (!is.null(numeric)){
-		if (numeric==T){
-			condition = "numeric"
-		} else if (numeric == F){
-			condition = "categorical"
-		} 
-	} else {
-		if (is.numeric(d[,variable]) & levels>5){
-			condition = "numeric"
-		} else if (is.factor(variable)){
-			condition = "categorical"
-		} else {
-			condition = "categorical"
-		}
-	}
-		
-
-		#### if they specified a numeric variable...
-	if (condition == "numeric"){
-		p = ggplot(data=d, aes_string(variable)) + geom_histogram(fill="lightgray", col="black", bins=min(30, round(levels/2))) + theme_bw() + labs(x=variable)
-
+		#### create histogram
+		q = ggplot(data=data, aes_string(variable)) + geom_histogram(fill="lightgray", col="black") + theme_bw() + labs(x=variable)
 		
 		### now create the code that created it
-		output = paste0("R Code to generate plots: \n\n ggplot(data=", deparse(substitute(d)), ", aes(", variable, ")) + geom_histogram(fill='lightgray', col='black') + theme_bw() + labs(x='", variable, "')")
+		output = paste0("R Code to generate plots: \n\n ggplot(data=", deparse(substitute(data)), ", aes(", variable, ")) + geom_histogram(fill='lightgray', col='black') + theme_bw() + labs(x='", variable, "')\n")
 		cat(output)
-
-		return(p)
-
+		return(q)			
+		
 	} else {
-		p = ggplot(data=d, aes_string(variable)) + geom_bar() + theme_bw() + labs(x=variable)
-		output = paste0("R Code to generate plots: \n\n ggplot(data=", deparse(substitute(d)), ", aes(", variable, ")) + geom_bar() + theme_bw() + labs(x='", variable, "')")
-		cat(output)		
-		return(p)			
-	} 
+		
+		##### create bargraph
+		p = ggplot(data=data, aes_string(variable)) + geom_bar() + theme_bw() + labs(x=variable)
+		output = paste0("R Code to generate plots: \n\n ggplot(data=", deparse(substitute(data)), ", aes(", variable, ")) + geom_bar() + theme_bw() + labs(x='", variable, "')\n")
+		cat(output)	
+		p
 
+
+	} 
+		#### this seems to be a bug in ggplot. I have to print p (without using "return") outside of the else function
+		#### see more at https://github.com/tidyverse/ggplot2/issues/2514, though this just let me to trial and error until I got it to work
+	#p
 }

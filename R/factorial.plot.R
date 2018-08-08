@@ -9,47 +9,67 @@
 ##' @return A plot
 ##' @author Dustin Fife
 ##' @export
-factorial.plot = function(y, x1, x2, yname=NULL, x1name=NULL, x2name=NULL){
+factorial.plot = function(y, x1, x2, d, spread = c('quartiles', 'stdev', 'sterr'), raw.data=T, sample=Inf){
 	
-	##### check if y/x are same length
-	if ((length(x1) != length(y)) | (length(y) != length(x2))) {
-        stop("Variables need to be the same length!")
-    }	
-    if (!is.factor(x1)){
-	    x1 = factor(x1)
-    }
-    
-    if (!is.factor(x2)){
-    	x2 = factor(x2)
+	#### sample, if needed
+	if (sample==Inf){
+		d.aes=""
+	} else {
+		samp = sample(1:nrow(d), size=sample)
+		d.aes=paste0("data=data[", deparse(samp),",],")
 	}
-	##### combine into gg-friendly dataframe
-	m = data.frame(y = y, x1 = x1, x2=x2)
-	
-	#### handle missing values
-	miss = which(is.na(m$y) | is.na(m$x1) | is.na(m$x2))
-	if (length(miss) > 0) {
-		warning("Missing values are being removed from the dataset.")
-		m = m[-miss, ]
-	}
-
-
-	n = length(y)
-
 	#### name variables
 	x.name = deparse(substitute(x1))
-	x.name = ifelse(is.null(x1name),subsetString(x.name, "$", 2, T), x1name) 
+	x2.name = deparse(substitute(x2))
 	y.name = deparse(substitute(y)) 
-	y.name = ifelse(is.null(yname),subsetString(y.name, "$", 2, T), yname)
 
-	##### do a plot
-	ggplot(data=m, aes(x=x1, y=y)) + geom_jitter(alpha = .35, size=.25, width=.2) + geom_smooth(method="loess") + 
-		theme_bw() +  facet_grid(~x2)
-		m
-	ggplot(data=m, aes(x=x1, y=y)) + 	
-		geom_jitter(alpha=.10, width=.2) + 
-		facet_wrap(~x2) + 
-		stat_summary(aes(x=x1, y= y), geom='errorbar', fun.ymin=function(z) {mean(z) - 1.96*(sd(z)/length(z))}, fun.ymax = function(z) {mean(z) + 1.96*(sd(z)/length(z))}, fun.y=mean,  width=.1) + 
-		stat_summary(fun.y='mean', geom="line", group=1) + 
-		labs(x=x.name, y=y.name, title="Factorial ANOVA") +
-		theme_bw()		
+	#modify lower and upper limits, based on spread
+	if (spread=="quartiles"){
+		ymin = "function(z){quantile(z, .25)}"
+		ymax = "function(z){quantile(z, .75)}"
+		center = "median"
+	} else if (spread=="stdev"){
+		ymin = "function(z){mean(z)+sd(z)}"
+		ymax = "function(z){mean(z)-sd(z)}"
+		center = "mean"
+	} else {
+		ymin = "function(z){mean(z)-1.96*(sd(z)/sqrt(nrow(d)))}"
+		ymax = "function(z){mean(z)+1.96*(sd(z)/sqrt(nrow(d)))}"			
+		center = "mean"
+	}
+
+
+	#### plot with raw data
+	if (!raw.data){
+		call = paste0("ggplot(data=", deparse(substitute(d)), ", aes(x=",x1,", y=",y,", group=",x2,")) +
+			stat_summary(data=d, fun.y='median', geom='line', aes(linetype=",x2,")) +
+			stat_summary(aes(x=", x1, ", y=", y, "), geom='errorbar', fun.ymin=", ymin, ", fun.ymax = ", ymax, ", fun.y=", center, ", color='gray', width=.2, position=position_dodge(.15))+
+			labs(x=x.name, y=y.name) +
+			theme_bw()\n")
+
+			
+	} else {
+		call = paste0("ggplot(data=", deparse(substitute(d)), ", aes(x=",x1,", y=",y,")) + 	
+			geom_jitter(", d.aes, " alpha=.10, width=.2) + 
+			facet_wrap(~", x2, ") + 
+			stat_summary(aes(x=", x1, ", y=", y, "), geom='errorbar', fun.ymin=", ymin, ", fun.ymax = ", ymax, ", fun.y=", center, ", width=.2)+
+			stat_summary(fun.y='", center, "', geom='line', group=1) + 
+			labs(x=x.name, y=y.name) +
+			theme_bw()\n"	)
+			
+			
+			#### thiis looks good			
+	}
+	cat(paste0("R Code to Generate These Plots: \n\n"))
+	cat(call)
+	p <- eval(parse(text = call))			
+	print(p)		
+	return(p)
+
+
+
+
+
+
 }
+

@@ -21,69 +21,85 @@
 ##' x = rnorm(100)
 ##' y = rnorm(100)
 ##' bivariate.plot(x,y)
-bivariate.plot = function(x, y, x.numeric=NULL, y.numeric=NULL, d=NULL,  jitter=FALSE, method="loess",...){
-	
-
-	#### first try to find the variable
-		if (is.null(d) & (is.character(x) | is.character(y))){
-			stop("You must specify a dataset if you surround the variable name in quotes")
-		} else if (!is.null(d)){
-			#### try finding that variable in the dataset
-			out = tryCatch(ncol(d[,c(x,y)])>0, error=function(error){paste0("I couldn't find '", x, "' or '", y , "' in your dataset"); return(FALSE)})			
-			if (!out){
-				stop(paste0("I couldn't find either '", x, "' or '", y , "' in your dataset"))
-			}
-		} else if (is.null(d[,c(x,y)]) & !is.character(x) & !is.character(y)){
-			d = data.frame(cbind(x, y)); names(d) = c(deparse(substitute(x)), deparse(substitute(y)))
-			x = deparse(substitute(x))
-			y = deparse(substitute(y))			
-		}
-
-
+bivariate.plot = function(x, y, d=NULL, jitter=FALSE, method="loess", spread=c('quartiles', 'stdev', 'sterr'), raw.data=T, sample=Inf, se=T, ...){
 
 	length.x = length(unique(d[,x]))	
 	length.y = length(unique(d[,y]))		
 		
 	#### specify conditions
-	if (!is.null(x.numeric)){
-		x.type = ifelse(x.numeric==T, "numeric", "categorical")
-	} else {
-		if (is.numeric(d[,x]) & length.x > 5){ 
+	if (is.numeric(d[,x]) & length.x > 5){ 
 			x.type="numeric"
-		} else {
-			x.type = "categorical"
-			
-		}
-		
-	}
-	if (!is.null(y.numeric)){
-		y.type = ifelse(y.numeric==T, "numeric", "categorical")
 	} else {
-		if (is.numeric(d[,y]) & length.y > 5){ 
-			y.type="numeric"
-		} else {
-			y.type = "categorical"
-		}
+			x.type = "categorical"		
+	}
 		
+	
+	if (is.numeric(d[,y])){ 
+		y.type="numeric"
+	} else {
+		y.type = "categorical"
 	}
 	
 				##### big bug fixed via this answer: https://stackoverflow.com/questions/23563510/deparsesubstitute-within-function-using-data-table-as-argument
 				##### I just got rid of every instance of d[,y] = factor(d[,y]) (or whatever)
-	
+
+	#### sample, if needed
+	if (sample==Inf){
+		d.aes=""
+	} else {
+		samp = sample(1:nrow(d), size=sample)
+		d.aes=paste0("data=d[", deparse(samp),",],")
+	}
+
+			
 	##### mean plot for one numeric
 	if (x.type=="categorical" & y.type == "numeric" | x.type=="numeric" & y.type == "categorical"){
 		#### flip x and y if y is categorical and x is not
 		if (x.type=="numeric" & y.type == "categorical"){
 			ynew = y;y = x;	x = ynew
 		}
-		call = paste0("
 		
-		ggplot(data=d", ", aes(x=", x, ", y=", y, ")) +
-			geom_jitter(alpha=.15, width=.05, size=.75) +
-			stat_summary(fun.y='median', geom='point', size=2, color='red') +
-			stat_summary(aes(x=", x, ", y=", y, "), geom='errorbar', fun.ymin=function(z) {quantile(z, .25)}, fun.ymax = function(z) {quantile(z, .75)}, fun.y=median, color='red', width=.2)+
-			theme_bw()
-			")
+		#modify lower and upper limits, based on spread
+		if (spread=="quartiles"){
+			ymin = "function(z){quantile(z, .25)}"
+			ymax = "function(z){quantile(z, .75)}"
+			center = "median"
+		} else if (spread=="stdev"){
+			ymin = "function(z){mean(z)+sd(z)}"
+			ymax = "function(z){mean(z)-sd(z)}"
+			center = "mean"
+		} else {
+			ymin = "function(z){mean(z)-1.96*(sd(z)/sqrt(nrow(d)))}"
+			ymax = "function(z){mean(z)+1.96*(sd(z)/sqrt(nrow(d)))}"			
+			center = "mean"
+		}
+
+
+		
+		#### plot raw data?
+		
+		if (raw.data){
+			call = paste0("
+			
+			ggplot(data=", deparse(substitute(d)), ", aes(x=", x, ", y=", y, ")) +
+				geom_jitter(", d.aes,", alpha=.15, width=.05, size=.75) +
+				stat_summary(fun.y='", center, "', geom='point', size=2, color='red') +
+				stat_summary(aes(x=", x, ", y=", y, "), geom='errorbar', fun.ymin=", ymin, ", fun.ymax = ", ymax, ", fun.y=", center, ", color='red', width=.2)+
+				theme_bw()
+				")
+		} else {
+			limits = range(d[,y], na.rm=T)
+			call = paste0("
+			
+			ggplot(data=", deparse(substitute(d)), ", aes(x=", x, ", y=", y, ")) +
+				stat_summary(fun.y='", center, "', geom='point', size=2, color='red') +
+				stat_summary(aes(x=", x, ", y=", y, "), geom='errorbar', fun.ymin=", ymin, ", fun.ymax = ", ymax, ", fun.y=", center, ", color='red', width=.2)+
+				coord_cartesian(ylim=limits) + 
+				theme_bw()
+				")			
+		cat("Note: The Y axis has been scaled to the range of the available data.")
+		}
+
 		cat(paste0("R Code to Generate These Plots: \n\n"))
 		cat(call)
 		p <- eval(parse(text = call))			
@@ -98,13 +114,13 @@ bivariate.plot = function(x, y, x.numeric=NULL, y.numeric=NULL, d=NULL,  jitter=
 			call = paste0("
 			
 			ggplot(data=", deparse(substitute(d)), ", aes(x=", x, ", y=", y, ")) +
-			geom_jitter(width=.2) + geom_smooth(method=", method, ") + theme_bw()
+			geom_jitter(", d.aes, ", width=.2) + geom_smooth(method=", method, ", se=", se, ") + theme_bw()
 			") 			
 		} else {
 			call = paste0("
 			
 			ggplot(data=", deparse(substitute(d)), ", aes(x=", x, ", y=", y, ")) +
-			geom_point() + geom_smooth() + theme_bw()
+			geom_point(", d.aes, ") + geom_smooth(method=", method, ", se=", se, ") + theme_bw()
 			") 
 		}
 		cat(paste0("R Code to Generate These Plots: \n\n"))
