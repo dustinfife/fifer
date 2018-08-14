@@ -190,7 +190,7 @@ flexplot = function(formula, data,
 		
 	##### FOR VARAIBLES THAT WILL BE BINNED...
 	} else {
-		print(head(data))
+
 		##### only allow two "given" variables
 		if (length(given)>2){
 			stop("Only two 'given' variables are allowed.")
@@ -252,7 +252,7 @@ flexplot = function(formula, data,
 
 		
 		if (length(axis)>1){
-			p = ggplot(data=data, aes_string(x=axis[1], y=outcome, symbol=axis[1], linetype=axis[2]))+
+			p = ggplot(data=data, aes_string(x=axis[1], y=outcome, symbol=axis[2], linetype=axis[2]))+
 					geom_point(alpha=0) +
 					geom_smooth(method=method, se=se, col="black") + 
 					geom_point(data=sample.subset(sample, data), alpha=.15) +
