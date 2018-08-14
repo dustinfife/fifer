@@ -8,8 +8,7 @@
 \alias{pval.xtable}
 \title{Convert p-values into strings with inequalities.}
 \usage{
-pval.xtable(p.values, round.digits = 4, threshold = 0.0001,
-  scipen = FALSE)
+pval.xtable(p.values, round.digits = 4, threshold = 1e-04, scipen = FALSE)
 }
 \arguments{
 \item{p.values}{A vector (or scalar) of p-values.}
