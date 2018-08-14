@@ -2,19 +2,13 @@
 % Please edit documentation in R/estimates.R, R/regression.R, R/visualize.R
 \name{estimates.default}
 \alias{estimates.default}
-\alias{report.regression}
 \alias{report}
-\alias{report.ttest}
 \alias{report.default}
-\alias{estimates.default}
 \alias{report.regression}
-\alias{report}
 \alias{report.ttest}
-\alias{report.default}
-\alias{estimates.default}
 \alias{visualize}
-\alias{visualize.lm}
 \alias{visualize.default}
+\alias{visualize.lm}
 \title{Output APA style statistical significance from an object}
 \usage{
 \method{estimates}{default}(object)
@@ -37,3 +31,4 @@ Output APA style statistical significance from an object
 
 Visualize a fitted model
 }
+

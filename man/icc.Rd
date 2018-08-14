@@ -21,3 +21,4 @@ Recall that the equation for the ICC is var(school)/[var(school)+ var(person)]. 
 \author{
 Dustin Fife
 }
+

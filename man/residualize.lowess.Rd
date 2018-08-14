@@ -26,9 +26,10 @@ lines(lowess(Wind, Temp), col="red")
 residuals = residualize.lowess(Wind, Temp)
 plot(Wind, residuals)
 }
-\references{
-This function was developed by Glen_b on \href{https://stats.stackexchange.com/questions/126699/residuals-from-lowess-curve}{Stack Overflow}
-}
 \author{
 Dustin Fife
 }
+\references{
+This function was developed by Glen_b on \href{https://stats.stackexchange.com/questions/126699/residuals-from-lowess-curve}{Stack Overflow}
+}
+

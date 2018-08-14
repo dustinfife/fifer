@@ -25,3 +25,4 @@ This function plots the distribution of Y scores conditional on two factors. The
 \author{
 Dustin Fife
 }
+

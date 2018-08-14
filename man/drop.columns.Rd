@@ -29,12 +29,13 @@ data(fakeMedicalData)
 medical = drop.columns("HemoLeptin", data=fakeMedicalData, drop=FALSE)
 head(medical)
 }
+\author{
+Dustin Fife
+}
 \references{
 http://stackoverflow.com/questions/7597559/grep-in-r-with-a-list-of-patterns
 }
 \seealso{
 \code{\link{make.null}}
 }
-\author{
-Dustin Fife
-}
+

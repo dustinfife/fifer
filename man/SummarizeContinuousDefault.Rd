@@ -35,3 +35,4 @@ SummarizeContinuousDefault(x=c(rnorm(100, 5), rnorm(100, 0)), group=rep(0:1, eac
 \author{
 Vinh Nguyen
 }
+

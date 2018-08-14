@@ -18,9 +18,10 @@ a correlation matrix, of size \code{nxn}
 Generate a random correlation matrix from specified eigenvalues. If eigenvalues are
 not specified, they are randomly generated from a uniform [0,10] distribution.
 }
-\references{
-https://stat.ethz.ch/pipermail/r-help/2008-February/153708.html
-}
 \author{
 Dustin Fife
 }
+\references{
+https://stat.ethz.ch/pipermail/r-help/2008-February/153708.html
+}
+

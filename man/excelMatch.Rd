@@ -31,9 +31,10 @@ excelMatch("AC", names=fake.names)
 # find the column number instead
 excelMatch("AC", n=1000)
 }
-\seealso{
-\code{\link{excelCols}}
-}
 \author{
 Dustin Fife
 }
+\seealso{
+\code{\link{excelCols}}
+}
+

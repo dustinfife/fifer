@@ -45,9 +45,10 @@ object = rfThresh(formula, data=iris, nruns=2, importance="gini");
 #### run interpretation step
 rfInterp(object, nruns=10, importance="permutation")}
 }
-\seealso{
-\code{\link{rfInterp}}, \code{\link{rfPred}}
-}
 \author{
 Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot, with modifications by Dustin Fife
 }
+\seealso{
+\code{\link{rfInterp}}, \code{\link{rfPred}}
+}
+

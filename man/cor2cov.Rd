@@ -4,7 +4,7 @@
 \alias{cor2cov}
 \title{Correlation Matrix to Covariance Matrix Conversion}
 \usage{
-cor2cov(cor.mat, sd, discrepancy = 1e-05)
+cor2cov(cor.mat, sd, discrepancy = 0.00001)
 }
 \arguments{
 \item{cor.mat}{the correlation matrix to be converted}
@@ -25,3 +25,4 @@ The correlation matrix input should be a square matrix, and the length of sd sho
 \author{
 Ken Kelley (University of Notre Dame; (\email{KKelley@ND.Edu}) and Keke Lai (the \code{MBESS} package), with modifications by Dustin Fife \email{fife.dustin@gmail.com}.
 }
+

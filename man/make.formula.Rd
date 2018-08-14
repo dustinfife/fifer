@@ -33,3 +33,4 @@ make.formula("A", LETTERS[2:5], random="(1|group)")
 \author{
 Dustin Fife
 }
+

@@ -1,6 +1,14 @@
 Package: fifer
-Title: A Biostatisticians Toolbox for Various Activities, Including Plotting, Data Cleanup, and Data Analysis
-Description: Functions and datasets that can be used for data cleanup (e.g., functions for eliminating all but a few columns from a dataset, selecting a range of columns, quickly editing column names), plotting/presenting data (prism-like reproductions, spearman plots for ordinal data, making colored tables, plotting interactions with quantitative variables), and analyses common to biostatistics (e.g., random forest, multiple comparisons with chi square tests). See the package vignette for a brief introduction to many of the main functions. 
+Title: A Biostatisticians Toolbox for Various Activities, Including Plotting,
+    Data Cleanup, and Data Analysis
+Description: Functions and datasets that can be used for data cleanup (e.g.,
+    functions for eliminating all but a few columns from a dataset, selecting
+    a range of columns, quickly editing column names), plotting/presenting data
+    (prism-like reproductions, spearman plots for ordinal data, making colored
+    tables, plotting interactions with quantitative variables), and analyses common
+    to biostatistics (e.g., random forest, multiple comparisons with chi square
+    tests). See the package vignette for a brief introduction to many of the main
+    functions.
 Version: 1.1
 Author: Dustin Fife <fife.dustin@gmail.com>
 Maintainer: Dustin Fife <fife.dustin@gmail.com>
@@ -17,4 +25,4 @@ Imports:
     Hmisc,
     rpart,
     fields
-RoxygenNote: 6.0.1
+RoxygenNote: 5.0.1

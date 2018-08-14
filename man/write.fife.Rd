@@ -2,10 +2,10 @@
 % Please edit documentation in R/meta.data.R
 \name{write.fife}
 \alias{write.fife}
+\alias{write.fifer}
 \alias{write.meta}
 \alias{write.meta.data}
 \alias{write.metadata}
-\alias{write.fifer}
 \title{Write a dataset and load the meta-data}
 \usage{
 write.fife(object, newfile, originalfile = NULL, file.type = ".csv",
@@ -37,9 +37,10 @@ Technically, \code{read.fife} and \code{\link{write.fife}} don't actually read a
 (or read) a separate file that has the same name (though different extension) than the subsetted dataset. The extension of 
 the meta data file is .file.
 }
-\seealso{
-\code{\link{read.fife}}
-}
 \author{
 Dustin Fife
 }
+\seealso{
+\code{\link{read.fife}}
+}
+

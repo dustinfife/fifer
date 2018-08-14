@@ -18,3 +18,4 @@ that shows each stage of the variable selection algorithm.
 \details{
 Print a Summary Table of rfPred
 }
+

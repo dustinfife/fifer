@@ -25,9 +25,10 @@ estimates(reg.mod)
 plot(reg.mod)
 report(reg.mod)
 }
-\seealso{
-\code{\link{MASS}}
-}
 \author{
 Dustin Fife
 }
+\seealso{
+\code{\link{MASS}}
+}
+

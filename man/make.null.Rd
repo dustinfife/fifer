@@ -32,11 +32,12 @@ new.data = make.null(c("Sepal.Length"),
 new.data2 = make.null(c("Sepal.Length"), 
    r("Sepal.Width", "Petal.Width", names(iris)), data=iris, keep=TRUE)
 }
+\author{
+Dustin Fife
+}
 \seealso{
 \code{\link{subset}}.
 
 \code{\link{get.cols}}, \code{\link{r}}
 }
-\author{
-Dustin Fife
-}
+

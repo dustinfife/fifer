@@ -38,3 +38,4 @@ scaleB(object)
 \author{
 Dustin Fife
 }
+

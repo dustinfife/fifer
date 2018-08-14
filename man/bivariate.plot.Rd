@@ -5,7 +5,7 @@
 \title{Plot bivariate plot of two variables}
 \usage{
 bivariate.plot(x, y, x.numeric = NULL, y.numeric = NULL, d = NULL,
-  jitter = FALSE, ...)
+  jitter = FALSE, method = "loess", ...)
 }
 \arguments{
 \item{x}{A string indicating the name of the IV to plot. Alternatively, an object can be used.}
@@ -37,9 +37,10 @@ x = rnorm(100)
 y = rnorm(100)
 bivariate.plot(x,y)
 }
-\seealso{
-\code{\link{uni.plot}}
-}
 \author{
 Dustin Fife
 }
+\seealso{
+\code{\link{uni.plot}}
+}
+

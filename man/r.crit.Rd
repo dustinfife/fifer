@@ -28,3 +28,4 @@ r.crit(n=20, r=.6, p=.05)
 \author{
 Dustin Fife
 }
+

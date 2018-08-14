@@ -25,3 +25,4 @@ mean(x.new); sd(x.new)
 \author{
 Dustin Fife
 }
+

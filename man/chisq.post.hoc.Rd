@@ -58,3 +58,4 @@ chisq.post.hoc(M)
 \code{chisq.test} and \code{p.adjust}.
 }
 \keyword{htest}
+

@@ -1,4 +1,3 @@
-clear()
 ##' Create a "flexible plot" or flexplot
 ##'
 ##' Create a flexible plot 
@@ -21,11 +20,10 @@ clear()
 ##' @param jitter Should values be jittered?
 ##' @param raw.data Should raw data be plotted?
 ##' @param sample Should a sample of the data be plotted? Defaults to Inf (for all variables). 
-##' @references
-##' @author
+##' @author Dustin Fife
 ##' @export
 ##' @examples
-##' #later
+##' 
 flexplot = function(formula, data, 
 		color=NULL, symbol=NULL, linetype=NULL, 
 		bins = 4, labels=NULL, breaks=NULL,
@@ -249,87 +247,3 @@ flexplot = function(formula, data,
 }
 
 
-# # d = read.csv("research/Rowan/Dinzeo/social_functioning/data/social_functioning_cleaned.csv")
-# # color=NULL; symbol=NULL; linetype=NULL;	bins = 4; labels=NULL; breaks=NULL;	method="loess"; se=T; spread=c('quartiles', 'stdev', 'sterr'); jitter=FALSE; raw.data=T;sample=Inf
-# # formula = formula(social.functioning~1)
-# # flexplot(formula, data=d)
-	# #### this works
-# data=d
-
-# source("research/RPackages/fifer/R/bivariate.plot.R")	
-	
-	# ### mean plots
-# formula = formula(Gender~social.functioning)
-# flexplot(formula, data=d)
-	# #### this works
-
-# formula = formula(social.functioning~Gender)
-# flexplot(formula, data=d)
-	# ##### this works
-
-	# ### SCATTERPLOT
-# formula = formula(social.functioning~neg.affect)
-# flexplot(formula, data=d)
-	# ##### this works
-
-	# ### CHI SQUARE PLOT
-# d$Ethnicity = factor(d$Ethnicity)
-# formula = formula(Ethnicity~Gender)
-# flexplot(formula, data=d)	
-	# #### this works
-			
-	# ### INTERACTION PLOT			
-# formula = formula(social.functioning~Ethnicity+Gender)
-# flexplot(formula, data=d, raw.data=T)
-
-	# #### ANCOVA PLOT
-# formula = formula(social.functioning~schizo+Gender)
-# flexplot(formula, data=d)
-
-	# #### 2N PLOT (2 NUMERIC VARIABLE PLOTS)
-# formula = formula(social.functioning~schizo+neg.affect)
-# flexplot(formula, data=d)
-
-	# #### 3N plot
-# formula = formula(social.functioning~schizo+neg.affect)
-# flexplot(formula, data=d)
-
-# formula = formula(social.functioning~schizo+neg.affect | problem.focused)
-# flexplot(formula, data=d)
-
-# formula = formula(social.functioning~schizo  | problem.focused + neg.affect)
-# flexplot(formula, data=d)
-
-# data(fakeMedicalData)
-# head(fakeMedicalData)
-# head(d)
-
-
-
-
-# data=d
-# color=NULL; symbol=NULL; linetype=NULL;	bins = 4; labels=NULL; breaks=NULL;	method="loess"; se=T; spread=c('quartiles', 'stdev', 'sterr'); jitter=FALSE; raw.data=T;sample=Inf
-
-# flexplot(formula, data=d, labels=list(c("10-12", "12-15","15-20", "20-47")), method="lm")
-
-# bins=4
-# formula = formula(social.functioning~schizo + neg.affect | problem.focused + Age )
-# flexplot(formula, data=d)
-
-# # 
-# #formula = formula(Ethnicity~Gender)
-# formula = formula(social.functioning~Ethnicity+Gender)
-# head(d)
-# data = d
-# labels = list(NULL, c("emotion focused", "neutral", "problem focused"), c("18-19", "20-21", "22+"))
-# bins = c(4,3,3)
-# method="lm"
-# se=F
-# sample=Inf
-# raw.data=T
-# formula = formula(social.functioning~schizo + neg.affect | problem.focused + Age )
-# data = d
-# labels = list(NULL, c("emotion focused", "neutral", "problem focused"), c("18-19", "20-21", "22+"))
-# bins = c(4,3,3)
-# method="lm"
-# se=F	

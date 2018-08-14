@@ -22,9 +22,10 @@ Excel columns are labeled with letters (e.g., A, B, C, ... AA, AB, AC, etc). Giv
 \examples{
 excelCols(11)
 }
-\seealso{
-\code{\link{excelMatch}}
-}
 \author{
 Dustin Fife
 }
+\seealso{
+\code{\link{excelMatch}}
+}
+
