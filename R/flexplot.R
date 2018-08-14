@@ -23,7 +23,55 @@
 ##' @author Dustin Fife
 ##' @export
 ##' @examples
-##' 
+# data(exercise_data)
+# d = exercise_data
+	# #### histograms and barcharts
+# flexplot()
+# head(d)
+	# ### mean plots
+# formula = formula(Gender~social.functioning)
+# flexplot(formula, data=d)
+	# #### this works
+
+# formula = formula(social.functioning~Gender)
+# flexplot(formula, data=d)
+	# ##### this works
+
+	# ### SCATTERPLOT
+# formula = formula(social.functioning~neg.affect)
+# flexplot(formula, data=d)
+	# ##### this works
+
+	# ### CHI SQUARE PLOT
+# d$Ethnicity = factor(d$Ethnicity)
+# formula = formula(Ethnicity~Gender)
+# flexplot(formula, data=d)	
+	# #### this works
+			
+	# ### INTERACTION PLOT			
+# formula = formula(social.functioning~Ethnicity+Gender)
+# flexplot(formula, data=d, raw.data=T)
+
+	# #### ANCOVA PLOT
+# formula = formula(social.functioning~schizo+Gender)
+# flexplot(formula, data=d)
+
+	# #### 2N PLOT (2 NUMERIC VARIABLE PLOTS)
+# formula = formula(social.functioning~schizo+neg.affect)
+# flexplot(formula, data=d)
+
+	# #### 3N plot
+# formula = formula(social.functioning~schizo+neg.affect)
+# flexplot(formula, data=d)
+
+# formula = formula(social.functioning~schizo+neg.affect | problem.focused)
+# flexplot(formula, data=d)
+
+# formula = formula(social.functioning~schizo  | problem.focused + neg.affect)
+# flexplot(formula, data=d)
+
+
+
 flexplot = function(formula, data, 
 		color=NULL, symbol=NULL, linetype=NULL, 
 		bins = 4, labels=NULL, breaks=NULL,

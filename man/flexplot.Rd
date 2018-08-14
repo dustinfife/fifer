@@ -47,9 +47,6 @@ variables between ~ and | will fall on the x axis and categorical predictors wil
 after ~, the second (and third) will be binned. No more than four variables are allow (otherwise, cognitive load is too high). If the user wishes to include another variable,
  I recommend they create separate plots, one for each level of the new variable (or a binned level of a numeric variable).
 }
-\examples{
-
-}
 \author{
 Dustin Fife
 }
