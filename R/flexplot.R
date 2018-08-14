@@ -252,10 +252,11 @@ flexplot = function(formula, data,
 
 		
 		if (length(axis)>1){
-			p = ggplot(data=data, aes_string(x=axis[1], y=outcome, symbol=axis[2], linetype=axis[2]))+
-					geom_point(alpha=0) +
+			
+			print(axis[2])
+			p = ggplot(data=data, aes_string(x=axis[1], y=outcome, shape=axis[2], linetype=axis[2]))+
 					geom_smooth(method=method, se=se, col="black") + 
-					geom_point(data=sample.subset(sample, data), alpha=.15) +
+					geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, .35)) +
 					facet_grid(as.formula(given.as.string),labeller = labeller(.rows = label_both, .cols=label_both)) + 
 					theme_bw()
 		} else {
