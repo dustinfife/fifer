@@ -23,53 +23,6 @@
 ##' @author Dustin Fife
 ##' @export
 ##' @examples
-# data(exercise_data)
-# d = exercise_data
-	# #### histograms and barcharts
-# flexplot()
-# head(d)
-	# ### mean plots
-# formula = formula(Gender~social.functioning)
-# flexplot(formula, data=d)
-	# #### this works
-
-# formula = formula(social.functioning~Gender)
-# flexplot(formula, data=d)
-	# ##### this works
-
-	# ### SCATTERPLOT
-# formula = formula(social.functioning~neg.affect)
-# flexplot(formula, data=d)
-	# ##### this works
-
-	# ### CHI SQUARE PLOT
-# d$Ethnicity = factor(d$Ethnicity)
-# formula = formula(Ethnicity~Gender)
-# flexplot(formula, data=d)	
-	# #### this works
-			
-	# ### INTERACTION PLOT			
-# formula = formula(social.functioning~Ethnicity+Gender)
-# flexplot(formula, data=d, raw.data=T)
-
-	# #### ANCOVA PLOT
-# formula = formula(social.functioning~schizo+Gender)
-# flexplot(formula, data=d)
-
-	# #### 2N PLOT (2 NUMERIC VARIABLE PLOTS)
-# formula = formula(social.functioning~schizo+neg.affect)
-# flexplot(formula, data=d)
-
-	# #### 3N plot
-# formula = formula(social.functioning~schizo+neg.affect)
-# flexplot(formula, data=d)
-
-# formula = formula(social.functioning~schizo+neg.affect | problem.focused)
-# flexplot(formula, data=d)
-
-# formula = formula(social.functioning~schizo  | problem.focused + neg.affect)
-# flexplot(formula, data=d)
-
 
 
 flexplot = function(formula, data, 
@@ -78,27 +31,27 @@ flexplot = function(formula, data,
 		method="loess", se=T, spread=c('quartiles', 'stdev', 'sterr'), jitter=FALSE, raw.data=T,
 		sample=Inf){
 			
-		##### extract outcome, predictors, and given variables
+		#### extract outcome, predictors, and given variables
 	variables = all.vars(formula)
 	outcome = variables[1]
 	predictors = variables[-1]
 	given = unlist(strsplit(as.character(formula[[3L]])[3], " + ", fixed=T))
 	if (is.na(given[1])){given=NULL}
 	
-	##### identify which variables are numeric and which are factors
+	#### identify which variables are numeric and which are factors
 	if (length(predictors)>0){
 		numbers = names(which(unlist(lapply(data[,predictors], is.numeric))))
 		categories = names(which(!(unlist(lapply(data[,predictors], is.numeric)))))
 	}
 	
-		#### remove missing values
+		### remove missing values
 	if (length(predictors)>0){
 		if (length(unlist(apply(data[,variables], 2, function(x){(which(is.na(x)))})))>0){
 			data = na.omit(data)
 		}
 	}
 	
-	#### create custom function to sample data
+	### create custom function to sample data
 	sample.subset = function(sample, data){
 		if (sample!=Inf){
 			m = data[sample(1:nrow(data), size=sample),]
@@ -107,26 +60,26 @@ flexplot = function(formula, data,
 		}
 	}
 
-	#### if they don't want raw data, just make alpha = 0
+	### if they don't want raw data, just make alpha = 0
 	if (raw.data){
 		alpha.raw = .35
 	} else {
 		alpha.raw = 0
 	}	
 
-	#### BEGIN THE MEGA PLOTTING IFS!
-	#### PLOT UNIVARIATE PLOTS
-		#### if there's no predictors, use the "uni.plot" function
+	### BEGIN THE MEGA PLOTTING IFS!
+	### PLOT UNIVARIATE PLOTS
+		### if there's no predictors, use the "uni.plot" function
 	if (length(outcome)==1 & length(predictors)==0 & length(given)==0){
-		#fifer:::uni.plot(outcome)
+		fifer:::uni.plot(outcome)
 		p = uni.plot(outcome, d=data)
 
-	##### BIVARIATE PLOTS	
+	#### BIVARIATE PLOTS	
 	} else if (length(outcome)==1 & length(predictors)==1 & length(given)==0){			
 		p = bivariate.plot(predictors, outcome, d=data, jitter=jitter, raw.data=raw.data, spread=spread, method=method, se=se, sample=sample)
 
 
-	###### INTERACTION PLOT
+	##### INTERACTION PLOT
 	} else if (length(outcome)==1 & length(predictors)==2 & (is.character(data[,predictors[1]]) | is.factor(data[,predictors[1]])) & (is.character(data[,predictors[2]]) | is.factor(data[,predictors[2]]))){		
 		p = ggplot(data=data, aes_string(x=predictors[1], y=outcome)) +
 			geom_jitter(data=sample.subset(sample, data), alpha = alpha.raw, size=.25, width=.2) +
@@ -136,7 +89,7 @@ flexplot = function(formula, data,
 			labs(x=predictors[1], y=outcome) +
 			theme_bw()
 		
-	##### ANCOVA PLOT		
+	#### ANCOVA PLOT		
 	} else if (length(predictors)==2 & length(categories)==1){
 		p = ggplot(data=d, aes_string(x=numbers, y=outcome, group=categories, linetype=categories)) +
 			geom_point(data=sample.subset(sample, data), alpha=alpha.raw) +
@@ -144,22 +97,22 @@ flexplot = function(formula, data,
 			theme_bw()							
 
 
-	###### FOR VARAIBLES THAT WILL BE BINNED...
+	##### FOR VARAIBLES THAT WILL BE BINNED...
 	} else {
 		
-		###### only allow two "given" variables
+		##### only allow two "given" variables
 		if (length(given)>2){
 			stop("Only two 'given' variables are allowed.")
 		}
 		
-		##### make given variables ggplot friendly (for facet_grid)
+		#### make given variables ggplot friendly (for facet_grid)
 		given.as.string = ifelse(length(given)>1,paste0(given, collapse="~"), paste0("~",given))
 		
 
-		##### identify the non given variables
+		#### identify the non given variables
 		axis = unlist(strsplit(as.character(formula[[3L]])[2], " + ", fixed=T))	
 			
-		#### identify the number of binned variables we need
+		### identify the number of binned variables we need
 		if (length(axis)>1 & axis[2] %in% numbers){ 
 			binned.vars = c(axis[2], numbers[which((numbers) %in% given)])
 		} else {
@@ -169,7 +122,7 @@ flexplot = function(formula, data,
 		msg = paste0("The following variables are going to be binned: ", paste0(binned.vars, collapse=", "))
 		cat(msg)
 		
-		#### repeat the bins the number of bins there are
+		### repeat the bins the number of bins there are
 		if (length(bins) != length(binned.vars) & length(bins)>1){
 			warning("You haven't specified enough bins to cover all the binned variables. I'm making a guess for the rest of the variables")
 			bins = matrix(bins, nrow=1, ncol=length(binned.vars))
@@ -179,7 +132,7 @@ flexplot = function(formula, data,
 			bins = rep(bins, times=length(binned.vars))
 		}
 
-		##### bin the binned variables
+		#### bin the binned variables
 		for (i in 1:length(binned.vars)){
 			
 			break.current = unlist(breaks[i])
@@ -187,9 +140,9 @@ flexplot = function(formula, data,
 				stop(paste0("The label vectors (", paste0(unlist(labels[i]), collapse=", "), ") is not the same length as the bin length (", bins[i], ")", sep=""))
 			}
 			
-			#### if they supply the breaks...
+			### if they supply the breaks...
 			if (!is.null(break.current)){
-				##### give min as breaks, if the user doesn't
+				#### give min as breaks, if the user doesn't
 				if (min(break.current)>min(data[,binned.vars[i]])){
 					break.current = c(-Inf, break.current)
 				}
@@ -271,14 +224,14 @@ flexplot = function(formula, data,
 				
 				
 				
-				# # a = ggplot(data=d[d$Category=="Health",], aes(x=Group, y=Percentage, col=Group)) + geom_point()+ 
-						# # geom_errorbar(aes(ymin=Percentage - 1.96*Percentage*(1-Percentage)/sqrt(200), ymax=Percentage + 1.96*Percentage*(1-Percentage)/sqrt(200),col=Group), width=.2) + 
-						# # coord_flip(ylim=c(0,1)) + 
-						# # facet_wrap(~Condition, ncol=1) + 
-						# # scale_color_manual(values=c("green", "red", "blue"))+
-						# # theme_bw() +
-						# # theme(strip.text = element_text(size=15))
-				# # a		
+				# a = ggplot(data=d[d$Category=="Health",], aes(x=Group, y=Percentage, col=Group)) + geom_point()+ 
+						# geom_errorbar(aes(ymin=Percentage - 1.96*Percentage*(1-Percentage)/sqrt(200), ymax=Percentage + 1.96*Percentage*(1-Percentage)/sqrt(200),col=Group), width=.2) + 
+						# coord_flip(ylim=c(0,1)) + 
+						# facet_wrap(~Condition, ncol=1) + 
+						# scale_color_manual(values=c("green", "red", "blue"))+
+						# theme_bw() +
+						# theme(strip.text = element_text(size=15))
+				# a		
 		
 		
 		
@@ -287,9 +240,9 @@ flexplot = function(formula, data,
 	
 		
 		
-	# }
+	#}
 	
-	### GIVEN VARIABLES
+	## GIVEN VARIABLES
 	
 	
 }
