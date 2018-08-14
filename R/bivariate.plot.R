@@ -97,13 +97,13 @@ bivariate.plot = function(x, y, x.numeric=NULL, y.numeric=NULL, d=NULL,  jitter=
 		if (jitter){
 			call = paste0("
 			
-			ggplot(data=", deparse(substitute(d)), ", aes(x=", x, ", y=", y, ")) +
+			ggplot(data=d, aes(x=", x, ", y=", y, ")) +
 			geom_jitter(width=.2) + geom_smooth(method=", method, ") + theme_bw()
 			") 			
 		} else {
 			call = paste0("
 			
-			ggplot(data=", deparse(substitute(d)), ", aes(x=", x, ", y=", y, ")) +
+			ggplot(data=d, aes(x=", x, ", y=", y, ")) +
 			geom_point() + geom_smooth() + theme_bw()
 			") 
 		}
@@ -120,7 +120,7 @@ bivariate.plot = function(x, y, x.numeric=NULL, y.numeric=NULL, d=NULL,  jitter=
 		#### if they specified both are categorical
 	if ((x.type=="categorical" & y.type == "categorical")){
 		call = paste0("
-		m = as.data.frame(table(", deparse(substitute(d)), "[,'", x, "'],", deparse(substitute(d)), "[,'", y, "'])); names(m)[1:2] = c('", x, "', '", y, "')
+		m = as.data.frame(table(d[,'", x, "'], d[,'", y, "'])); names(m)[1:2] = c('", x, "', '", y, "')
 		Freq = 'Freq'
 		ggplot(data=m, aes(x=", x, ", y=Freq, fill=", y, ")) + geom_bar(stat='identity', position='dodge')
 		")
