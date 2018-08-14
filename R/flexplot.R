@@ -71,7 +71,6 @@ flexplot = function(formula, data,
 	### PLOT UNIVARIATE PLOTS
 		### if there's no predictors, use the "uni.plot" function
 	if (length(outcome)==1 & length(predictors)==0 & length(given)==0){
-		fifer:::uni.plot(outcome)
 		p = uni.plot(outcome, d=data)
 
 	#### BIVARIATE PLOTS	
