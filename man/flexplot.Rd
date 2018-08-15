@@ -7,7 +7,7 @@
 flexplot(formula, data, color = NULL, symbol = NULL, linetype = NULL,
   bins = 4, labels = NULL, breaks = NULL, method = "loess", se = T,
   spread = c("quartiles", "stdev", "sterr"), jitter = FALSE, raw.data = T,
-  sample = Inf)
+  sample = Inf, prediction = NULL, suppress_smooth = F)
 }
 \arguments{
 \item{formula}{A formula of the form  y~x + a | b + z}
@@ -46,6 +46,46 @@ Formula takes the form of y~x + a | b + z. Everything on the right of | will occ
 variables between ~ and | will fall on the x axis and categorical predictors will be color-coded/symbol-coded/line-coded (if user specifies). If more than one numeric variable is specified
 after ~, the second (and third) will be binned. No more than four variables are allow (otherwise, cognitive load is too high). If the user wishes to include another variable,
  I recommend they create separate plots, one for each level of the new variable (or a binned level of a numeric variable).
+}
+\examples{
+clear()
+data(exercise_data)
+d = exercise_data
+
+# # #### histograms and barcharts
+flexplot(income~1, data=d)
+flexplot(gender~1, data=d)
+
+# ### scatter plot
+source("research/RPackages/fifer/R/flexplot.R")
+flexplot(weight.change~motivation, data=d)	
+flexplot(weight.change~motivation, data=d, method="lm", se=F)	#### with regression line and without standard error	
+
+# ### mean plots
+flexplot(weight.change~therapy.type, data=d)
+flexplot(weight.change~therapy.type, data=d, raw.data=F)		## without raw data
+
+# ### CHI SQUARE PLOT
+flexplot(therapy.type~gender, data=d)	
+		
+# ### INTERACTION PLOT			
+flexplot(weight.change~therapy.type + gender, data=d)
+flexplot(weight.change~therapy.type + gender, data=d, sample=50)	#### sampling 50 people instead (to make it less noisy)
+
+# #### ANCOVA PLOT
+flexplot(weight.change~motivation + gender, data=d, se=F)	### remove se
+
+# #### 2N PLOT (2 NUMERIC VARIABLE PLOTS)
+flexplot(weight.change~motivation + income, data=d, se=F, method="lm")
+flexplot(weight.change~motivation + income, data=d, se=F, method="lm", breaks = list(c(95000, 100000, 105000)),labels=list(c("<95K", "<100K", "<105K", ">105K")))		### change labels for income
+
+# #### 3N plot
+flexplot(weight.change~motivation + income + health, data=d, se=F, method="lm")	## different lines for income
+flexplot(weight.change~motivation | income + health, data=d, se=F, method="lm")	## different panels for income
+flexplot(weight.change~motivation | income + health, data=d, se=F, method="lm", breaks = list(c(95000, 100000, 105000)),labels=list(c("<95K", "<100K", "<105K", ">105K")))	## relabel income
+
+# #### three categorical variables (multiway dot plot)
+flexplot(weight.change~gender + therapy.type + rewards, data=d, raw.data=F)
 }
 \author{
 Dustin Fife
