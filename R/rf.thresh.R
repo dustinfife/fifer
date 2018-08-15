@@ -82,8 +82,8 @@
 rfThresh = function(formula, data, nruns = 50, silent=FALSE, importance="permutation", nmin=1,...){
 	
 	#### extract varaibles and response from formula
-	vars = attr(terms(formula), "term.labels")
-	resp = row.names(attr(terms(formula), "factors"))[1]
+	vars = names(model.frame(formula, data=data))[-1]
+	resp = names(model.frame(formula, data=data))[1]	
 	
 	#### keep us posted
 	if (!silent){
