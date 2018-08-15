@@ -65,7 +65,15 @@ flexplot = function(formula, data,
 		color=NULL, symbol=NULL, linetype=NULL, 
 		bins = 4, labels=NULL, breaks=NULL,
 		method="loess", se=T, spread=c('quartiles', 'stdev', 'sterr'), jitter=FALSE, raw.data=T,
-		sample=Inf){
+		sample=Inf, 
+		prediction = NULL, suppress_smooth=F){
+			
+	if (suppress_smooth){
+		gm = theme_bw()
+	} else {
+		gm = geom_smooth(method=method, se=se)
+	}
+			
 			
 		#### extract outcome, predictors, and given variables
 	variables = all.vars(formula)
@@ -73,6 +81,18 @@ flexplot = function(formula, data,
 	predictors = variables[-1]
 	given = unlist(strsplit(as.character(formula[[3L]])[3], " + ", fixed=T))
 	if (is.na(given[1])){given=NULL}
+	
+		#### turn numbered categorical into categorical	
+	# f = function(x){ 
+		# if (length(unique(x))==2){
+			# as.factor(x)
+		# } else {
+			# x
+		# }
+	# }
+	# apply(data[,predictors], 2,function(x){length(unique)})
+	# data[,predictors] = apply(data[,predictors],2,f)
+
 	
 	#### identify which variables are numeric and which are factors
 	if (length(predictors)>0){
@@ -104,6 +124,8 @@ flexplot = function(formula, data,
 			alpha.raw = 0
 		}	
 	}
+	
+
 
 	### BEGIN THE MEGA PLOTTING IFS!
 	### PLOT UNIVARIATE PLOTS
@@ -115,7 +137,7 @@ flexplot = function(formula, data,
 	} else if (length(outcome)==1 & length(predictors)==1 & length(given)==0 & (is.numeric(data[,predictors]) & is.numeric(data[,outcome]))){			
 		p = ggplot(data=data, aes_string(x=predictors, y=outcome))+
 			geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data)) +
-			geom_smooth(method=method, se=se) +
+			gm +
 			theme_bw()						
 
 	##### MEAN PLOT
@@ -147,7 +169,7 @@ flexplot = function(formula, data,
 	} else if (length(predictors)==2 & length(categories)==1){
 		p = ggplot(data=d, aes_string(x=numbers, y=outcome, group=categories, linetype=categories, color=categories)) +
 			geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data)) +
-			geom_smooth(method=method, se=se) +
+			gm +
 			theme_bw()							
 
 	###### MULTIWAY DOT PLOT FOR THREE CATEGORICAL PREDICTORS
@@ -196,9 +218,15 @@ flexplot = function(formula, data,
 			stop("Only two 'given' variables are allowed.")
 		}
 		
+		
 		#### make given variables ggplot friendly (for facet_grid)
 		given.as.string = ifelse(length(given)>1,paste0(given, collapse="~"), paste0("~",given))
-		
+
+		#### if a category is "given", leave it alone
+		if (length(which(given %in% categories))>0){
+			given = given[-which(given %in% categories)]
+		}
+
 
 		#### identify the non given variables
 		axis = unlist(strsplit(as.character(formula[[3L]])[2], " + ", fixed=T))	
@@ -209,7 +237,7 @@ flexplot = function(formula, data,
 		} else {
 			binned.vars = numbers[which((numbers) %in% given)]
 		}
-	
+
 		msg = paste0("The following variables are going to be binned: ", paste0(binned.vars, collapse=", "))
 		cat(msg)
 		
@@ -248,21 +276,36 @@ flexplot = function(formula, data,
 
 			data[,paste0(binned.vars[i])] = cut(data[,binned.vars[i]], quants, labels= unlist(labels[i]), include.lowest=T, include.highest=T)
 			
+			if (!is.null(prediction)){
+				prediction[,paste0(binned.vars[i])] = cut(prediction[,binned.vars[i]], quants, labels= unlist(labels[i]), include.lowest=T, include.highest=T)
+			}
+			
 		}
 
-		
+######
+
+		# head(prediction)
+# ggplot(data=data, aes_string(x=axis[1], y=outcome, shape=axis[2], linetype=axis[2]))+
+					# geom_smooth(col="black") + 
+					# geom_point() +
+					# facet_grid(as.formula(given.as.string),labeller = labeller(.rows = label_both, .cols=label_both)) + 
+					# theme_bw() +
+					# geom_line(data= prediction, aes(linetype=model, y=prediction), col="red")
+
+	
+#######	
+	
 		if (length(axis)>1){
-			
-			print(axis[2])
+	
 			p = ggplot(data=data, aes_string(x=axis[1], y=outcome, shape=axis[2], linetype=axis[2]))+
-					geom_smooth(method=method, se=se, col="black") + 
+					gm + 
 					geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, .35)) +
 					facet_grid(as.formula(given.as.string),labeller = labeller(.rows = label_both, .cols=label_both)) + 
 					theme_bw()
 		} else {
 			p = ggplot(data=data, aes_string(x=axis[1], y=outcome))+
 				geom_point(data=sample.subset(sample, data), alpha=.5) +
-				geom_smooth(method=method, se=se)+
+				gm +
 				facet_grid(as.formula(given.as.string),labeller = labeller(.rows = label_both, .cols=label_both)) +
 				theme_bw()			
 		}
@@ -270,6 +313,12 @@ flexplot = function(formula, data,
 		
 	
 
-	}		
-	return(p)
+	}	
+	
+	if (!is.null(prediction)){	
+		p = p + geom_line(data= prediction, aes(linetype=model, y=prediction))
+		return(p)
+	} else {
+			return(p)
+	}
 }
