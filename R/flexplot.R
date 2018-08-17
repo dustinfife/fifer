@@ -82,16 +82,6 @@ flexplot = function(formula, data,
 	given = unlist(strsplit(as.character(formula[[3L]])[3], " + ", fixed=T))
 	if (is.na(given[1])){given=NULL}
 	
-		#### turn numbered categorical into categorical	
-	# f = function(x){ 
-		# if (length(unique(x))==2){
-			# as.factor(x)
-		# } else {
-			# x
-		# }
-	# }
-	# apply(data[,predictors], 2,function(x){length(unique)})
-	# data[,predictors] = apply(data[,predictors],2,f)
 
 	
 	#### identify which variables are numeric and which are factors
@@ -124,7 +114,7 @@ flexplot = function(formula, data,
 			alpha.raw = 0
 		}	
 	}
-	
+
 
 
 	### BEGIN THE MEGA PLOTTING IFS!
@@ -156,22 +146,32 @@ flexplot = function(formula, data,
 		p = ggplot(data=m, aes_string(x=predictors, y=Freq, fill=outcome)) + geom_bar(stat='identity', position='dodge') + theme_bw()
 
 	##### INTERACTION PLOT
-	} else if (length(outcome)==1 & length(predictors)==2 & (is.character(data[,predictors[1]]) | is.factor(data[,predictors[1]])) & (is.character(data[,predictors[2]]) | is.factor(data[,predictors[2]]))){		
-		p = ggplot(data=data, aes_string(x=predictors[1], y=outcome)) +
-			geom_jitter(data=sample.subset(sample, data), alpha = raw.alph.func(raw.data, .35), size=.25, width=.2) +
-			facet_wrap(as.formula(paste("~", predictors[2]))) +
-			stat_summary(aes_string(x=predictors[1], y=outcome), geom="errorbar", fun.ymin = function(z){mean(z) - 1.96*(sd(z)/length(z))}, fun.ymax=function(z){mean(z) + 1.96*(sd(z)/length(z))}, fun.y = mean, width=.1) +
-			stat_summary(fun.y = "mean", geom="line", group=1) +
-			labs(x=predictors[1], y=outcome) +
-			theme_bw()
-		
+	} else if (length(outcome)==1 & length(predictors)==2 & (is.character(data[,predictors[1]]) | is.factor(data[,predictors[1]])) & (is.character(data[,predictors[2]]) | is.factor(data[,predictors[2]]))){
+			p = ggplot(data=data, aes_string(x=predictors[1], y=outcome)) +
+				geom_jitter(data=sample.subset(sample, data), alpha = raw.alph.func(raw.data, .35), size=.25, width=.2) +
+				facet_wrap(as.formula(paste("~", predictors[2]))) +
+				stat_summary(aes_string(x=predictors[1], y=outcome), geom="errorbar", fun.ymin = function(z){mean(z) - 1.96*(sd(z)/length(z))}, fun.ymax=function(z){mean(z) + 1.96*(sd(z)/length(z))}, fun.y = mean, width=.1) +
+				stat_summary(fun.y = "mean", geom="line", group=1) +
+				labs(x=predictors[1], y=outcome) +
+				theme_bw()
+
 	#### ANCOVA PLOT		
 	} else if (length(predictors)==2 & length(categories)==1){
-		p = ggplot(data=d, aes_string(x=numbers, y=outcome, group=categories, linetype=categories, color=categories)) +
-			geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data)) +
-			gm +
-			theme_bw()							
-
+		### if they're supplying a prediction, put the covariate in the "given" area
+		if (!is.null(prediction)){
+			given.as.string = paste0("~", categories)
+			p = ggplot(data=data, aes_string(x=numbers, y=outcome))+
+				geom_point(data=sample.subset(sample, data), alpha=.5) +
+				gm +
+				facet_grid(as.formula(given.as.string),labeller = labeller(.rows = label_both, .cols=label_both)) +
+				theme_bw()	
+				
+		} else {	
+			p = ggplot(data=d, aes_string(x=numbers, y=outcome, group=categories, linetype=categories, color=categories)) +
+				geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data)) +
+				gm +
+				theme_bw()							
+		}
 	###### MULTIWAY DOT PLOT FOR THREE CATEGORICAL PREDICTORS
 	} else if (length(outcome)==1 & length(predictors)==3 & length(categories)==3){
 
@@ -238,8 +238,10 @@ flexplot = function(formula, data,
 			binned.vars = numbers[which((numbers) %in% given)]
 		}
 
-		msg = paste0("The following variables are going to be binned: ", paste0(binned.vars, collapse=", "))
-		cat(msg)
+		if (length(binned.vars)>0){
+			msg = paste0("The following variables are going to be binned: ", paste0(binned.vars, collapse=", "))
+			cat(msg)
+		}
 		
 		### repeat the bins the number of bins there are
 		if (length(bins) != length(binned.vars) & length(bins)>1){
@@ -252,48 +254,37 @@ flexplot = function(formula, data,
 		}
 
 		#### bin the binned variables
-		for (i in 1:length(binned.vars)){
-			
-			break.current = unlist(breaks[i])
-			if (!is.null(unlist(labels[i])) & length(unlist(labels[i])) != bins[i]){
-				stop(paste0("The label vectors (", paste0(unlist(labels[i]), collapse=", "), ") is not the same length as the bin length (", bins[i], ")", sep=""))
-			}
-			
-			### if they supply the breaks...
-			if (!is.null(break.current)){
-				#### give min as breaks, if the user doesn't
-				if (min(break.current)>min(data[,binned.vars[i]])){
-					break.current = c(-Inf, break.current)
-				}
-				if (max(break.current,na.rm=T)<max(data[,binned.vars[i]])){
-					break.current = c(break.current, Inf)
+		if (length(binned.vars)>0){
+			for (i in 1:length(binned.vars)){
+				
+				break.current = unlist(breaks[i])
+				if (!is.null(unlist(labels[i])) & length(unlist(labels[i])) != bins[i]){
+					stop(paste0("The label vectors (", paste0(unlist(labels[i]), collapse=", "), ") is not the same length as the bin length (", bins[i], ")", sep=""))
 				}
 				
-				quants = unlist(break.current)
-			} else {
-				quants = quantile(data[,binned.vars[i]], seq(from=0, to=1, length.out=bins[i]+1))
-			}
-
-			data[,paste0(binned.vars[i])] = cut(data[,binned.vars[i]], quants, labels= unlist(labels[i]), include.lowest=T, include.highest=T)
-			
-			if (!is.null(prediction)){
-				prediction[,paste0(binned.vars[i])] = cut(prediction[,binned.vars[i]], quants, labels= unlist(labels[i]), include.lowest=T, include.highest=T)
-			}
-			
-		}
-
-######
-
-		# head(prediction)
-# ggplot(data=data, aes_string(x=axis[1], y=outcome, shape=axis[2], linetype=axis[2]))+
-					# geom_smooth(col="black") + 
-					# geom_point() +
-					# facet_grid(as.formula(given.as.string),labeller = labeller(.rows = label_both, .cols=label_both)) + 
-					# theme_bw() +
-					# geom_line(data= prediction, aes(linetype=model, y=prediction), col="red")
-
+				### if they supply the breaks...
+				if (!is.null(break.current)){
+					#### give min as breaks, if the user doesn't
+					if (min(break.current)>min(data[,binned.vars[i]])){
+						break.current = c(-Inf, break.current)
+					}
+					if (max(break.current,na.rm=T)<max(data[,binned.vars[i]])){
+						break.current = c(break.current, Inf)
+					}
+					
+					quants = unlist(break.current)
+				} else {
+					quants = quantile(data[,binned.vars[i]], seq(from=0, to=1, length.out=bins[i]+1))
+				}
 	
-#######	
+				data[,paste0(binned.vars[i])] = cut(data[,binned.vars[i]], quants, labels= unlist(labels[i]), include.lowest=T, include.highest=T)
+				
+				if (!is.null(prediction)){
+					prediction[,paste0(binned.vars[i])] = cut(prediction[,binned.vars[i]], quants, labels= unlist(labels[i]), include.lowest=T, include.highest=T)
+				}
+				
+			}
+		}
 	
 		if (length(axis)>1){
 	
@@ -303,6 +294,7 @@ flexplot = function(formula, data,
 					facet_grid(as.formula(given.as.string),labeller = labeller(.rows = label_both, .cols=label_both)) + 
 					theme_bw()
 		} else {
+			
 			p = ggplot(data=data, aes_string(x=axis[1], y=outcome))+
 				geom_point(data=sample.subset(sample, data), alpha=.5) +
 				gm +
@@ -314,9 +306,10 @@ flexplot = function(formula, data,
 	
 
 	}	
-	
+			
 	if (!is.null(prediction)){	
-		p = p + geom_line(data= prediction, aes(linetype=model, y=prediction))
+		print("here dude")
+		p = p + geom_line(data= prediction, aes(color=model, y=prediction))
 		return(p)
 	} else {
 			return(p)
