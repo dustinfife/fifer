@@ -281,9 +281,22 @@ flexplot = function(formula, data,
 				
 				if (!is.null(prediction)){
 					prediction[,paste0(binned.vars[i])] = cut(prediction[,binned.vars[i]], quants, labels= unlist(labels[i]), include.lowest=T, include.highest=T)
+
 				}
 				
 			}
+			nrow(prediction)
+			if (!is.null(prediction)){
+							#### average the predictions within bin
+				f = make.formula("prediction", c("model",
+														predictors[-which(predictors==binned.vars[i])],
+														binned.vars[i]
+														)
+									)			
+				prediction = aggregate(f, data=prediction, FUN=median)
+
+			}			
+			
 		}
 	
 		if (length(axis)>1){
@@ -308,8 +321,7 @@ flexplot = function(formula, data,
 	}	
 			
 	if (!is.null(prediction)){	
-		print("here dude")
-		p = p + geom_line(data= prediction, aes(color=model, y=prediction))
+		p = p + geom_line(data= prediction, aes(linetype=model, y=prediction))
 		return(p)
 	} else {
 			return(p)

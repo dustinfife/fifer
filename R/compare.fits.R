@@ -76,7 +76,7 @@ compare.fits = function(formula, data, model1, model2){
 			}
 		}
 	}
-
+### if it's binned, predict the midpoint of the binned variable
 
 	#### generate predictions
 	pred.mod1 = data.frame(prediction = predict(model1, pred.values), model= subsetString(as.character(model1$call), "(", position=1)[1])
@@ -88,4 +88,4 @@ compare.fits = function(formula, data, model1, model2){
 	#### create flexplot
 	flexplot(formula, data=data, prediction=prediction.model, suppress_smooth=T, se=F)
 
-}		
+}	
