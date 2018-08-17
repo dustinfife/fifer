@@ -45,8 +45,12 @@ compare.fits = function(formula, data, model1, model2){
 	min.max = as.list(as.data.frame((apply(min.max, 1, f))))
 
     #### get unique values for categorical vars
-	un.vars =lapply(data[,cat], unique); names(un.vars) = cat
-    
+    if (length(cat)==1){
+    	un.vars = lapply(data[cat], unique)    	
+    } else {
+		un.vars =lapply(data[,cat], unique); names(un.vars) = cat
+	}
+
     
     #### combine into one dataset
     all.vars = c(min.max, un.vars)    
