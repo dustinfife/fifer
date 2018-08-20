@@ -28,10 +28,12 @@
 ##' mod = lm(weight.change.missing~motivation, data=d, model=T)
 ##' predictors = c("muscle.gain.missing", "weight.change")
 ##' impute.me(mod, data=d, predictors=predictors, keep=F, imputations=5)
-impute.me = function(model, data, predictors, keep=T, imputations=20, silent=F){
+impute.me = function(model, data, predictors=NULL, keep=T, imputations=20, silent=F){
 
 		#### set up data to perform the imputations
-		data = make.null(predictors, data=data, keep=keep)
+		if (!is.null(predictors)){
+			data = make.null(predictors, data=data, keep=keep)
+		}
 
 		#### figure out missing data pattern
 		pattern = md.pattern(data)
@@ -41,6 +43,9 @@ impute.me = function(model, data, predictors, keep=T, imputations=20, silent=F){
 			cat("Performing Imputations. \n\n")
 			require(mice)
 			imputed.data= mice(data=data, m=imputations)
+		} else {
+			require(mice)
+			imputed.data= mice(data=data, m=imputations, quietly=T)
 		}
 		
 		#### remove dataset in the call
