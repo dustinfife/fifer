@@ -81,6 +81,14 @@
 # data(iris); data = iris; formula = as.formula("Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width"); nruns=5; silent=FALSE; importance="gini";nmin=1
 rfThresh = function(formula, data, nruns = 50, silent=FALSE, importance="permutation", nmin=1,...){
 	
+	
+	character.vars = names(which(!(unlist(lapply(data, is.numeric)))))
+	if (length(character.vars)>0){
+		cat(paste0("Note: converting the following character variables to factors: ", paste0(character.vars, collapse=", ")))
+		data = as.data.frame(unclass(data))
+	}
+	
+		
 	#### extract varaibles and response from formula
 	vars = names(model.frame(formula, data=data))[-1]
 	resp = names(model.frame(formula, data=data))[1]	
