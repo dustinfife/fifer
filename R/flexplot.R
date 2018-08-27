@@ -66,7 +66,7 @@ flexplot = function(formula, data,
 		bins = 4, labels=NULL, breaks=NULL,
 		method="loess", se=T, spread=c('quartiles', 'stdev', 'sterr'), jitter=FALSE, raw.data=T,
 		sample=Inf, 
-		prediction = NULL, suppress_smooth=F){
+		prediction = NULL, suppress_smooth=F, alpha=1){
 			
 	if (suppress_smooth){
 		gm = theme_bw()
@@ -107,7 +107,7 @@ flexplot = function(formula, data,
 	}
 
 	### if they don't want raw data, just make alpha = 0
-	raw.alph.func = function(raw.data,alpha=1){
+	raw.alph.func = function(raw.data,alpha=alpha){
 		if (raw.data){
 			alpha.raw = alpha
 		} else {
