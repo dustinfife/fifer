@@ -11,7 +11,7 @@
 ##' @export
 ##' @examples
 ##' #not yet
-compare.fits = function(formula, data, model1, model2){
+compare.fits = function(formula, data, model1, model2, ...){
 
 
 	#### extract the terms from each model
@@ -60,6 +60,10 @@ compare.fits = function(formula, data, model1, model2){
 	all.vars = all.vars[-rejects]
 	pred.values = expand.grid(all.vars)
 
+	##### look for interactions and remove them
+	if (length(grep(":", terms.mod1))>0){
+		terms.mod1 = terms.mod1[-grep(":", terms.mod1)]
+	}
 	
 	#### if it's not in model 1:
 	#### input the mean (if numeric) or a value (if categorical)
@@ -86,6 +90,6 @@ compare.fits = function(formula, data, model1, model2){
 
 
 	#### create flexplot
-	flexplot(formula, data=data, prediction=prediction.model, suppress_smooth=T, se=F)
+	flexplot(formula, data=data, prediction=prediction.model, suppress_smooth=T, se=F, ...)
 
 }	
