@@ -66,7 +66,7 @@ flexplot = function(formula, data,
 		bins = 4, labels=NULL, breaks=NULL,
 		method="loess", se=T, spread=c('quartiles', 'stdev', 'sterr'), jitter=FALSE, raw.data=T,
 		sample=Inf, 
-		prediction = NULL, suppress_smooth=F, alpha=1){
+		prediction = NULL, suppress_smooth=F, alpha=1, linecol="red"){
 			
 	if (suppress_smooth){
 		gm = theme_bw()
@@ -126,7 +126,7 @@ flexplot = function(formula, data,
 	#### SCATTERPLOT	
 	} else if (length(outcome)==1 & length(predictors)==1 & length(given)==0 & (is.numeric(data[,predictors]) & is.numeric(data[,outcome]))){			
 		p = ggplot(data=data, aes_string(x=predictors, y=outcome))+
-			geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data)) +
+			geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
 			gm +
 			theme_bw()						
 
@@ -168,7 +168,7 @@ flexplot = function(formula, data,
 				
 		} else {	
 			p = ggplot(data=d, aes_string(x=numbers, y=outcome, group=categories, linetype=categories, color=categories)) +
-				geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data)) +
+				geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
 				gm +
 				theme_bw()							
 		}
@@ -301,15 +301,15 @@ flexplot = function(formula, data,
 	
 		if (length(axis)>1){
 	
-			p = ggplot(data=data, aes_string(x=axis[1], y=outcome, shape=axis[2], linetype=axis[2]))+
+			p = ggplot(data=data, aes_string(x=axis[1], y=outcome, shape=axis[2], linetype=axis[2]), colour= linecol)+
 					gm + 
-					geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, .35)) +
+					geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
 					facet_grid(as.formula(given.as.string),labeller = labeller(.rows = label_both, .cols=label_both)) + 
 					theme_bw()
 		} else {
 			
-			p = ggplot(data=data, aes_string(x=axis[1], y=outcome))+
-				geom_point(data=sample.subset(sample, data), alpha=.5) +
+			p = ggplot(data=data, aes_string(x=axis[1], y=outcome, colour= linecol))+
+				geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
 				gm +
 				facet_grid(as.formula(given.as.string),labeller = labeller(.rows = label_both, .cols=label_both)) +
 				theme_bw()			
