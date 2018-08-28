@@ -88,6 +88,10 @@ compare.fits = function(formula, data, model1, model2, ...){
 	prediction.model = rbind(pred.mod1, pred.mod2)
 	prediction.model = cbind(pred.values, prediction.model)
 
+source("research/RPackages/fifer/R/flexplot.R")
+flexplot(formula, data=data, prediction=prediction.model, suppress_smooth=T, se=F, alpha=.01, sample=1000, linecol="red")
+
+
 
 	#### create flexplot
 	flexplot(formula, data=data, prediction=prediction.model, suppress_smooth=T, se=F, ...)

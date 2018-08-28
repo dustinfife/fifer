@@ -107,7 +107,7 @@ flexplot = function(formula, data,
 	}
 
 	### if they don't want raw data, just make alpha = 0
-	raw.alph.func = function(raw.data,alpha=alpha){
+	raw.alph.func = function(raw.data,alpha=1){
 		if (raw.data){
 			alpha.raw = alpha
 		} else {
@@ -160,8 +160,8 @@ flexplot = function(formula, data,
 		### if they're supplying a prediction, put the covariate in the "given" area
 		if (!is.null(prediction)){
 			given.as.string = paste0("~", categories)
-			p = ggplot(data=data, aes_string(x=numbers, y=outcome))+
-				geom_point(data=sample.subset(sample, data), alpha=.5) +
+			p = ggplot(data=data, aes_string(x=numbers, y=outcome, color=linecol))+
+				geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
 				gm +
 				facet_grid(as.formula(given.as.string),labeller = labeller(.rows = label_both, .cols=label_both)) +
 				theme_bw()	
@@ -298,16 +298,18 @@ flexplot = function(formula, data,
 			}			
 			
 		}
-	
+		
+		print(raw.alph.func(raw.data, alpha=alpha))
+
 		if (length(axis)>1){
-	
+
 			p = ggplot(data=data, aes_string(x=axis[1], y=outcome, shape=axis[2], linetype=axis[2]), colour= linecol)+
 					gm + 
 					geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
 					facet_grid(as.formula(given.as.string),labeller = labeller(.rows = label_both, .cols=label_both)) + 
 					theme_bw()
 		} else {
-			
+				
 			p = ggplot(data=data, aes_string(x=axis[1], y=outcome, colour= linecol))+
 				geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
 				gm +
@@ -321,7 +323,7 @@ flexplot = function(formula, data,
 	}	
 			
 	if (!is.null(prediction)){	
-		p = p + geom_line(data= prediction, aes(linetype=model, y=prediction))
+		p = p + geom_line(data= prediction, aes(linetype=model, y=prediction, color=model))
 		return(p)
 	} else {
 			return(p)
