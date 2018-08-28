@@ -83,13 +83,10 @@ compare.fits = function(formula, data, model1, model2, ...){
 ### if it's binned, predict the midpoint of the binned variable
 
 	#### generate predictions
-	pred.mod1 = data.frame(prediction = predict(model1, pred.values), model= subsetString(as.character(model1$call), "(", position=1)[1])
-	pred.mod2 = data.frame(prediction = predict(model2, pred.values), model = subsetString(as.character(model2$call), "(", position=1)[1])	
+	pred.mod1 = data.frame(prediction = predict(model1, pred.values, type="response"), model= subsetString(as.character(model1$call), "(", position=1)[1])
+	pred.mod2 = data.frame(prediction = predict(model2, pred.values, type="response"), model = subsetString(as.character(model2$call), "(", position=1)[1])	
 	prediction.model = rbind(pred.mod1, pred.mod2)
 	prediction.model = cbind(pred.values, prediction.model)
-
-source("research/RPackages/fifer/R/flexplot.R")
-flexplot(formula, data=data, prediction=prediction.model, suppress_smooth=T, se=F, alpha=.01, sample=1000, linecol="red")
 
 
 

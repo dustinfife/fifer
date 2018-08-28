@@ -73,13 +73,15 @@ flexplot = function(formula, data,
 	} else {
 		gm = geom_smooth(method=method, se=se)
 	}
-			
+		
+	
 			
 		#### extract outcome, predictors, and given variables
 	variables = all.vars(formula)
 	outcome = variables[1]
 	predictors = variables[-1]
-	given = unlist(strsplit(as.character(formula[[3L]])[3], " + ", fixed=T))
+	given = unlist(subsetString(as.character(formula[[3L]])[3], sep=" | ", position=2, flexible=F))
+
 	if (is.na(given[1])){given=NULL}
 	
 
@@ -156,22 +158,22 @@ flexplot = function(formula, data,
 				theme_bw()
 
 	#### ANCOVA PLOT		
-	} else if (length(predictors)==2 & length(categories)==1){
-		### if they're supplying a prediction, put the covariate in the "given" area
-		if (!is.null(prediction)){
-			given.as.string = paste0("~", categories)
-			p = ggplot(data=data, aes_string(x=numbers, y=outcome))+
-				geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
-				gm +
-				facet_grid(as.formula(given.as.string),labeller = labeller(.rows = label_both, .cols=label_both)) +
-				theme_bw()	
+	# } else if (length(predictors)==2 & length(categories)==1 & length(given)<1){
+		# ### if they're supplying a prediction, put the covariate in the "given" area
+		# if (!is.null(prediction)){
+			# given.as.string = paste0("~", categories)
+			# p = ggplot(data=data, aes_string(x=numbers, y=outcome))+
+				# geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
+				# gm +
+				# facet_grid(as.formula(given.as.string),labeller = labeller(.rows = label_both, .cols=label_both)) +
+				# theme_bw()	
 				
-		} else {	
-			p = ggplot(data=d, aes_string(x=numbers, y=outcome, group=categories, linetype=categories, color=categories)) +
-				geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
-				gm +
-				theme_bw()							
-		}
+		# } else {	
+			# p = ggplot(data=d, aes_string(x=numbers, y=outcome, group=categories, linetype=categories, color=categories)) +
+				# geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
+				# gm +
+				# theme_bw()							
+		# }
 	###### MULTIWAY DOT PLOT FOR THREE CATEGORICAL PREDICTORS
 	} else if (length(outcome)==1 & length(predictors)==3 & length(categories)==3){
 
@@ -219,17 +221,24 @@ flexplot = function(formula, data,
 		}
 		
 		
+		#### see if more than two variables are shown at the left of the given sign
+		if ((length(predictors) - length(given))>2){
+			stop("Only two 'axis' variables are allowed.")
+		}
+		
+		
 		#### make given variables ggplot friendly (for facet_grid)
 		given.as.string = ifelse(length(given)>1,paste0(given, collapse="~"), paste0("~",given))
 
 		#### if a category is "given", leave it alone
-		if (length(which(given %in% categories))>0){
-			given = given[-which(given %in% categories)]
-		}
+		# if (length(which(given %in% categories))>0){
+			# given = given[-which(given %in% categories)]
+		# }
 
 
 		#### identify the non given variables
-		axis = unlist(strsplit(as.character(formula[[3L]])[2], " + ", fixed=T))	
+		axis = unlist(strsplit(as.character(formula[[3L]])[-1], " + ", fixed=T))	
+		
 			
 		### identify the number of binned variables we need
 		if (length(axis)>1 & axis[2] %in% numbers){ 
@@ -285,7 +294,7 @@ flexplot = function(formula, data,
 				}
 				
 			}
-			nrow(prediction)
+
 			if (!is.null(prediction)){
 							#### average the predictions within bin
 				f = make.formula("prediction", c("model",
@@ -299,21 +308,27 @@ flexplot = function(formula, data,
 			
 		}
 		
-		print(raw.alph.func(raw.data, alpha=alpha))
-
+		
+		#### add code for "given" variable
+		if (!is.null(given)){
+			giv = facet_grid(as.formula(given.as.string),labeller = labeller(.rows = label_both, .cols=label_both))
+		} else {
+			giv = theme_bw()
+		}
+		
 		if (length(axis)>1){
 
 			p = ggplot(data=data, aes_string(x=axis[1], y=outcome, shape=axis[2], linetype=axis[2]))+
 					gm + 
 					geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
-					facet_grid(as.formula(given.as.string),labeller = labeller(.rows = label_both, .cols=label_both)) + 
+					giv + 
 					theme_bw()
 		} else {
 				
 			p = ggplot(data=data, aes_string(x=axis[1], y=outcome))+
 				geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
 				gm +
-				facet_grid(as.formula(given.as.string),labeller = labeller(.rows = label_both, .cols=label_both)) +
+				giv + 
 				theme_bw()			
 		}
 
