@@ -20,7 +20,7 @@ compare.fits = function(formula, data, model1, model2, ...){
 		
 	#### check if models have the same terms
 	if (length(which(!(terms.mod1 %in% terms.mod2)))>0 | length(which(!(terms.mod2 %in% terms.mod1)))>0){
-		stop("You must have the same predictors in both models to compare them.")
+		warning("You should probably have the same predictors in both models for a better comparison.")
 	}
 
 	##### extract variable names
