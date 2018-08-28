@@ -75,12 +75,16 @@ flexplot = function(formula, data,
 	}
 		
 	
-			
 		#### extract outcome, predictors, and given variables
 	variables = all.vars(formula)
 	outcome = variables[1]
 	predictors = variables[-1]
-	given = unlist(subsetString(as.character(formula[[3L]])[3], sep=" | ", position=2, flexible=F))
+	given = unlist(subsetString(as.character(formula)[3], sep=" | ", position=2, flexible=F))
+
+		#### identify the non given variables
+	axis = unlist(subsetString(as.character(formula)[3], sep=" | ", position=1, flexible=F))
+	axis = unlist(strsplit(axis, " + ", fixed=T))
+	
 
 	if (is.na(given[1])){given=NULL}
 	
@@ -236,8 +240,6 @@ flexplot = function(formula, data,
 		# }
 
 
-		#### identify the non given variables
-		axis = unlist(strsplit(as.character(formula[[3L]])[-1], " + ", fixed=T))	
 		
 			
 		### identify the number of binned variables we need
