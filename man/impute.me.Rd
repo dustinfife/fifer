@@ -4,7 +4,8 @@
 \alias{impute.me}
 \title{Multiple Imputation on a Model}
 \usage{
-impute.me(model, data, predictors, keep = T, imputations = 20, silent = F)
+impute.me(model, data, predictors = NULL, keep = T, imputations = 20,
+  silent = F)
 }
 \arguments{
 \item{model}{An R-friendly model. Currently, it only allows lm objects, but will eventually allow other objects (e.g., glm).}
@@ -44,4 +45,3 @@ impute.me(mod, data=d, predictors=predictors, keep=F, imputations=5)
 \author{
 Dustin Fife
 }
-

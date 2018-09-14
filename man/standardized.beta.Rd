@@ -21,4 +21,3 @@ Compute standardized betas on a linear model object
 \author{
 Dustin Fife
 }
-

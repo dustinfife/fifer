@@ -2,8 +2,8 @@
 % Please edit documentation in R/visualize.R
 \name{visualize}
 \alias{visualize}
-\alias{visualize.default}
 \alias{visualize.lm}
+\alias{visualize.default}
 \title{Visualize a fitted model}
 \usage{
 visualize(object, ...)
@@ -14,4 +14,3 @@ visualize(object, ...)
 \description{
 Visualize a fitted model
 }
-

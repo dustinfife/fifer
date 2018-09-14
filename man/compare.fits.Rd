@@ -4,7 +4,7 @@
 \alias{compare.fits}
 \title{Compare the fits of two models}
 \usage{
-compare.fits(formula, data, model1, model2)
+compare.fits(formula, data, model1, model2, ...)
 }
 \arguments{
 \item{formula}{A formula that can be used in flexplot. The variables inside must not include variables outside the fitted models.}
@@ -27,4 +27,3 @@ Compare the fits of two models
 \author{
 Dustin Fife
 }
-

@@ -25,4 +25,3 @@ The correlation matrix input should be a square matrix, and the length of sd sho
 \author{
 Ken Kelley (University of Notre Dame; (\email{KKelley@ND.Edu}) and Keke Lai (the \code{MBESS} package), with modifications by Dustin Fife \email{fife.dustin@gmail.com}.
 }
-

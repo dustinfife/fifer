@@ -4,8 +4,8 @@
 \alias{xtable.rfInterp}
 \title{Prepare xtable Summary}
 \usage{
-\method{xtable}{rfInterp}(x, caption = NULL, label = NULL, align = NULL,
-  digits = NULL, display = NULL, ...)
+\method{xtable}{rfInterp}(x, caption = NULL, label = NULL,
+  align = NULL, digits = NULL, display = NULL, ...)
 }
 \arguments{
 \item{x}{an rfInterp object}
@@ -66,4 +66,3 @@ class of \code{x}.}
 \description{
 Prepare xtable Summary
 }
-

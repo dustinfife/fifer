@@ -33,4 +33,3 @@ table(d$category)
 \author{
 Dustin Fife
 }
-

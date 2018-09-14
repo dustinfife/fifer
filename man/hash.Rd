@@ -20,4 +20,3 @@ hash(j=100, i=11)
 \author{
 Dustin Fife
 }
-

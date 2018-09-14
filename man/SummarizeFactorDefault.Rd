@@ -36,4 +36,3 @@ SummarizeFactorDefault(x=c(sample(1:5, 100, replace=TRUE), sample(1:5, 100, repl
 \author{
 Vinh Nguyen
 }
-

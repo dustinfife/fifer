@@ -4,8 +4,8 @@
 \alias{spearman.plot}
 \title{Spearman plot}
 \usage{
-spearman.plot(x, y = NULL, dcol = "blue", lhist = 20, num.dnorm = 5 *
-  lhist, plot.cor = TRUE, ...)
+spearman.plot(x, y = NULL, dcol = "blue", lhist = 20, num.dnorm = 5
+  * lhist, plot.cor = TRUE, ...)
 }
 \arguments{
 \item{x}{either a matrix with two columns or a vector (if y is not \code{NULL})}
@@ -41,4 +41,3 @@ spearman.plot(x=iris$Sepal.Length, y=iris$Sepal.Width)
 \author{
 Dustin Fife
 }
-

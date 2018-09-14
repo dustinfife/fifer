@@ -6,8 +6,8 @@
 chi-square test, correcting for multiple comparisons.}
 \usage{
 chisq.post.hoc(tbl, test = c("fisher.test"), popsInRows = TRUE,
-  control = c("fdr", "BH", "BY", "bonferroni", "holm", "hochberg", "hommel"),
-  digits = 4, ...)
+  control = c("fdr", "BH", "BY", "bonferroni", "holm", "hochberg",
+  "hommel"), digits = 4, ...)
 }
 \arguments{
 \item{tbl}{A \code{table} object.}
@@ -58,4 +58,3 @@ chisq.post.hoc(M)
 \code{chisq.test} and \code{p.adjust}.
 }
 \keyword{htest}
-

@@ -23,10 +23,9 @@ names = LETTERS[1:10]
 get.cols(c("A", "B", "D"), LETTERS[1:10])  ### works
 #get.cols(c("A", "B", "Z"), LETTERS[1:10])  ### doesn't work
 }
-\author{
-Dustin Fife
-}
 \seealso{
 \code{\link{make.null}}, \code{\link{r}}
 }
-
+\author{
+Dustin Fife
+}

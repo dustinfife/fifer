@@ -36,4 +36,3 @@ ci.mean(iq, group, levels=c("control","iq.booster.pill"), interval=.99)
 \author{
 Dustin Fife
 }
-

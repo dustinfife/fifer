@@ -33,4 +33,3 @@ z.test(k, mean=5, sd=3)
 \author{
 Dustin Fife
 }
-

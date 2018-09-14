@@ -15,4 +15,3 @@ A list containing the accuracy, sensitivity, etc.
 \description{
 Output accuracy, sensitivity, specificity, NPV, and PPV.
 }
-

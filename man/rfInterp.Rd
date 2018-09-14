@@ -4,7 +4,8 @@
 \alias{rfInterp}
 \title{Variable Selection with Random Forest}
 \usage{
-rfInterp(object, nruns = 20, nsd = 1, importance = "permutation", ...)
+rfInterp(object, nruns = 20, nsd = 1, importance = "permutation",
+  ...)
 }
 \arguments{
 \item{object}{a rfThresh object}
@@ -45,10 +46,9 @@ object = rfThresh(formula, data=iris, nruns=2, importance="gini");
 #### run interpretation step
 rfInterp(object, nruns=10, importance="permutation")}
 }
-\author{
-Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot, with modifications by Dustin Fife
-}
 \seealso{
 \code{\link{rfInterp}}, \code{\link{rfPred}}
 }
-
+\author{
+Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot, with modifications by Dustin Fife
+}

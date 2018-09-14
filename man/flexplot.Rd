@@ -5,9 +5,10 @@
 \title{Create a "flexible plot" or flexplot}
 \usage{
 flexplot(formula, data, color = NULL, symbol = NULL, linetype = NULL,
-  bins = 4, labels = NULL, breaks = NULL, method = "loess", se = T,
-  spread = c("quartiles", "stdev", "sterr"), jitter = FALSE, raw.data = T,
-  sample = Inf, prediction = NULL, suppress_smooth = F)
+  bins = 4, labels = NULL, breaks = NULL, method = "loess",
+  se = T, spread = c("quartiles", "stdev", "sterr"), jitter = FALSE,
+  raw.data = T, sample = Inf, prediction = NULL,
+  suppress_smooth = F, alpha = 1)
 }
 \arguments{
 \item{formula}{A formula of the form  y~x + a | b + z}
@@ -90,4 +91,3 @@ flexplot(weight.change~gender + therapy.type + rewards, data=d, raw.data=F)
 \author{
 Dustin Fife
 }
-
