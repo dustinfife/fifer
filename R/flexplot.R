@@ -230,6 +230,12 @@ flexplot = function(formula, data,
 			stop("Only two 'axis' variables are allowed.")
 		}
 		
+		#### modify given (if needed)
+		if (regexpr("+", given)){
+			given = unlist(strsplit(given, " + ", fixed=T))
+		}
+		
+		
 		
 		#### make given variables ggplot friendly (for facet_grid)
 		given.as.string = ifelse(length(given)>1,paste0(given, collapse="~"), paste0("~",given))
@@ -246,7 +252,7 @@ flexplot = function(formula, data,
 		if (length(axis)>1 & axis[2] %in% numbers){ 
 			binned.vars = c(axis[2], numbers[which((numbers) %in% given)])
 		} else {
-			binned.vars = numbers[which((numbers) %in% unlist(strsplit(given, " + ", fixed=T)))]
+			binned.vars = numbers[which((numbers) %in% given)]
 		}
 
 		if (length(binned.vars)>0){
