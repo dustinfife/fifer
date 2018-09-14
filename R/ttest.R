@@ -189,7 +189,7 @@ print.ttest = function(x,...){
 #' @param ... other parameters passed to plot
 #' @importFrom cowplot plot_grid
 #' @export
-plot.ttest = function(x, ...){
+plot.ttest = function(x, residuals=T,...){
 	m = x$data
 	
 	x.name = x$x.name
@@ -221,6 +221,10 @@ plot.ttest = function(x, ...){
 	res.dep = ggplot(data=m, aes(y=residuals, x=x)) + geom_jitter(alpha=.15, width=.05, size=.75) + stat_summary(fun.y=median, color="red", geom="line", aes(group=1)) + theme_bw() + labs(x=x.name, y="Absolute Value of Residuals", title="S-L Plot")
 	
 	##### put into a single plot
-	plot_grid(t.test, histo, res.dep)
+	if (residuals){
+		plot_grid(t.test, histo, res.dep)
+	} else {
+		t.test
+	}
 
 }
