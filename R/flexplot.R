@@ -246,7 +246,7 @@ flexplot = function(formula, data,
 		if (length(axis)>1 & axis[2] %in% numbers){ 
 			binned.vars = c(axis[2], numbers[which((numbers) %in% given)])
 		} else {
-			binned.vars = numbers[which((numbers) %in% given)]
+			binned.vars = numbers[which((numbers) %in% unlist(strsplit(given, " + ", fixed=T)))]
 		}
 
 		if (length(binned.vars)>0){
