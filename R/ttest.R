@@ -186,6 +186,7 @@ print.ttest = function(x,...){
 #' @aliases plot plot.ttest
 #' @param x a ttest object
 #' @param y igorned
+#' @param residuals should the residuals be plotted?
 #' @param ... other parameters passed to plot
 #' @importFrom cowplot plot_grid
 #' @export
