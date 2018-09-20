@@ -65,6 +65,11 @@ compare.fits = function(formula, data, model1, model2, ...){
 		terms.mod1 = terms.mod1[-grep(":", terms.mod1)]
 	}
 	
+	##### look for polynomials and remove them
+	if (length(grep("^2", terms.mod1, fixed=T, value=T))>0){
+		terms.mod1 = terms.mod1[-grep("^2", terms.mod1, fixed=T)]
+	}	
+	
 	#### if it's not in model 1:
 	#### input the mean (if numeric) or a value (if categorical)
 	if (length(which(!(terms.mod1 %in% predictors)))>0){
