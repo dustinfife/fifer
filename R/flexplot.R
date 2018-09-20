@@ -231,8 +231,10 @@ flexplot = function(formula, data,
 		}
 		
 		#### modify given (if needed)
+		if (length(given)>0){
 		if (regexpr("+", given)){
 			given = unlist(strsplit(given, " + ", fixed=T))
+		}
 		}
 		
 		
