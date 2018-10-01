@@ -80,13 +80,16 @@ flexplot = function(formula, data,
 	outcome = variables[1]
 	predictors = variables[-1]
 	given = unlist(subsetString(as.character(formula)[3], sep=" | ", position=2, flexible=F))
+	if (is.na(given)){
+		given=NULL
+	}
 
 		#### identify the non given variables
 	axis = unlist(subsetString(as.character(formula)[3], sep=" | ", position=1, flexible=F))
 	axis = unlist(strsplit(axis, " + ", fixed=T))
 	
 
-	if (is.na(given[1])){given=NULL}
+	if (is.na(given)){given=NULL}
 	
 
 	
@@ -153,6 +156,10 @@ flexplot = function(formula, data,
 
 	##### INTERACTION PLOT
 	} else if (length(outcome)==1 & length(predictors)==2 & (is.character(data[,predictors[1]]) | is.factor(data[,predictors[1]])) & (is.character(data[,predictors[2]]) | is.factor(data[,predictors[2]]))){
+		
+		
+		#### identify if given is null
+		if (!is.null(given)){
 			p = ggplot(data=data, aes_string(x=predictors[1], y=outcome)) +
 				geom_jitter(data=sample.subset(sample, data), alpha = raw.alph.func(raw.data, .35), size=.25, width=.2) +
 				facet_wrap(as.formula(paste("~", predictors[2]))) +
@@ -160,6 +167,14 @@ flexplot = function(formula, data,
 				stat_summary(fun.y = "mean", geom="line", group=1) +
 				labs(x=predictors[1], y=outcome) +
 				theme_bw()
+		} else {
+			p = ggplot(data=data, aes_string(x=predictors[1], y=outcome, color=predictors[2], linetype=predictors[2], symbol=predictors[2])) +
+				geom_jitter(data=sample.subset(sample, data), alpha = raw.alph.func(raw.data, .35), size=.25, width=.2) +
+				stat_summary(aes_string(x=predictors[1], y=outcome), geom="errorbar", fun.ymin = function(z){mean(z) - 1.96*(sd(z)/length(z))}, fun.ymax=function(z){mean(z) + 1.96*(sd(z)/length(z))}, fun.y = mean, width=.1) +
+				stat_summary(fun.y = "mean", geom="line", group=1) +
+				labs(x=predictors[1], y=outcome) +
+				theme_bw()			
+		}
 
 	#### ANCOVA PLOT		
 	# } else if (length(predictors)==2 & length(categories)==1 & length(given)<1){
@@ -223,20 +238,19 @@ flexplot = function(formula, data,
 		if (length(given)>2){
 			stop("Only two 'given' variables are allowed.")
 		}
-		
-		
-		#### see if more than two variables are shown at the left of the given sign
-		if ((length(predictors) - length(given))>2){
-			stop("Only two 'axis' variables are allowed.")
-		}
-		
+
 		#### modify given (if needed)
 		if (length(given)>0){
 		if (regexpr("+", given)){
 			given = unlist(strsplit(given, " + ", fixed=T))
 		}
-		}
+		}		
 		
+		#### see if more than two variables are shown at the left of the given sign
+		if ((length(predictors) - length(given))>2){
+			stop("Only two 'axis' variables are allowed.")
+		}
+			
 		
 		
 		#### make given variables ggplot friendly (for facet_grid)
@@ -326,17 +340,23 @@ flexplot = function(formula, data,
 			giv = theme_bw()
 		}
 		
+		if (jitter){
+			jit = geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha), width=.2, height=.2)
+		} else {
+			jit = geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha))
+		}
+		
 		if (length(axis)>1){
 
-			p = ggplot(data=data, aes_string(x=axis[1], y=outcome, shape=axis[2], linetype=axis[2]))+
+			p = ggplot(data=data, aes_string(x=axis[1], y=outcome, shape=axis[2], linetype=axis[2], color=axis[2]))+
 					gm + 
-					geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
+					jit + 
 					giv + 
 					theme_bw()
 		} else {
 				
 			p = ggplot(data=data, aes_string(x=axis[1], y=outcome))+
-				geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
+				jit + 
 				gm +
 				giv + 
 				theme_bw()			
