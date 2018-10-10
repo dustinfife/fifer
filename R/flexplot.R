@@ -68,6 +68,10 @@ flexplot = function(formula, data,
 		sample=Inf, 
 		prediction = NULL, suppress_smooth=F, alpha=1){
 			
+			
+	##### use the following to debug flexplot
+	#color=NULL; symbol=NULL; linetype=NULL; bins = 4; labels=NULL; breaks=NULL;	method="loess"; se=T; spread=c('quartiles', 'stdev', 'sterr'); jitter=FALSE; raw.data=T;	sample=Inf; prediction = NULL; suppress_smooth=F; alpha=1		
+			
 	if (suppress_smooth){
 		gm = theme_bw()
 	} else {
@@ -80,8 +84,9 @@ flexplot = function(formula, data,
 	outcome = variables[1]
 	predictors = variables[-1]
 	given = unlist(subsetString(as.character(formula)[3], sep=" | ", position=2, flexible=F))
-	if (is.na(given)){
-		given=NULL
+
+	if (is.null(given)){
+		given=NA
 	}
 
 		#### identify the non given variables
@@ -89,7 +94,7 @@ flexplot = function(formula, data,
 	axis = unlist(strsplit(axis, " + ", fixed=T))
 	
 
-	if (is.na(given)){given=NULL}
+	#if (is.na(given)){given=NULL}
 	
 
 	
@@ -133,14 +138,14 @@ flexplot = function(formula, data,
 		p = uni.plot(outcome, d=data)
 
 	#### SCATTERPLOT	
-	} else if (length(outcome)==1 & length(predictors)==1 & length(given)==0 & (is.numeric(data[,predictors]) & is.numeric(data[,outcome]))){			
+	} else if (length(outcome)==1 & length(predictors)==1 & is.na(given) & (is.numeric(data[,predictors]) & is.numeric(data[,outcome]))){			
 		p = ggplot(data=data, aes_string(x=predictors, y=outcome))+
 			geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
 			gm +
 			theme_bw()						
 
 	##### MEAN PLOT
-	} else if (length(outcome)==1 & length(predictors)==1 & length(given)==0 & (is.numeric(data[,predictors]) | is.numeric(data[,outcome]))){		
+	} else if (length(outcome)==1 & length(predictors)==1 & is.na(given) & (is.numeric(data[,predictors]) | is.numeric(data[,outcome]))){		
 				
 		p = ggplot(data=data, aes_string(x=predictors, y=outcome)) +
 			geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, .15), size=.75, width=.05) + 
@@ -149,7 +154,7 @@ flexplot = function(formula, data,
 			theme_bw()
 	
 	##### CHI SQUARE PLOT
-	} else if (length(outcome) == 1 & length(predictors)==1 & length(given)==0 & !is.numeric(data[,predictors]) & !is.numeric(data[,outcome])){
+	} else if (length(outcome) == 1 & length(predictors)==1 & is.na(given) & !is.numeric(data[,predictors]) & !is.numeric(data[,outcome])){
 		m = as.data.frame(table(d[,predictors], d[,outcome])); names(m)[1:2] = c(predictors, outcome)
 		Freq = 'Freq'
 		p = ggplot(data=m, aes_string(x=predictors, y=Freq, fill=outcome)) + geom_bar(stat='identity', position='dodge') + theme_bw()
