@@ -16,6 +16,8 @@
 ##' @param breaks The breaks to be used for the bins
 ##' @param method The method to be used to draw the lines. Defaults to loess
 ##' @param se Should standard errors be drawn?
+##' @param ghost.line Should a ghost line be drawn? If so, user must specify a color. Default is NULL (in which case, the ghost line isn't shown). 
+##' @param ghost.group What should the reference group be (from which to draw the ghost line)? The user can specify up to two values as a vector. See examples. 
 ##' @param spread How should standard errors be drawn? Defaults to quartiles
 ##' @param jitter Should values be jittered?
 ##' @param raw.data Should raw data be plotted?
@@ -64,14 +66,14 @@
 flexplot = function(formula, data, 
 		color=NULL, symbol=NULL, linetype=NULL, 
 		bins = 4, labels=NULL, breaks=NULL,
-		method="loess", se=T, spread=c('quartiles', 'stdev', 'sterr'), jitter=FALSE, raw.data=T,
+		method="loess", se=T, 
+		ghost.line=NULL, ghost.reference=NULL,
+		spread=c('quartiles', 'stdev', 'sterr'), jitter=FALSE, raw.data=T,
 		sample=Inf, 
 		prediction = NULL, suppress_smooth=F, alpha=1){
 			
 			
 	##### use the following to debug flexplot
-	#color=NULL; symbol=NULL; linetype=NULL; bins = 4; labels=NULL; breaks=NULL;	method="loess"; se=T; spread=c('quartiles', 'stdev', 'sterr'); jitter=FALSE; raw.data=T;	sample=Inf; prediction = NULL; suppress_smooth=F; alpha=1		
-			
 	if (suppress_smooth){
 		gm = theme_bw()
 	} else {
@@ -338,7 +340,6 @@ flexplot = function(formula, data,
 		}
 		
 		
-		#### add code for "given" variable
 		if (!is.null(given)){
 			giv = facet_grid(as.formula(given.as.string),labeller = labeller(.rows = label_both, .cols=label_both))
 		} else {
@@ -366,6 +367,7 @@ flexplot = function(formula, data,
 				giv + 
 				theme_bw()			
 		}
+		
 
 		
 	
