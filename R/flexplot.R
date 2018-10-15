@@ -74,6 +74,7 @@ flexplot = function(formula, data,
 			
 			
 	##### use the following to debug flexplot
+	#color=NULL; symbol=NULL; linetype=NULL; bins = 4; labels=NULL; breaks=NULL; method="loess"; se=T; spread=c('quartiles', 'stdev', 'sterr'); jitter=FALSE; raw.data=T; ghost.line="gray"; sample=Inf; prediction = NULL; suppress_smooth=F; alpha=1					
 	if (suppress_smooth){
 		gm = theme_bw()
 	} else {
@@ -87,9 +88,9 @@ flexplot = function(formula, data,
 	predictors = variables[-1]
 	given = unlist(subsetString(as.character(formula)[3], sep=" | ", position=2, flexible=F))
 
-	if (is.null(given)){
-		given=NA
-	}
+	# if (is.null(given)){
+		# given=NA
+	# }
 
 		#### identify the non given variables
 	axis = unlist(subsetString(as.character(formula)[3], sep=" | ", position=1, flexible=F))
@@ -247,7 +248,7 @@ flexplot = function(formula, data,
 		}
 
 		#### modify given (if needed)
-		if (length(given)>0){
+		if (length(given)>0 & !is.na(given)){
 		if (regexpr("+", given)){
 			given = unlist(strsplit(given, " + ", fixed=T))
 		}
@@ -261,7 +262,7 @@ flexplot = function(formula, data,
 		
 		
 		#### make given variables ggplot friendly (for facet_grid)
-		given.as.string = ifelse(length(given)>1,paste0(given, collapse="~"), paste0("~",given))
+		given.as.string = ifelse(length(given)>1 & !is.na(given),paste0(rev(given), collapse="~"), paste0("~",given))
 
 		#### if a category is "given", leave it alone
 		# if (length(which(given %in% categories))>0){
@@ -339,8 +340,8 @@ flexplot = function(formula, data,
 			
 		}
 		
-		
-		if (!is.null(given)){
+				#### add code for "given" variable
+		if (!is.na(given)){
 			giv = facet_grid(as.formula(given.as.string),labeller = labeller(.rows = label_both, .cols=label_both))
 		} else {
 			giv = theme_bw()
@@ -351,6 +352,9 @@ flexplot = function(formula, data,
 		} else {
 			jit = geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha))
 		}
+		
+		
+
 		
 		if (length(axis)>1){
 
@@ -368,6 +372,40 @@ flexplot = function(formula, data,
 				theme_bw()			
 		}
 		
+
+		if (!is.null(ghost.line)){ # with help from https://stackoverflow.com/questions/52682789/how-to-add-a-lowess-or-lm-line-to-an-existing-facet-grid/52683068#52683068
+			#### if they don't specify a reference group, choose one
+			#ghost.reference=c("[18,19]", "Male")
+			#ghost.reference = NULL
+			if (is.null(ghost.reference)){
+				l = data[1,given]
+			} else {
+				if (length(ghost.reference)!=length(given)){
+					stop("When referencing a 'ghost line,' you must specify the value for each 'given' variable.")
+				}
+				
+				#### throw error if they don't put in the right order
+				if (length(given)>1 & !(ghost.reference[1] %in% data[,given[1]])){
+					stop(paste0("The ordering of the referent group must be written in the same order as the formula: ", paste0(given, collapse=", ")))
+				}
+				
+				l = matrix(ghost.reference, nrow=1)
+				
+			}	
+
+			##### now create a subsetted dataset
+			if (length(given)>1){
+				k = data[,given[1]]==l[1,1]	& data[,given[2]]==l[1,2]
+			} else {
+				k = data[,given[1]]==as.vector(l)
+			}	
+		
+			g0 = ggplot(data=data[k,], aes_string(x=axis[1], y=outcome))+gm
+			d_smooth = ggplot_build(g0)$data[[1]]; names(d_smooth)[1] = axis[1]; names(d_smooth)[2] = outcome
+			## add line to existing plot   
+			p = p + geom_line(data=d_smooth,colour=ghost.line)
+			
+		}		
 
 		
 	
