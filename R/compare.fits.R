@@ -59,16 +59,31 @@ compare.fits = function(formula, data, model1, model2, ...){
     rejects = grep("reject", names(all.vars))
 	all.vars = all.vars[-rejects]
 	pred.values = expand.grid(all.vars)
+	
+	
+	model1.type = subsetString(as.character(model1$call), "(", position=1)[1]
+	model2.type = subsetString(as.character(model2$call), "(", position=1)[1]	
 
 	##### look for interactions and remove them
 	if (length(grep(":", terms.mod1))>0){
 		terms.mod1 = terms.mod1[-grep(":", terms.mod1)]
+		model1.type = "interaction"
 	}
+	if (length(grep(":", terms.mod2))>0){
+		terms.mod2 = terms.mod2[-grep(":", terms.mod1)]
+		model2.type = "interaction"
+	}	
 	
 	##### look for polynomials and remove them
 	if (length(grep("^2", terms.mod1, fixed=T, value=T))>0){
 		terms.mod1 = terms.mod1[-grep("^2", terms.mod1, fixed=T)]
+		model1.type="polynomial"
+	}
+	if (length(grep("^2", terms.mod2, fixed=T, value=T))>0){
+		terms.mod2 = terms.mod2[-grep("^2", terms.mod1, fixed=T)]
+		model2.type="polynomial"
 	}	
+		
 	
 	#### if it's not in model 1:
 	#### input the mean (if numeric) or a value (if categorical)
@@ -88,8 +103,10 @@ compare.fits = function(formula, data, model1, model2, ...){
 ### if it's binned, predict the midpoint of the binned variable
 
 	#### generate predictions
-	pred.mod1 = data.frame(prediction = predict(model1, pred.values, type="response"), model= subsetString(as.character(model1$call), "(", position=1)[1])
-	pred.mod2 = data.frame(prediction = predict(model2, pred.values, type="response"), model = subsetString(as.character(model2$call), "(", position=1)[1])	
+	pred.mod1 = data.frame(prediction = predict(model1, pred.values, type="response"), model= model1.type)
+	pred.mod2 = data.frame(prediction = predict(model2, pred.values, type="response"), model = model2.type)	
+	
+
 	prediction.model = rbind(pred.mod1, pred.mod2)
 	prediction.model = cbind(pred.values, prediction.model)
 
