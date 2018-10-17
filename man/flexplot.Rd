@@ -6,7 +6,8 @@
 \usage{
 flexplot(formula, data, color = NULL, symbol = NULL, linetype = NULL,
   bins = 4, labels = NULL, breaks = NULL, method = "loess",
-  se = T, spread = c("quartiles", "stdev", "sterr"), jitter = FALSE,
+  se = T, ghost.line = NULL, ghost.reference = NULL,
+  spread = c("quartiles", "stdev", "sterr"), jitter = FALSE,
   raw.data = T, sample = Inf, prediction = NULL,
   suppress_smooth = F, alpha = 1)
 }
@@ -31,6 +32,8 @@ flexplot(formula, data, color = NULL, symbol = NULL, linetype = NULL,
 
 \item{se}{Should standard errors be drawn?}
 
+\item{ghost.line}{Should a ghost line be drawn? If so, user must specify a color. Default is NULL (in which case, the ghost line isn't shown).}
+
 \item{spread}{How should standard errors be drawn? Defaults to quartiles}
 
 \item{jitter}{Should values be jittered?}
@@ -38,6 +41,8 @@ flexplot(formula, data, color = NULL, symbol = NULL, linetype = NULL,
 \item{raw.data}{Should raw data be plotted?}
 
 \item{sample}{Should a sample of the data be plotted? Defaults to Inf (for all variables).}
+
+\item{ghost.group}{What should the reference group be (from which to draw the ghost line)? The user can specify up to two values as a vector. See examples.}
 }
 \description{
 Create a flexible plot
