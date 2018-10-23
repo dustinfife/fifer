@@ -185,21 +185,21 @@ flexplot = function(formula, data, related=F,
 	} else if (length(outcome)==1 & length(predictors)==1 & is.na(given) & (is.numeric(data[,predictors]) | is.numeric(data[,outcome]))){		
 		if (spread=="stdev"){
 		p = ggplot(data=data, aes_string(x=predictors, y=outcome)) +
-			geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, .15), size=.75, width=.05) + 
-			stat_summary(fun.y='mean', geom='point', size=2, color='red') + 
-			stat_summary(aes_string(x=predictors, y=outcome), geom='errorbar', fun.ymin = function(z){mean(z)-sd(z)}, fun.ymax = function(z) {mean(z)+sd(z)}, fun.y=median, color='red', width=.2)+
+			geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, .35), size=.75, width=.05) + 
+			stat_summary(fun.y='mean', geom='point', size=2, color='blue') + 
+			stat_summary(aes_string(x=predictors, y=outcome), geom='errorbar', fun.ymin = function(z){mean(z)-sd(z)}, fun.ymax = function(z) {mean(z)+sd(z)}, fun.y=median, color=rgb(1,0,0,.5), width=.2)+
 			theme_bw()			
 		} else if (spread=="sterr"){	
 		p = ggplot(data=data, aes_string(x=predictors, y=outcome)) +
-			geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, .15), size=.75, width=.05) + 
+			geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, .35), size=.75, width=.05) + 
 			stat_summary(fun.y='mean', geom='point', size=2, color='red') + 
-			stat_summary(aes_string(x=predictors, y=outcome), geom='errorbar', fun.data = mean_cl_normal, color='red', width=.2)+
+			stat_summary(aes_string(x=predictors, y=outcome), geom='errorbar', fun.data = mean_cl_normal, color=rgb(1,0,0,.5), width=.2)+
 			theme_bw()
 		} else {	
 		p = ggplot(data=data, aes_string(x=predictors, y=outcome)) +
-			geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, .15), size=.75, width=.05) + 
+			geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, .35), size=.75, width=.05) + 
 			stat_summary(fun.y='median', geom='point', size=2, color='red') + 
-			stat_summary(aes_string(x=predictors, y=outcome), geom='errorbar', fun.ymin = function(z){quantile(z, .25)}, fun.ymax = function(z) {quantile(z, .75)}, fun.y=median, color='red', width=.2)+
+			stat_summary(aes_string(x=predictors, y=outcome), geom='errorbar', fun.ymin = function(z){quantile(z, .25)}, fun.ymax = function(z) {quantile(z, .75)}, fun.y=median, color=rgb(1,0,0,.5), width=.2)+
 			theme_bw()
 		}	
 			
