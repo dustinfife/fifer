@@ -8,6 +8,7 @@
 ##'  I recommend they create separate plots, one for each level of the new variable (or a binned level of a numeric variable). 
 ##' @param formula A formula of the form  y~x + a | b + z
 ##' @param data The dataset
+##' @param related Are variables related? If so, it will show a plot of difference scores, rather than the raw scores (for a related t test). 
 ##' @param color Color values to be used for the categorical variables
 ##' @param symbol The symbols to be used for the categorical variables
 ##' @param linetype The linetype to be used for the categorical variables
@@ -63,7 +64,7 @@
 #'
 #'	# #### three categorical variables (multiway dot plot)
 ##' flexplot(weight.change~gender + therapy.type + rewards, data=d, raw.data=F)
-flexplot = function(formula, data, 
+flexplot = function(formula, data, related=F,
 		color=NULL, symbol=NULL, linetype=NULL, 
 		bins = 4, labels=NULL, breaks=NULL,
 		method="loess", se=T, 
@@ -72,9 +73,9 @@ flexplot = function(formula, data,
 		sample=Inf, 
 		prediction = NULL, suppress_smooth=F, alpha=1){
 			
-			
+
 	##### use the following to debug flexplot
-	#color=NULL; symbol=NULL; linetype=NULL; bins = 4; labels=NULL; breaks=NULL; method="loess"; se=T; spread=c('quartiles', 'stdev', 'sterr'); jitter=FALSE; raw.data=T; ghost.line="gray"; sample=Inf; prediction = NULL; suppress_smooth=F; alpha=1					
+	#formula = formula(weight.loss~therapy.type); related=T; data=d; color=NULL; symbol=NULL; linetype=NULL; bins = 4; labels=NULL; breaks=NULL; method="loess"; se=T; spread=c('quartiles', 'stdev', 'sterr'); jitter=FALSE; raw.data=T; ghost.line="gray"; sample=Inf; prediction = NULL; suppress_smooth=F; alpha=1					
 	if (suppress_smooth){
 		gm = theme_bw()
 	} else {
@@ -137,8 +138,44 @@ flexplot = function(formula, data,
 	### BEGIN THE MEGA PLOTTING IFS!
 	### PLOT UNIVARIATE PLOTS
 		### if there's no predictors, use the "uni.plot" function
-	if (length(outcome)==1 & length(predictors)==0 & length(given)==0){
+	if (length(outcome)==1 & length(predictors)==0){
 		p = uni.plot(outcome, d=data)
+		
+	### related t plot
+	} else if (related){
+		if (length(predictors)!=1){
+			stop("Currently, the 'related' option is only available when there's a single predictor.")
+		} 
+		
+		#### extract levels of the predictors
+		levs = levels(data[,predictors])
+		
+		if (length(levs)!=2){
+			stop("Sorry, I can only accept two levels of the grouping variable when related=T.")
+		}
+
+		#### create difference scores
+		g1 = data[data[,predictors]==levs[1], outcome]
+		g2 = data[data[,predictors]==levs[2], outcome]		
+		
+		if (length(g1) != length(g2)){
+			stop("Sorry, the length of the two groups are not the same. I can only create difference scores when the group sizes are identical.")
+		}
+		
+		lab = paste0("Difference (",levs[2], "-", levs[1], ')')
+		d2 = data.frame(Difference=g2-g1)
+		ggplot(d2, aes(y=Difference, x=1)) +
+			geom_jitter(data=sample.subset(sample, d2), alpha=raw.alph.func(raw.data, alpha=alpha), width=.05) +
+			stat_summary(fun.y='mean', geom='point', size=2, color='red') + 
+			stat_summary(geom='errorbar', fun.ymin = function(z){mean(z)-sd(z)}, fun.ymax = function(z) {mean(z)+sd(z)}, fun.y=median, color='red', width=.2)+			
+			gm +
+			geom_hline(yintercept=0, col="lightgray") +
+			labs(x=lab) +
+			theme_bw() +
+			theme(axis.ticks.x=element_blank(), axis.text.x=element_blank()) +
+			coord_cartesian(xlim=c(.75, 1.25))
+					
+	}	
 
 	#### SCATTERPLOT	
 	} else if (length(outcome)==1 & length(predictors)==1 & is.na(given) & (is.numeric(data[,predictors]) & is.numeric(data[,outcome]))){			
