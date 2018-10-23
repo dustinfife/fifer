@@ -164,7 +164,7 @@ flexplot = function(formula, data, related=F,
 		
 		lab = paste0("Difference (",levs[2], "-", levs[1], ')')
 		d2 = data.frame(Difference=g2-g1)
-		ggplot(d2, aes(y=Difference, x=1)) +
+		p = ggplot(d2, aes(y=Difference, x=1)) +
 			geom_jitter(data=sample.subset(sample, d2), alpha=raw.alph.func(raw.data, alpha=alpha), width=.05) +
 			stat_summary(fun.y='mean', geom='point', size=2, color='red') + 
 			stat_summary(geom='errorbar', fun.ymin = function(z){mean(z)-sd(z)}, fun.ymax = function(z) {mean(z)+sd(z)}, fun.y=median, color='red', width=.2)+			
@@ -174,9 +174,6 @@ flexplot = function(formula, data, related=F,
 			theme_bw() +
 			theme(axis.ticks.x=element_blank(), axis.text.x=element_blank()) +
 			coord_cartesian(xlim=c(.75, 1.25))
-					
-
-
 	#### SCATTERPLOT	
 	} else if (length(outcome)==1 & length(predictors)==1 & is.na(given) & (is.numeric(data[,predictors]) & is.numeric(data[,outcome]))){			
 		p = ggplot(data=data, aes_string(x=predictors, y=outcome))+
