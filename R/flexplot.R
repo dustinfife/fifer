@@ -165,7 +165,7 @@ flexplot = function(formula, data, related=F,
 		lab = paste0("Difference (",levs[2], "-", levs[1], ')')
 		d2 = data.frame(Difference=g2-g1)
 		p = ggplot(d2, aes(y=Difference, x=1)) +
-			geom_jitter(data=sample.subset(sample, d2), alpha=raw.alph.func(raw.data, alpha=alpha), width=.05) +
+			geom_jitter(data=sample.subset(sample, d2), alpha=raw.alph.func(raw.data, .15), width=.05) +
 			stat_summary(fun.y='mean', geom='point', size=2, color='red') + 
 			stat_summary(geom='errorbar', fun.ymin = function(z){mean(z)-sd(z)}, fun.ymax = function(z) {mean(z)+sd(z)}, fun.y=median, color='red', width=.2)+			
 			gm +
