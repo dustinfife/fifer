@@ -175,7 +175,7 @@ flexplot = function(formula, data, related=F,
 			theme(axis.ticks.x=element_blank(), axis.text.x=element_blank()) +
 			coord_cartesian(xlim=c(.75, 1.25))
 					
-	}	
+
 
 	#### SCATTERPLOT	
 	} else if (length(outcome)==1 & length(predictors)==1 & is.na(given) & (is.numeric(data[,predictors]) & is.numeric(data[,outcome]))){			
