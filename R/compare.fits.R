@@ -11,8 +11,12 @@
 ##' @export
 ##' @examples
 ##' #not yet
-compare.fits = function(formula, data, model1, model2, ...){
+compare.fits = function(formula, data, model1, model2=NULL, return.preds=F, ...){
 
+	#### if mod2 is null..
+	if (is.null(model2)){
+		model2 = model1
+	}
 
 	#### extract the terms from each model
 	terms.mod1 = attr(terms(model1), "term.labels")
