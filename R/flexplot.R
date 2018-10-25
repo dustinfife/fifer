@@ -132,6 +132,14 @@ flexplot = function(formula, data, related=F,
 			alpha.raw = 0
 		}	
 	}
+	
+	
+	if (jitter){
+			jit = geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha), width=.2, height=.2)
+		} else {
+			jit = geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha))
+	}
+			
 
 
 
@@ -177,7 +185,7 @@ flexplot = function(formula, data, related=F,
 	#### SCATTERPLOT	
 	} else if (length(outcome)==1 & length(predictors)==1 & is.na(given) & (is.numeric(data[,predictors]) & is.numeric(data[,outcome]))){			
 		p = ggplot(data=data, aes_string(x=predictors, y=outcome))+
-			geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
+			jit + #geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
 			gm +
 			theme_bw()						
 
@@ -186,20 +194,20 @@ flexplot = function(formula, data, related=F,
 		if (spread=="stdev"){
 		p = ggplot(data=data, aes_string(x=predictors, y=outcome)) +
 			geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, .35), size=.75, width=.05) + 
-			stat_summary(fun.y='mean', geom='point', size=2, color='blue') + 
-			stat_summary(aes_string(x=predictors, y=outcome), geom='errorbar', fun.ymin = function(z){mean(z)-sd(z)}, fun.ymax = function(z) {mean(z)+sd(z)}, fun.y=median, color=rgb(1,0,0,.5), width=.2)+
+			stat_summary(fun.y='mean', geom='point', size=2, color='red') + 
+			stat_summary(aes_string(x=predictors, y=outcome), geom='errorbar', fun.ymin = function(z){mean(z)-sd(z)}, fun.ymax = function(z) {mean(z)+sd(z)}, fun.y=median, color=rgb(1,0,0,.25), width=.2)+
 			theme_bw()			
 		} else if (spread=="sterr"){	
 		p = ggplot(data=data, aes_string(x=predictors, y=outcome)) +
 			geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, .35), size=.75, width=.05) + 
 			stat_summary(fun.y='mean', geom='point', size=2, color='red') + 
-			stat_summary(aes_string(x=predictors, y=outcome), geom='errorbar', fun.data = mean_cl_normal, color=rgb(1,0,0,.5), width=.2)+
+			stat_summary(aes_string(x=predictors, y=outcome), geom='errorbar', fun.data = mean_cl_normal, color=rgb(1,0,0,.25), width=.2)+
 			theme_bw()
 		} else {	
 		p = ggplot(data=data, aes_string(x=predictors, y=outcome)) +
 			geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, .35), size=.75, width=.05) + 
 			stat_summary(fun.y='median', geom='point', size=2, color='red') + 
-			stat_summary(aes_string(x=predictors, y=outcome), geom='errorbar', fun.ymin = function(z){quantile(z, .25)}, fun.ymax = function(z) {quantile(z, .75)}, fun.y=median, color=rgb(1,0,0,.5), width=.2)+
+			stat_summary(aes_string(x=predictors, y=outcome), geom='errorbar', fun.ymin = function(z){quantile(z, .25)}, fun.ymax = function(z) {quantile(z, .75)}, fun.y=median, color=rgb(1,0,0,.25), width=.2)+
 			theme_bw()
 		}	
 			
@@ -419,7 +427,7 @@ flexplot = function(formula, data, related=F,
 				giv + 
 				theme_bw()			
 		}
-		
+
 
 		if (!is.null(ghost.line)){ # with help from https://stackoverflow.com/questions/52682789/how-to-add-a-lowess-or-lm-line-to-an-existing-facet-grid/52683068#52683068
 			#### if they don't specify a reference group, choose one
@@ -449,9 +457,20 @@ flexplot = function(formula, data, related=F,
 			}	
 		
 			g0 = ggplot(data=data[k,], aes_string(x=axis[1], y=outcome))+gm
-			d_smooth = ggplot_build(g0)$data[[1]]; names(d_smooth)[1] = axis[1]; names(d_smooth)[2] = outcome
+			d_smooth = ggplot_build(g0)$data[[1]]; names(d_smooth)[1] = axis[1]; names(d_smooth)[2] = outcome; #d_smooth[,names(d_smooth)==given[1]] = ghost.reference
+
+
 			## add line to existing plot   
 			p = p + geom_line(data=d_smooth,colour=ghost.line)
+
+
+
+# g0 <- ggplot(data=subset(data,groups=="A"), aes(x,y))+geom_smooth()
+# d_smooth <- ggplot_build(g0)$data[[1]]
+# ## add line to existing plot   
+# p + geom_line(data=d_smooth,colour="red")
+
+
 			
 		}		
 

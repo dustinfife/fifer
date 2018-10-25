@@ -15,8 +15,8 @@ compare.fits = function(formula, data, model1, model2, ...){
 
 
 	#### extract the terms from each model
-	terms.mod1 = attr(model1$terms, "term.labels")
-	terms.mod2 = attr(model2$terms, "term.labels")
+	terms.mod1 = attr(terms(model1), "term.labels")
+	terms.mod2 = attr(terms(model2), "term.labels")
 		
 	#### check if models have the same terms
 	if (length(which(!(terms.mod1 %in% terms.mod2)))>0 | length(which(!(terms.mod2 %in% terms.mod1)))>0){
@@ -61,8 +61,9 @@ compare.fits = function(formula, data, model1, model2, ...){
 	pred.values = expand.grid(all.vars)
 	
 	
-	model1.type = subsetString(as.character(model1$call), "(", position=1)[1]
-	model2.type = subsetString(as.character(model2$call), "(", position=1)[1]	
+	model1.type = class(model1)[1]
+	model2.type = class(model2)[1]
+
 
 	##### look for interactions and remove them
 	if (length(grep(":", terms.mod1))>0){
@@ -103,9 +104,19 @@ compare.fits = function(formula, data, model1, model2, ...){
 ### if it's binned, predict the midpoint of the binned variable
 
 	#### generate predictions
-	pred.mod1 = data.frame(prediction = predict(model1, pred.values, type="response"), model= model1.type)
-	pred.mod2 = data.frame(prediction = predict(model2, pred.values, type="response"), model = model2.type)	
+	if (model1.type == "lmerMod"){
+		pred.mod1 = data.frame(prediction = predict(model1, pred.values, type="response", re.form=NA), model= model1.type)		
+	} else {
+		pred.mod1 = data.frame(prediction = predict(model1, pred.values, type="response"), model= model1.type)		
+	}
 	
+	if (model1.type == "lmerMod"){
+		pred.mod2 = data.frame(prediction = predict(model2, pred.values, type="response", re.form=NA), model= model2.type)		
+	} else {
+		pred.mod2 = data.frame(prediction = predict(model2, pred.values, type="response"), model= model2.type)		
+	}	
+	
+
 
 	prediction.model = rbind(pred.mod1, pred.mod2)
 	prediction.model = cbind(pred.values, prediction.model)
