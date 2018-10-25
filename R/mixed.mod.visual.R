@@ -27,10 +27,6 @@ mixed.mod.visual = function(formula, data, model, n=6, jitter=F){
 	rows = data[,ID] %in% samp
 	d_new = data[rows,]	
 
-	#### identify which parameters are fixed
-	random = subsetString(as.character(form)[3], "(", 2)
-	random = subsetString(random, " |", 1)
-
 	
 	##### only allow one X and one Y 
 	variables = all.vars(formula)
@@ -40,15 +36,15 @@ mixed.mod.visual = function(formula, data, model, n=6, jitter=F){
 		stop("Sorry, I can only plot one predictor variable at a time")
 	}
 	
-	coef(model)
+
 	
 	##### extract the rows of the random effects
 	d2 = data[!duplicated(data$ID),]
 	select.rows = which(d2[,ID] %in% samp)
 	show.predicted = coef(model)$ID[select.rows,]
 	names(show.predicted) = c("intercept", "predictor")
-	show.predicted$ID = samp
-	
+	show.predicted$ID = factor(row.names(show.predicted))
+
 	##### jitter if needed
 	if (jitter){
 			jit = geom_jitter(width=.2, height=.2)
