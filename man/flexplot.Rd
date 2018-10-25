@@ -4,17 +4,19 @@
 \alias{flexplot}
 \title{Create a "flexible plot" or flexplot}
 \usage{
-flexplot(formula, data, color = NULL, symbol = NULL, linetype = NULL,
-  bins = 4, labels = NULL, breaks = NULL, method = "loess",
-  se = T, ghost.line = NULL, ghost.reference = NULL,
-  spread = c("quartiles", "stdev", "sterr"), jitter = FALSE,
-  raw.data = T, sample = Inf, prediction = NULL,
+flexplot(formula, data, related = F, color = NULL, symbol = NULL,
+  linetype = NULL, bins = 4, labels = NULL, breaks = NULL,
+  method = "loess", se = T, ghost.line = NULL,
+  ghost.reference = NULL, spread = c("quartiles", "stdev", "sterr"),
+  jitter = FALSE, raw.data = T, sample = Inf, prediction = NULL,
   suppress_smooth = F, alpha = 1)
 }
 \arguments{
 \item{formula}{A formula of the form  y~x + a | b + z}
 
 \item{data}{The dataset}
+
+\item{related}{Are variables related? If so, it will show a plot of difference scores, rather than the raw scores (for a related t test).}
 
 \item{color}{Color values to be used for the categorical variables}
 
