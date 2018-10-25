@@ -23,7 +23,7 @@ mixed.mod.visual = function(formula, data, model, n=6, jitter=F){
 	}
 	
 	##### subset the data
-	samp = sort(samp)
+	samp = sort(as.numeric(samp))
 	rows = data[,ID] %in% samp
 	d_new = data[rows,]	
 
