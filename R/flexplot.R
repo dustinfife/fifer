@@ -82,6 +82,8 @@ flexplot = function(formula, data, related=F,
 		gm = geom_smooth(method=method, se=se)
 	}
 		
+		
+	spread = match.arg(spread, c('quartiles', 'stdev', 'sterr'))
 	
 		#### extract outcome, predictors, and given variables
 	variables = all.vars(formula)
