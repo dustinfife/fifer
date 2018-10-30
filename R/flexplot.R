@@ -75,7 +75,7 @@ flexplot = function(formula, data, related=F,
 			
 
 	##### use the following to debug flexplot
-	#formula = formula(weight.loss~therapy.type); related=T; data=d; color=NULL; symbol=NULL; linetype=NULL; bins = 4; labels=NULL; breaks=NULL; method="loess"; se=T; spread=c('quartiles', 'stdev', 'sterr'); jitter=FALSE; raw.data=T; ghost.line="gray"; sample=Inf; prediction = NULL; suppress_smooth=F; alpha=1					
+	#formula = formula(weight.loss~therapy.type + rewards); related=T; data=d; color=NULL; symbol=NULL; linetype=NULL; bins = 4; labels=NULL; breaks=NULL; method="loess"; se=T; spread=c('quartiles', 'stdev', 'sterr'); jitter=FALSE; raw.data=T; ghost.line="gray"; sample=Inf; prediction = NULL; suppress_smooth=F; alpha=1					
 	if (suppress_smooth){
 		gm = theme_bw()
 	} else {
@@ -141,7 +141,21 @@ flexplot = function(formula, data, related=F,
 		} else {
 			jit = geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha))
 	}
-			
+	
+	if (spread=="stdev"){
+		summary1 = stat_summary(fun.y='mean', geom='point', size=3, position=position_dodge(width=.2)) 
+		summary2 = stat_summary(aes_string(x=predictor[1], y=outcome), geom='errorbar', fun.ymin = function(z){mean(z)-sd(z)}, fun.ymax = function(z) {mean(z)+sd(z)}, fun.y=median, width=.2, position=position_dodge(width=.2))
+		sum.line = stat_summary(aes_string(group=predictors[2]), geom="line", fun.y="mean", position=position_dodge(width=.2)) 			
+	} else if (spread=="sterr"){	
+		summary1 = stat_summary(fun.y='mean', geom='point', size=3, position=position_dodge(width=.2)) 
+		summary2 = stat_summary(aes_string(x=predictors[1], y=outcome), geom='errorbar', fun.data = mean_cl_normal, color=rgb(1,0,0,.25), width=.2, position=position_dodge(width=.2))
+		sum.line = stat_summary(aes_string(group=predictors[2]), geom="line", fun.y="mean", position=position_dodge(width=.2)) 	
+	} else if (spread == "quartiles"){	
+		summary1 = stat_summary(fun.y='median', geom='point', size=3, position=position_dodge(width=.2)) 
+		summary2 = stat_summary(aes_string(x=predictors[1], y=outcome), geom='errorbar', fun.ymin = function(z){quantile(z, .25)}, fun.ymax = function(z) {quantile(z, .75)}, fun.y=median, width=.2, position=position_dodge(width=.2))
+		sum.line = stat_summary(aes_string(group=predictors[2]), geom="line", fun.y="median", position=position_dodge(width=.2)) 	
+	}		
+		
 
 
 
@@ -176,8 +190,7 @@ flexplot = function(formula, data, related=F,
 		d2 = data.frame(Difference=g2-g1)
 		p = ggplot(d2, aes(y=Difference, x=1)) +
 			geom_jitter(data=sample.subset(sample, d2), alpha=raw.alph.func(raw.data, .15), width=.05) +
-			stat_summary(fun.y='mean', geom='point', size=2, color='red') + 
-			stat_summary(geom='errorbar', fun.ymin = function(z){mean(z)-sd(z)}, fun.ymax = function(z) {mean(z)+sd(z)}, fun.y=median, color='red', width=.2)+			
+			summary1 + summary2 + 
 			gm +
 			geom_hline(yintercept=0, col="lightgray") +
 			labs(x=lab) +
@@ -193,26 +206,11 @@ flexplot = function(formula, data, related=F,
 
 	##### MEAN PLOT
 	} else if (length(outcome)==1 & length(predictors)==1 & is.na(given) & (is.numeric(data[,predictors]) | is.numeric(data[,outcome]))){		
-		if (spread=="stdev"){
+
 		p = ggplot(data=data, aes_string(x=predictors, y=outcome)) +
-			geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, .35), size=.75, width=.05) + 
-			stat_summary(fun.y='mean', geom='point', size=2, color='red') + 
-			stat_summary(aes_string(x=predictors, y=outcome), geom='errorbar', fun.ymin = function(z){mean(z)-sd(z)}, fun.ymax = function(z) {mean(z)+sd(z)}, fun.y=median, color=rgb(1,0,0,.25), width=.2)+
-			theme_bw()			
-		} else if (spread=="sterr"){	
-		p = ggplot(data=data, aes_string(x=predictors, y=outcome)) +
-			geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, .35), size=.75, width=.05) + 
-			stat_summary(fun.y='mean', geom='point', size=2, color='red') + 
-			stat_summary(aes_string(x=predictors, y=outcome), geom='errorbar', fun.data = mean_cl_normal, color=rgb(1,0,0,.25), width=.2)+
-			theme_bw()
-		} else {	
-		p = ggplot(data=data, aes_string(x=predictors, y=outcome)) +
-			geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, .35), size=.75, width=.05) + 
-			stat_summary(fun.y='median', geom='point', size=2, color='red') + 
-			stat_summary(aes_string(x=predictors, y=outcome), geom='errorbar', fun.ymin = function(z){quantile(z, .25)}, fun.ymax = function(z) {quantile(z, .75)}, fun.y=median, color=rgb(1,0,0,.25), width=.2)+
-			theme_bw()
-		}	
-			
+			geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, .25), size=.75, width=.05) + 
+			summary1 + summary2 + 
+			theme_bw()						
 	
 	##### CHI SQUARE PLOT
 	} else if (length(outcome) == 1 & length(predictors)==1 & is.na(given) & !is.numeric(data[,predictors]) & !is.numeric(data[,outcome])){
@@ -223,21 +221,19 @@ flexplot = function(formula, data, related=F,
 	##### INTERACTION PLOT
 	} else if (length(outcome)==1 & length(predictors)==2 & (is.character(data[,predictors[1]]) | is.factor(data[,predictors[1]])) & (is.character(data[,predictors[2]]) | is.factor(data[,predictors[2]]))){
 		
-		
-		#### identify if given is null
-		if (!is.null(given)){
+		#### identify if given is na
+		if (!is.na(given)){
 			p = ggplot(data=data, aes_string(x=predictors[1], y=outcome)) +
-				geom_jitter(data=sample.subset(sample, data), alpha = raw.alph.func(raw.data, .35), size=.25, width=.2) +
+				geom_jitter(data=sample.subset(sample, data), alpha = raw.alph.func(raw.data, .25), size = .75, width=.2) +
 				facet_wrap(as.formula(paste("~", predictors[2]))) +
-				stat_summary(aes_string(x=predictors[1], y=outcome), geom="errorbar", fun.ymin = function(z){mean(z) - 1.96*(sd(z)/length(z))}, fun.ymax=function(z){mean(z) + 1.96*(sd(z)/length(z))}, fun.y = mean, width=.1) +
-				stat_summary(fun.y = "mean", geom="line", group=1) +
+				summary1 + summary2 +
 				labs(x=predictors[1], y=outcome) +
 				theme_bw()
 		} else {
-			p = ggplot(data=data, aes_string(x=predictors[1], y=outcome, color=predictors[2], linetype=predictors[2], symbol=predictors[2])) +
-				geom_jitter(data=sample.subset(sample, data), alpha = raw.alph.func(raw.data, .35), size=.25, width=.2) +
-				stat_summary(aes_string(x=predictors[1], y=outcome), geom="errorbar", fun.ymin = function(z){mean(z) - 1.96*(sd(z)/length(z))}, fun.ymax=function(z){mean(z) + 1.96*(sd(z)/length(z))}, fun.y = mean, width=.1) +
-				stat_summary(fun.y = "mean", geom="line", group=1) +
+			p = ggplot(data=data, aes_string(x=predictors[1], y=outcome, color=predictors[2], linetype=predictors[2], shape=predictors[2])) +
+				geom_jitter(data=sample.subset(sample, data), alpha = raw.alph.func(raw.data, .5), size=.75,  position= position_jitterdodge(jitter.width=.2, dodge.width=.2)) +
+				summary1 + summary2 + 
+				sum.line + 
 				labs(x=predictors[1], y=outcome) +
 				theme_bw()			
 		}
