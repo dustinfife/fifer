@@ -141,11 +141,11 @@ flexplot = function(formula, data, related=F,
 		} else {
 			jit = geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha))
 	}
-	
+
 	if (spread=="stdev"){
 		summary1 = stat_summary(fun.y='mean', geom='point', size=3, position=position_dodge(width=.2)) 
 		summary2 = stat_summary(aes_string(x=predictor[1], y=outcome), geom='errorbar', fun.ymin = function(z){mean(z)-sd(z)}, fun.ymax = function(z) {mean(z)+sd(z)}, fun.y=median, size = 1.25, width=.2, position=position_dodge(width=.2))
-		sum.line = stat_summary(aes_string(group=predictors[2]), geom="line", fun.y="mean", position=position_dodge(width=.2)) 			
+		sum.line = stat_summary(aes_string(group=predictors[2]), geom="line", fun.y="mean", position=position_dodge(width=.2))
 	} else if (spread=="sterr"){	
 		summary1 = stat_summary(fun.y='mean', geom='point', size=3, position=position_dodge(width=.2)) 
 		summary2 = stat_summary(aes_string(x=predictors[1], y=outcome), geom='errorbar', fun.data = mean_cl_normal, color=rgb(1,0,0,.25), width=.2, size = 1.25, position=position_dodge(width=.2))
@@ -188,6 +188,12 @@ flexplot = function(formula, data, related=F,
 		
 		lab = paste0("Difference (",levs[2], "-", levs[1], ')')
 		d2 = data.frame(Difference=g2-g1)
+		
+		if (spread == "stdev"){ summary2 = stat_summary(geom='errorbar', fun.ymin = function(z){mean(z)-sd(z)}, fun.ymax = function(z) {mean(z)+sd(z)}, fun.y=median, size = 1.25, width=.12, position=position_dodge(width=.2))}
+		if (spread == "sterr"){ summary2 = stat_summary(geom='errorbar', fun.data = mean_cl_normal, color=rgb(1,0,0,.25), width=.12, size = 1.25, position=position_dodge(width=.2))}
+		if (spread == "quartiles"){ summary2 = stat_summary(geom='errorbar', fun.ymin = function(z){quantile(z, .25)},size = 1.25,  fun.ymax = function(z) {quantile(z, .75)}, fun.y=median, width=.12, position=position_dodge(width=.2))}				
+												#stat_summary(geom='errorbar', fun.ymin = function(z){mean(z)-sd(z)}, fun.ymax = function(z) {mean(z)+sd(z)}, fun.y=median, color='red', width=.2)
+		
 		p = ggplot(d2, aes(y=Difference, x=1)) +
 			geom_jitter(data=sample.subset(sample, d2), alpha=raw.alph.func(raw.data, .15), width=.05) +
 			summary1 + summary2 + 
