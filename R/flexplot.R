@@ -144,15 +144,15 @@ flexplot = function(formula, data, related=F,
 	
 	if (spread=="stdev"){
 		summary1 = stat_summary(fun.y='mean', geom='point', size=3, position=position_dodge(width=.2)) 
-		summary2 = stat_summary(aes_string(x=predictor[1], y=outcome), geom='errorbar', fun.ymin = function(z){mean(z)-sd(z)}, fun.ymax = function(z) {mean(z)+sd(z)}, fun.y=median, width=.2, position=position_dodge(width=.2))
+		summary2 = stat_summary(aes_string(x=predictor[1], y=outcome), geom='errorbar', fun.ymin = function(z){mean(z)-sd(z)}, fun.ymax = function(z) {mean(z)+sd(z)}, fun.y=median, size = 1.25, width=.2, position=position_dodge(width=.2))
 		sum.line = stat_summary(aes_string(group=predictors[2]), geom="line", fun.y="mean", position=position_dodge(width=.2)) 			
 	} else if (spread=="sterr"){	
 		summary1 = stat_summary(fun.y='mean', geom='point', size=3, position=position_dodge(width=.2)) 
-		summary2 = stat_summary(aes_string(x=predictors[1], y=outcome), geom='errorbar', fun.data = mean_cl_normal, color=rgb(1,0,0,.25), width=.2, position=position_dodge(width=.2))
+		summary2 = stat_summary(aes_string(x=predictors[1], y=outcome), geom='errorbar', fun.data = mean_cl_normal, color=rgb(1,0,0,.25), width=.2, size = 1.25, position=position_dodge(width=.2))
 		sum.line = stat_summary(aes_string(group=predictors[2]), geom="line", fun.y="mean", position=position_dodge(width=.2)) 	
 	} else if (spread == "quartiles"){	
 		summary1 = stat_summary(fun.y='median', geom='point', size=3, position=position_dodge(width=.2)) 
-		summary2 = stat_summary(aes_string(x=predictors[1], y=outcome), geom='errorbar', fun.ymin = function(z){quantile(z, .25)}, fun.ymax = function(z) {quantile(z, .75)}, fun.y=median, width=.2, position=position_dodge(width=.2))
+		summary2 = stat_summary(aes_string(x=predictors[1], y=outcome), geom='errorbar', fun.ymin = function(z){quantile(z, .25)},size = 1.25,  fun.ymax = function(z) {quantile(z, .75)}, fun.y=median, width=.2, position=position_dodge(width=.2))
 		sum.line = stat_summary(aes_string(group=predictors[2]), geom="line", fun.y="median", position=position_dodge(width=.2)) 	
 	}		
 		
@@ -208,7 +208,7 @@ flexplot = function(formula, data, related=F,
 	} else if (length(outcome)==1 & length(predictors)==1 & is.na(given) & (is.numeric(data[,predictors]) | is.numeric(data[,outcome]))){		
 
 		p = ggplot(data=data, aes_string(x=predictors, y=outcome)) +
-			geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, .25), size=.75, width=.05) + 
+			geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, .15), size=.75, width=.05) + 
 			summary1 + summary2 + 
 			theme_bw()						
 	
@@ -224,7 +224,7 @@ flexplot = function(formula, data, related=F,
 		#### identify if given is na
 		if (!is.na(given)){
 			p = ggplot(data=data, aes_string(x=predictors[1], y=outcome)) +
-				geom_jitter(data=sample.subset(sample, data), alpha = raw.alph.func(raw.data, .25), size = .75, width=.2) +
+				geom_jitter(data=sample.subset(sample, data), alpha = raw.alph.func(raw.data, .15), size = .75, width=.2) +
 				facet_wrap(as.formula(paste("~", predictors[2]))) +
 				summary1 + summary2 +
 				labs(x=predictors[1], y=outcome) +
