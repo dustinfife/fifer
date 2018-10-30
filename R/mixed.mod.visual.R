@@ -39,12 +39,13 @@ mixed.mod.visual = function(formula, data, model, n=6, jitter=F){
 
 	
 	##### extract the rows of the random effects
-	d2 = data[!duplicated(data$ID),]
+	d2 = data[!duplicated(data[,ID]),]
 	select.rows = which(d2[,ID] %in% samp)
-	show.predicted = coef(model)$ID[select.rows,]
+	show.predicted = coef(model)[ID]
+	show.predicted = data.frame(show.predicted)[select.rows,]
 	names(show.predicted) = c("intercept", "predictor")
-	show.predicted$ID = factor(row.names(show.predicted))
-
+	show.predicted[,ID] = factor(row.names(show.predicted))
+	d_new[,ID] = factor(d_new[,ID])
 	##### jitter if needed
 	if (jitter){
 			jit = geom_jitter(width=.2, height=.2)
@@ -53,13 +54,13 @@ mixed.mod.visual = function(formula, data, model, n=6, jitter=F){
 	}
 	fixed.slope = fixef(model)[2]
 	fixed.intercept = fixef(model)[1]
-		
+
 	##### plot it
 	ggplot(data=d_new, aes_string(predictors, outcome)) +
 		jit +
 		geom_abline(aes(slope=fixed.slope, intercept=fixed.intercept), col="red", size=2) +
 		geom_abline(data=show.predicted, aes(slope=predictor, intercept=intercept), col="gray") +
-		facet_wrap(ID, labeller = labeller(.cols=label_both)) +
+		facet_wrap(as.formula(paste0("~", ID)), labeller = labeller(.cols=label_both)) +				
 		theme_bw()
 		
 }
