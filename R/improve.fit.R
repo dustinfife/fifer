@@ -1,0 +1,40 @@
+##' Compare the improvement in fit from a baseline model
+##'
+##' Compare the improvement in fit from a baseline model
+##'	
+##' Compare the improvement in fit from a baseline model, using mixed models
+##' @param full the full mixed model
+##' @param reduced the reduced mixed model (typically a random effect ANOVA model)
+##' @return A vector containing the proportion change in fit for each random effects parameter
+##' @author Dustin Fife
+##' @export
+##' @examples
+#' data(math)
+#' require(lme4)
+#' baseline.model = lmer(MathAch~1 + (1|School), data=d)
+#' full.model = lmer(MathAch~SES + (SES|School), data=d)
+#' improve.fit(full.model, baseline.model)
+improve.fit = function(full, reduced){
+
+	#### create objects for variance terms
+	full.var = as.data.frame(VarCorr(full)); names(full.var)[4:5] = c("variance", "sd")
+	reduced.var = as.data.frame(VarCorr(reduced))
+	
+	if (nrow(full.var)<nrow(reduced.var)){
+		stop("Your 'full' model must be larger than your 'reduced' model.")
+	}
+	
+	#### look only at those that have common terms
+	full.var = full.var[with(full.var, order(grp, var1, var2)), ]; full.var$vcov2 = full.var$vcov
+	reduced.var = reduced.var[with(reduced.var, order(grp, var1, var2)), ]	
+	
+	full.var = merge(full.var, reduced.var, all.y=T, all.x=F)
+	full.var
+	
+	#### compute estimates
+	change.in.fit = (full.var$vcov-full.var$variance)/reduced.var$vcov
+	names(change.in.fit) = full.var$var1; names(change.in.fit)[is.na(names(change.in.fit))] = "Residual"
+	
+	change.in.fit
+
+}
