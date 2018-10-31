@@ -7,6 +7,8 @@
 ##' @param reduced the reduced mixed model (typically a random effect ANOVA model)
 ##' @return A vector containing the proportion change in fit for each random effects parameter
 ##' @author Dustin Fife
+##' @importFrom lme4 lmer
+##' @importFrom lme4 VarCorr
 ##' @export
 ##' @examples
 #' data(math)
@@ -17,8 +19,8 @@
 improve.fit = function(full, reduced){
 
 	#### create objects for variance terms
-	full.var = as.data.frame(VarCorr(full)); names(full.var)[4:5] = c("variance", "sd")
-	reduced.var = as.data.frame(VarCorr(reduced))
+	full.var = as.data.frame(lme4:::VarCorr(full)); names(full.var)[4:5] = c("variance", "sd")
+	reduced.var = as.data.frame(lme4:::VarCorr(reduced))
 	
 	if (nrow(full.var)<nrow(reduced.var)){
 		stop("Your 'full' model must be larger than your 'reduced' model.")
