@@ -31,10 +31,12 @@ improve.fit = function(full, reduced){
 	reduced.var = reduced.var[with(reduced.var, order(grp, var1, var2)), ]	
 	
 	full.var = merge(full.var, reduced.var, all.y=T, all.x=F)
-	full.var
+
+	#### get rid of those with something in var2 (that's a covariance, which we don't care about)
+	full.var = full.var[-which(!is.na(full.var$var2)),]
 	
 	#### compute estimates
-	change.in.fit = (full.var$vcov-full.var$variance)/reduced.var$vcov
+	change.in.fit = (full.var$vcov-full.var$variance)/full.var$vcov
 	names(change.in.fit) = full.var$var1; names(change.in.fit)[is.na(names(change.in.fit))] = "Residual"
 	
 	change.in.fit
