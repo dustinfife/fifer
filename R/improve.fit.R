@@ -33,7 +33,9 @@ improve.fit = function(full, reduced){
 	full.var = merge(full.var, reduced.var, all.y=T, all.x=F)
 
 	#### get rid of those with something in var2 (that's a covariance, which we don't care about)
-	full.var = full.var[-which(!is.na(full.var$var2)),]
+	if (length(which(!is.na(full.var$var2)))>0){
+		full.var = full.var[-which(!is.na(full.var$var2)),]
+	}
 	
 	#### compute estimates
 	change.in.fit = (full.var$vcov-full.var$variance)/full.var$vcov
