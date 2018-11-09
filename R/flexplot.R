@@ -75,7 +75,7 @@ flexplot = function(formula, data, related=F,
 			
 
 	##### use the following to debug flexplot
-	#formula = formula(weight.loss~therapy.type + rewards); related=T; data=d; color=NULL; symbol=NULL; linetype=NULL; bins = 4; labels=NULL; breaks=NULL; method="loess"; se=T; spread=c('quartiles', 'stdev', 'sterr'); jitter=FALSE; raw.data=T; ghost.line="gray"; sample=Inf; prediction = NULL; suppress_smooth=F; alpha=1					
+	#formula = formula(weight.loss~therapy.type + rewards); related=T; data=d; color=NULL; symbol=NULL; linetype=NULL; bins = 4; labels=NULL; breaks=NULL; method="loess"; se=T; spread=c('stdev'); jitter=FALSE; raw.data=T; ghost.line="gray"; sample=Inf; prediction = NULL; suppress_smooth=F; alpha=1					
 	if (suppress_smooth){
 		gm = theme_bw()
 	} else {
@@ -144,11 +144,11 @@ flexplot = function(formula, data, related=F,
 
 	if (spread=="stdev"){
 		summary1 = stat_summary(fun.y='mean', geom='point', size=3, position=position_dodge(width=.2)) 
-		summary2 = stat_summary(aes_string(x=predictor[1], y=outcome), geom='errorbar', fun.ymin = function(z){mean(z)-sd(z)}, fun.ymax = function(z) {mean(z)+sd(z)}, fun.y=median, size = 1.25, width=.2, position=position_dodge(width=.2))
+		summary2 = stat_summary(aes_string(x=predictors[1], y=outcome), geom='errorbar', fun.ymin = function(z){mean(z)-sd(z)}, fun.ymax = function(z) {mean(z)+sd(z)}, fun.y=median, size = 1.25, width=.2, position=position_dodge(width=.2))
 		sum.line = stat_summary(aes_string(group=predictors[2]), geom="line", fun.y="mean", position=position_dodge(width=.2))
 	} else if (spread=="sterr"){	
 		summary1 = stat_summary(fun.y='mean', geom='point', size=3, position=position_dodge(width=.2)) 
-		summary2 = stat_summary(aes_string(x=predictors[1], y=outcome), geom='errorbar', fun.data = mean_cl_normal, color=rgb(1,0,0,.25), width=.2, size = 1.25, position=position_dodge(width=.2))
+		summary2 = stat_summary(aes_string(x=predictors[1], y=outcome), geom='errorbar', fun.data = mean_cl_normal, width=.2, size = 1.25, position=position_dodge(width=.2))
 		sum.line = stat_summary(aes_string(group=predictors[2]), geom="line", fun.y="mean", position=position_dodge(width=.2)) 	
 	} else if (spread == "quartiles"){	
 		summary1 = stat_summary(fun.y='median', geom='point', size=3, position=position_dodge(width=.2)) 
