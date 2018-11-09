@@ -6,10 +6,16 @@
 \alias{visualize.default}
 \title{Visualize a fitted model}
 \usage{
-visualize(object, ...)
+visualize(object, plot = c("all", "residuals", "bivariate"), ...)
 }
 \arguments{
 \item{object}{a object}
+
+\item{plot}{what should be plotted? Residuals? Bivariate plot? All of them?}
+
+\item{formula}{A flexplot-style formula}
+
+\item{linetype}{What time of smoothing line should be drawn? Defaults to loess.}
 }
 \description{
 Visualize a fitted model

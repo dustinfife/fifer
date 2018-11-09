@@ -11,18 +11,27 @@
 \alias{visualize.default}
 \title{Output APA style statistical significance from an object}
 \usage{
-\method{estimates}{default}(object)
+\method{estimates}{default}(object, plot = c("all", "residuals",
+  "bivariate"))
 
-\method{estimates}{default}(object)
+\method{estimates}{default}(object, plot = c("all", "residuals",
+  "bivariate"))
 
-\method{estimates}{default}(object)
+\method{estimates}{default}(object, plot = c("all", "residuals",
+  "bivariate"))
 }
 \arguments{
 \item{object}{a object}
 
+\item{plot}{what should be plotted? Residuals? Bivariate plot? All of them?}
+
 \item{object}{a object}
 
 \item{object}{a object}
+
+\item{formula}{A flexplot-style formula}
+
+\item{linetype}{What time of smoothing line should be drawn? Defaults to loess.}
 }
 \description{
 Output APA style statistical significance from an object
