@@ -35,7 +35,7 @@ estimates.default = function(object, plot=c("all", "residuals", "bivariate")){
 #' @param linetype What time of smoothing line should be drawn? Defaults to loess. 
 #' @importFrom cowplot plot_grid
 #' @export
-visualize.lm = function(object, plot=c("all", "residuals", "bivariate"), linetype="loess", formula,...){
+visualize.lm = function(object, plot=c("all", "residuals", "bivariate"), linetype="loess", formula = NULL,...){
 	
 
 	plot = match.arg(plot, c("all", "residuals", "bivariate"))
