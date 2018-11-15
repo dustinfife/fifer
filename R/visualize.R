@@ -35,7 +35,7 @@ estimates.default = function(object, plot=c("all", "residuals", "bivariate")){
 #' @param linetype What time of smoothing line should be drawn? Defaults to loess. 
 #' @importFrom cowplot plot_grid
 #' @export
-visualize.lm = function(object, plot=c("all", "residuals", "bivariate"), linetype="loess"){
+visualize.lm = function(object, plot=c("all", "residuals", "bivariate"), linetype="loess", ...){
 	
 
 	plot = match.arg(plot, c("all", "residuals", "bivariate"))
@@ -125,7 +125,7 @@ visualize.lmerMod = function(object, plot=c("residuals", "all", "bivariate"), li
 	
 
 	#### use flexplot to visualize
-	if (plot=="all" & is.null(formula)){
+	if (plot=="all" | plot=="bivariate" & is.null(formula)){
 		warning("You must provide a formula argument to plot the data. I'm just returning the residual plots.")
 	} else if (plot=="all"){
 		step3 = flexplot(formula, data=d, ...)

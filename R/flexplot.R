@@ -75,7 +75,7 @@ flexplot = function(formula, data, related=F,
 			
 
 	##### use the following to debug flexplot
-	#formula = formula(weight.loss~therapy.type + rewards); related=T; data=d; color=NULL; symbol=NULL; linetype=NULL; bins = 4; labels=NULL; breaks=NULL; method="loess"; se=T; spread=c('stdev'); jitter=FALSE; raw.data=T; ghost.line="gray"; sample=Inf; prediction = NULL; suppress_smooth=F; alpha=1					
+	#formula = formula(weight.loss~therapy.type + rewards); related=T; data=d; color=NULL; symbol=NULL; linetype=NULL; bins = 4; labels=NULL; breaks=NULL; method="loess"; se=T; spread=c('stdev'); jitter=FALSE; raw.data=T; ghost.line="gray"; sample=Inf; prediction = NULL; suppress_smooth=F; alpha=1
 	if (suppress_smooth){
 		gm = theme_bw()
 	} else {
@@ -482,9 +482,15 @@ flexplot = function(formula, data, related=F,
 	
 
 	}	
-			
+			p
 	if (!is.null(prediction)){	
-		p = p + geom_line(data= prediction, aes(linetype=model, y=prediction, color=model))
+		
+		#### check if first variable is a continuous predictor
+		if (is.numeric(data[,predictors])){
+			p = p + geom_line(data= prediction, aes(linetype=model, y=prediction, color=model))			
+		} else {
+			p = p + geom_point(data=prediction, aes(y=prediction, color=model), position=position_dodge(width=.2))
+		}
 		return(p)
 	} else {
 			return(p)
