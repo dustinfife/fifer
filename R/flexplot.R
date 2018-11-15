@@ -217,7 +217,10 @@ flexplot = function(formula, data, related=F,
 			geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, .15), size=.75, width=.05) + 
 			summary1 + summary2 + 
 			theme_bw()						
-	
+	##### logistic regression plot
+	# } else if (){
+		
+	# }
 	##### CHI SQUARE PLOT
 	} else if (length(outcome) == 1 & length(predictors)==1 & is.na(given) & !is.numeric(data[,predictors]) & !is.numeric(data[,outcome])){
 		m = as.data.frame(table(d[,predictors], d[,outcome])); names(m)[1:2] = c(predictors, outcome)

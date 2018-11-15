@@ -41,10 +41,8 @@ impute.me = function(model, data, predictors=NULL, keep=T, imputations=20, silen
 		#### do multiple imputations
 		if (!silent){
 			cat("Performing Imputations. \n\n")
-			require(mice)
 			imputed.data= mice(data=data, m=imputations)
 		} else {
-			require(mice)
 			imputed.data= mice(data=data, m=imputations, quietly=T)
 		}
 		

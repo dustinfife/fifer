@@ -41,6 +41,7 @@ visualize.lm = function(object, plot=c("all", "residuals", "bivariate"), linetyp
 	plot = match.arg(plot, c("all", "residuals", "bivariate"))
 	#### figure out what is numeric
 	d = object$model
+	head(d)
 	levels = apply(d, 2, FUN=function(x) length(unique(x)))
 	
 	#### if there's too few levels and it's not categorical
@@ -67,19 +68,19 @@ visualize.lm = function(object, plot=c("all", "residuals", "bivariate"), linetyp
 	
 	
 	#### use flexplot to visualize
-	if (plot=="all" & is.null(formula)){
+	if ((plot=="all" | plot == "bivariate" )& is.null(formula)){
 		warning("You must provide a formula argument to plot the data. I'm just returning the residual plots.")
-	} else if (plot=="all"){
-		step3 = flexplot(formula, data=d, ...)
+	} else if (plot=="all" | plot=="bivariate"){
+		step3 = flexplot(formula, data=d)
 	}
 
 	#### return the plots
 	if (plot=="bivariate"){
 		return(step3)
 	} else if (plot=="residuals"){
-		plot_grid(histo, res.dep, sl)
+		cowplot::plot_grid(histo, res.dep, sl)
 	} else {
-		plot_grid(step3, histo, res.dep, sl)
+		cowplot::plot_grid(step3, histo, res.dep, sl)
 	}
 }
 
@@ -135,8 +136,8 @@ visualize.lmerMod = function(object, plot=c("residuals", "all", "bivariate"), li
 	if (plot=="bivariate"){
 		return(step3)
 	} else if (plot=="residuals"){
-		plot_grid(histo, res.dep, sl)
+		cowplot::plot_grid(histo, res.dep, sl)
 	} else {
-		plot_grid(step3, histo, res.dep, sl)
+		cowplot::plot_grid(step3, histo, res.dep, sl)
 	}
 }
