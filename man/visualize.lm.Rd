@@ -7,7 +7,7 @@
 \title{Visualize a fitted model}
 \usage{
 \method{visualize}{lm}(object, plot = c("all", "residuals", "bivariate"),
-  linetype = "loess")
+  linetype = "loess", formula = NULL, ...)
 }
 \arguments{
 \item{object}{a lm object}

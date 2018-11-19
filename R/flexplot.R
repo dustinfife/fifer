@@ -78,6 +78,8 @@ flexplot = function(formula, data, related=F,
 	#formula = formula(weight.loss~therapy.type + rewards); related=T; data=d; color=NULL; symbol=NULL; linetype=NULL; bins = 4; labels=NULL; breaks=NULL; method="loess"; se=T; spread=c('stdev'); jitter=FALSE; raw.data=T; ghost.line="gray"; sample=Inf; prediction = NULL; suppress_smooth=F; alpha=1
 	if (suppress_smooth){
 		gm = theme_bw()
+	} else if (method=="logistic") {
+		gm = geom_smooth(method = "glm", method.args = list(family = "binomial"), se = se)
 	} else {
 		gm = geom_smooth(method=method, se=se)
 	}
@@ -113,7 +115,9 @@ flexplot = function(formula, data, related=F,
 		### remove missing values
 	if (length(predictors)>0){
 		if (length(unlist(apply(data[,variables], 2, function(x){(which(is.na(x)))})))>0){
-			data = na.omit(data)
+			
+			delete.me = unlist(apply(data[,variables], 2, function(x){(which(is.na(x)))}))
+			data = data[-deleteme,]
 		}
 	}
 	
@@ -136,8 +140,15 @@ flexplot = function(formula, data, related=F,
 	}
 	
 	
-	if (jitter){
-			jit = geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha), width=.2, height=.2)
+	if (!is.null(jitter)){
+			if (jitter[1]==T){
+				jit = geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha), width=.2, height=.2)
+			} else if (jitter[1] == F){
+				jit = geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha))
+			} else {
+				jit = geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha), width=jitter[1], height=jitter[2])
+			}
+			
 		} else {
 			jit = geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha))
 	}
@@ -343,7 +354,7 @@ flexplot = function(formula, data, related=F,
 		}
 
 		if (length(binned.vars)>0){
-			msg = paste0("The following variables are going to be binned: ", paste0(binned.vars, collapse=", "))
+			msg = paste0("The following variables are going to be binned: ", paste0(binned.vars, collapse=", "), "\n")
 			cat(msg)
 		}
 		
@@ -382,6 +393,12 @@ flexplot = function(formula, data, related=F,
 				}
 	
 				data[,paste0(binned.vars[i])] = cut(data[,binned.vars[i]], quants, labels= unlist(labels[i]), include.lowest=T, include.highest=T)
+
+				#### if they're making a ghost reference, bin that too
+				if (!is.null(ghost.reference) & binned.vars[i] %in% names(ghost.reference)){
+					val = as.numeric(ghost.reference[binned.vars[i]])
+					ghost.reference[binned.vars[i]] = as.character(cut(val, quants, labels=unlist(labels[i]), include.lowest=T, include.highest=T))
+				}
 				
 				if (!is.null(prediction)){
 					prediction[,paste0(binned.vars[i])] = cut(prediction[,binned.vars[i]], quants, labels= unlist(labels[i]), include.lowest=T, include.highest=T)
@@ -402,21 +419,28 @@ flexplot = function(formula, data, related=F,
 			}			
 			
 		}
-		
+
+
 				#### add code for "given" variable
-		if (!is.na(given)){
+		if (!is.na(given[1])){
 			giv = facet_grid(as.formula(given.as.string),labeller = labeller(.rows = label_both, .cols=label_both))
 		} else {
 			giv = theme_bw()
 		}
 		
-		if (jitter){
-			jit = geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha), width=.2, height=.2)
-		} else {
-			jit = geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha))
+		#### repeat this (otherwise it references the old dataset, before things were binned)
+		if (!is.null(jitter)){
+				if (jitter[1]==T){
+					jit = geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha), width=.2, height=.2)
+				} else if (jitter[1] == F){
+					jit = geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha))
+				} else {
+					jit = geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha), width=jitter[1], height=jitter[2])
+				}
+				
+			} else {
+				jit = geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha))
 		}
-		
-		
 
 		
 		if (length(axis)>1){
@@ -437,47 +461,38 @@ flexplot = function(formula, data, related=F,
 
 
 		if (!is.null(ghost.line)){ # with help from https://stackoverflow.com/questions/52682789/how-to-add-a-lowess-or-lm-line-to-an-existing-facet-grid/52683068#52683068
+
+			### quit if they try to do two axes
+			if (!is.na(axis[2])){
+				stop("Sorry. I can't plot a second variable on the x axis. Try putting it in the given area (e.g., y~ x + z | b should become y~ x | b + z)")
+			}
+
 			#### if they don't specify a reference group, choose one
-			#ghost.reference=c("[18,19]", "Male")
-			#ghost.reference = NULL
 			if (is.null(ghost.reference)){
 				l = data[1,given]
-			} else {
-				if (length(ghost.reference)!=length(given)){
-					stop("When referencing a 'ghost line,' you must specify the value for each 'given' variable.")
-				}
+			} 
+				# if (length(ghost.reference)!=length(given)){
+					# stop("When referencing a 'ghost line,' you must specify the value for each 'given' variable.")
+				# }
 				
-				#### throw error if they don't put in the right order
-				if (length(given)>1 & !(ghost.reference[1] %in% data[,given[1]])){
-					stop(paste0("The ordering of the referent group must be written in the same order as the formula: ", paste0(given, collapse=", ")))
-				}
-				
-				l = matrix(ghost.reference, nrow=1)
-				
-			}	
+	
+			ghost.names = names(ghost.reference)
+			##### select those columns in d specified
+			k = data
+			for (s in 1:length(ghost.reference)){
+				k = k[k[,ghost.names[s]]==ghost.reference[s],]
+			}				
 
-			##### now create a subsetted dataset
-			if (length(given)>1){
-				k = data[,given[1]]==l[1,1]	& data[,given[2]]==l[1,2]
-			} else {
-				k = data[,given[1]]==as.vector(l)
-			}	
-		
-			g0 = ggplot(data=data[k,], aes_string(x=axis[1], y=outcome))+gm
-			d_smooth = ggplot_build(g0)$data[[1]]; names(d_smooth)[1] = axis[1]; names(d_smooth)[2] = outcome; #d_smooth[,names(d_smooth)==given[1]] = ghost.reference
+			### identify which variables are in the given category
+			ghost.given = which(ghost.names %in% given)
+			g0 = ggplot(data=k, aes_string(x=axis[1], y=outcome))+gm
+			d_smooth = ggplot_build(g0)$data[[1]]; 
+			### rename columns
+			names(d_smooth)[names(d_smooth)=="x"] = axis[1]; names(d_smooth)[names(d_smooth)=="y"] = outcome; 
 
 
 			## add line to existing plot   
-			p = p + geom_line(data=d_smooth,colour=ghost.line)
-
-
-
-# g0 <- ggplot(data=subset(data,groups=="A"), aes(x,y))+geom_smooth()
-# d_smooth <- ggplot_build(g0)$data[[1]]
-# ## add line to existing plot   
-# p + geom_line(data=d_smooth,colour="red")
-
-
+			p = p + geom_line(data=d_smooth, aes_string(x=axis[1], y= outcome), color=ghost.line)
 			
 		}		
 
