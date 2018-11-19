@@ -76,14 +76,7 @@ flexplot = function(formula, data, related=F,
 
 	##### use the following to debug flexplot
 	#formula = formula(weight.loss~therapy.type + rewards); related=T; data=d; color=NULL; symbol=NULL; linetype=NULL; bins = 4; labels=NULL; breaks=NULL; method="loess"; se=T; spread=c('stdev'); jitter=FALSE; raw.data=T; ghost.line="gray"; sample=Inf; prediction = NULL; suppress_smooth=F; alpha=1
-	if (suppress_smooth){
-		gm = theme_bw()
-	} else if (method=="logistic") {
-		gm = geom_smooth(method = "glm", method.args = list(family = "binomial"), se = se)
-	} else {
-		gm = geom_smooth(method=method, se=se)
-	}
-		
+
 		
 	spread = match.arg(spread, c('quartiles', 'stdev', 'sterr'))
 	
@@ -93,19 +86,7 @@ flexplot = function(formula, data, related=F,
 	predictors = variables[-1]
 	given = unlist(subsetString(as.character(formula)[3], sep=" | ", position=2, flexible=F))
 
-	# if (is.null(given)){
-		# given=NA
-	# }
 
-		#### identify the non given variables
-	axis = unlist(subsetString(as.character(formula)[3], sep=" | ", position=1, flexible=F))
-	axis = unlist(strsplit(axis, " + ", fixed=T))
-	
-
-	#if (is.na(given)){given=NULL}
-	
-
-	
 	#### identify which variables are numeric and which are factors
 	if (length(predictors)>0){
 		numbers = names(which(unlist(lapply(data[,predictors], is.numeric))))
@@ -116,10 +97,46 @@ flexplot = function(formula, data, related=F,
 	if (length(predictors)>0){
 		if (length(unlist(apply(data[,variables], 2, function(x){(which(is.na(x)))})))>0){
 			
-			delete.me = unlist(apply(data[,variables], 2, function(x){(which(is.na(x)))}))
-			data = data[-deleteme,]
+			delete.me = as.numeric(unlist(apply(data[,variables], 2, function(x){(which(is.na(x)))})))
+			data = data[-delete.me,]
 		}
 	}
+	
+
+		#### identify the non given variables
+	axis = unlist(subsetString(as.character(formula)[3], sep=" | ", position=1, flexible=F))
+	axis = unlist(strsplit(axis, " + ", fixed=T))
+	
+		
+	#### identify the correct line
+	if (suppress_smooth){
+		gm = theme_bw()
+	} else if (method=="logistic") {
+
+		#### make sure there's only two levels
+		if (length(unique(data[,outcome]))!=2){
+			stop("To fit a logistic curve, you must have only two levels of your outcome variable.")
+		}
+		
+		#### convert outcome to numeric (if necessary)
+		if (!is.numeric(data[,outcome])){
+			data[,outcome] = as.numeric(data[,outcome])-1
+		}
+		
+		#### specify the curve
+		gm = geom_smooth(method = "glm", method.args = list(family = "binomial"), se = se)
+	} else {
+		gm = geom_smooth(method=method, se=se)
+	}
+
+
+	
+
+	#if (is.na(given)){given=NULL}
+	
+
+	
+
 	
 	### create custom function to sample data
 	sample.subset = function(sample, data){

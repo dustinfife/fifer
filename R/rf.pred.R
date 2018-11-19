@@ -346,6 +346,7 @@ plot.rfPred = function(x, y, ...){
 ##' Output accuracy, sensitivity, specificity, NPV, and PPV. 
 ##'
 ##' @param object An rfPred object
+##' @aliases sensitivity
 ##' @return A list containing the accuracy, sensitivity, etc. 
 ##' @export
 rfSensitivity = function(object){

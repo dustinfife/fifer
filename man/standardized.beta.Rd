@@ -4,7 +4,7 @@
 \alias{standardized.beta}
 \title{Compute standardized betas on a linear model object}
 \usage{
-standardized.beta(object)
+standardized.beta(object, sd.y = T)
 }
 \arguments{
 \item{object}{a lm object}

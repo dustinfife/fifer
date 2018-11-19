@@ -33,6 +33,55 @@ estimates.regression = function(object){
 	cat(paste("\n\nr = ", round(object$r, digits=4), "\nsigma = ", round(object$Sigma, digits=4)))
 }
 
+
+#' Report glm object Estimates (effect sizes and parameters)
+#'
+#' Report glm object Estimates
+#' @aliases estimates.glm estimates
+#' @param object a glm object
+#' @export
+estimates.glm = function(object){
+	#### generate list of coefficients
+	terms = attr(terms(object), "term.labels")
+	
+	#### get dataset
+	d = object$model
+	
+	#### identify factors
+	factors = names(which(unlist(lapply(d[,terms], is.factor))));
+	numbers = names(which(unlist(lapply(d[,terms], is.numeric))));
+
+	#### output predictions
+	n.func = function(term){anchor.predictions(object, term, shutup=T)$prediction}
+	preds = lapply(terms, n.func); names(preds) = terms
+	
+	
+	#### output coefficients
+	options(warn=-1)
+	coef.matrix = data.frame(raw.coefficients = coef(object), OR = exp(coef(object)), inverse.OR = 1/exp(coef(object)), standardized.OR = exp(standardized.beta(object, sd.y=F)), inverse.standardized.OR = 1/exp(standardized.beta(object, sd.y=F)))
+	options(warn=0)
+	coef.matrix[numbers,"Prediction Difference (+/- 1 SD)"] = sapply(preds[numbers], function(x){abs(round(x[2]-x[1], digits=2))})
+	
+	
+	#### for those that are factors, put the first prediction in the -1 SD column
+	string.round = function(x, digits){
+		return.val = ifelse(round(x, digits)==0, paste0("<0.", rep(0, times=digits-1), "1"), round(x, digits=digits))
+		return.val
+	}
+
+	for (i in 1:length(factors)){
+		current.pre = preds[factors[i]]
+		levs = levels(d[,factors[i]]); levs = paste0(factors[i], levs)
+		coef.matrix[levs[-1],"Prediction Difference (+/- 1 SD)"] = paste0(string.round(unlist(current.pre)[-1] - unlist(current.pre)[1], digits=2), " (relative to ", levs[1], ")")
+		
+		if (length(factors)==1){
+			coef.matrix[1,"Prediction Difference (+/- 1 SD)"] = paste0(string.round(unlist(current.pre)[1], digits=2), " (", levs[1], " prediction)")
+			row.names(coef.matrix)[1] = levs[1]
+		}
+	}
+	coef.matrix
+}
+
 #' Report regression object Estimates (effect sizes and parameters)
 #'
 #' Report regression object Estimates

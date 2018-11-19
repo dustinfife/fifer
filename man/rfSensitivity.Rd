@@ -2,6 +2,7 @@
 % Please edit documentation in R/rf.pred.R
 \name{rfSensitivity}
 \alias{rfSensitivity}
+\alias{sensitivity}
 \title{Output accuracy, sensitivity, specificity, NPV, and PPV.}
 \usage{
 rfSensitivity(object)
