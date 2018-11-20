@@ -55,6 +55,8 @@ anchor.predictions = function(model, reference, shutup=F){
 		if (!shutup){
 			cat(paste0("\nNote: You didn't specify predictions for:\n      ", paste0(not.included, collapse=","), "\nI'm going to predict the average for quantitative variables and take the first level of categorical predictors.\n\n"))
 		}	
+	} else {
+		average.predictions = NA
 	}
 
 		##### predict the ones that need to be predicted
@@ -82,11 +84,24 @@ anchor.predictions = function(model, reference, shutup=F){
 	
 	##### generate final prediction
 	if (length(numeric.preds)>0 & length(factor.levs)>0){
-		final.prediction = expand.grid(c(numeric.preds, factor.levs, average.predictions))
+		if (is.na(average.predictions[1])){
+			final.prediction = expand.grid(c(numeric.preds, factor.levs))
+		} else {
+			final.prediction = expand.grid(c(numeric.preds, factor.levs, average.predictions))
+		}
 	} else if (length(numeric.preds)>0){
-		final.prediction = expand.grid(c(numeric.preds, average.predictions))
+		if (is.na(average.predictions[1])){
+			final.prediction = expand.grid(c(numeric.preds))
+		} else {
+			final.prediction = expand.grid(c(numeric.preds, average.predictions))
+		}
 	} else if (length(factor.levs)>0){
-		final.prediction = expand.grid(c(factor.levs, average.predictions))
+		if (is.na(average.predictions[1])){
+			final.prediction = expand.grid(c(factor.levs))
+		} else {
+			final.prediction = expand.grid(c(factor.levs, average.predictions))
+		}
+		
 	}
 	
 	##### now predict
@@ -94,7 +109,9 @@ anchor.predictions = function(model, reference, shutup=F){
 	
 	### rename predictions
 	final.prediction[,numeric.included] = paste0(round(final.prediction[,numeric.included], digits=2), " (", c("+", "-"), "1 SD)", sep="")
-	final.prediction = final.prediction[,-which(names(final.prediction)%in%not.included)]
+	if (length(which(names(final.prediction)%in%not.included))>0){
+		final.prediction = final.prediction[,-which(names(final.prediction)%in%not.included)]
+	}
 	
 	final.prediction
 

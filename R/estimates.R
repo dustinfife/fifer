@@ -48,8 +48,13 @@ estimates.glm = function(object){
 	d = object$model
 	
 	#### identify factors
-	factors = names(which(unlist(lapply(d[,terms], is.factor))));
-	numbers = names(which(unlist(lapply(d[,terms], is.numeric))));
+	if (length(terms)>1){
+		factors = names(which(unlist(lapply(d[,terms], is.factor))));
+		numbers = names(which(unlist(lapply(d[,terms], is.numeric))));
+	} else {
+		factors = terms[which(is.factor(d[,terms]))]
+		numbers = terms[which(is.numeric(d[,terms]))]
+	}
 
 	#### output predictions
 	n.func = function(term){anchor.predictions(object, term, shutup=T)$prediction}
@@ -69,6 +74,8 @@ estimates.glm = function(object){
 		return.val
 	}
 
+
+	if (length(factors)>0){
 	for (i in 1:length(factors)){
 		current.pre = preds[factors[i]]
 		levs = levels(d[,factors[i]]); levs = paste0(factors[i], levs)
@@ -78,7 +85,7 @@ estimates.glm = function(object){
 			coef.matrix[1,"Prediction Difference (+/- 1 SD)"] = paste0(string.round(unlist(current.pre)[1], digits=2), " (", levs[1], " prediction)")
 			row.names(coef.matrix)[1] = levs[1]
 		}
-	}
+	}}
 	coef.matrix
 }
 
