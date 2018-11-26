@@ -71,7 +71,7 @@ flexplot = function(formula, data, related=F,
 		ghost.line=NULL, ghost.reference=NULL,
 		spread=c('quartiles', 'stdev', 'sterr'), jitter=FALSE, raw.data=T,
 		sample=Inf, 
-		prediction = NULL, suppress_smooth=F, alpha=1){
+		prediction = NULL, suppress_smooth=F, alpha=.99977){
 			
 
 	##### use the following to debug flexplot
@@ -232,7 +232,7 @@ flexplot = function(formula, data, related=F,
 			theme(axis.ticks.x=element_blank(), axis.text.x=element_blank()) +
 			coord_cartesian(xlim=c(.75, 1.25))
 	#### SCATTERPLOT	
-	} else if (length(outcome)==1 & length(predictors)==1 & is.na(given) & (is.numeric(data[,predictors]) & is.numeric(data[,outcome]))){			
+	} else if (length(outcome)==1 & length(predictors)==1 & is.na(given) & (is.numeric(data[,predictors]) & is.numeric(data[,outcome]))){				
 		p = ggplot(data=data, aes_string(x=predictors, y=outcome))+
 			jit + #geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
 			gm +
@@ -240,9 +240,12 @@ flexplot = function(formula, data, related=F,
 
 	##### MEAN PLOT
 	} else if (length(outcome)==1 & length(predictors)==1 & is.na(given) & (is.numeric(data[,predictors]) | is.numeric(data[,outcome]))){		
-
+		#### set default alpha
+		if(alpha==.99977){
+			alpha = .2
+		}
 		p = ggplot(data=data, aes_string(x=predictors, y=outcome)) +
-			geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, .15), size=.75, width=.05) + 
+			geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha), size=.75, width=.05) + 
 			summary1 + summary2 + 
 			theme_bw()						
 	##### logistic regression plot
@@ -257,18 +260,26 @@ flexplot = function(formula, data, related=F,
 
 	##### INTERACTION PLOT
 	} else if (length(outcome)==1 & length(predictors)==2 & (is.character(data[,predictors[1]]) | is.factor(data[,predictors[1]])) & (is.character(data[,predictors[2]]) | is.factor(data[,predictors[2]]))){
+
+
+					#### set default alpha
+		if(alpha==.99977){
+			alpha = .2	
+		}
 		
+				
 		#### identify if given is na
 		if (!is.na(given)){
+
 			p = ggplot(data=data, aes_string(x=predictors[1], y=outcome)) +
-				geom_jitter(data=sample.subset(sample, data), alpha = raw.alph.func(raw.data, .15), size = .75, width=.2) +
+				geom_jitter(data=sample.subset(sample, data), alpha = raw.alph.func(raw.data, alpha), size = .75, width=.2) +
 				facet_wrap(as.formula(paste("~", predictors[2]))) +
 				summary1 + summary2 +
 				labs(x=predictors[1], y=outcome) +
 				theme_bw()
 		} else {
 			p = ggplot(data=data, aes_string(x=predictors[1], y=outcome, color=predictors[2], linetype=predictors[2], shape=predictors[2])) +
-				geom_jitter(data=sample.subset(sample, data), alpha = raw.alph.func(raw.data, .5), size=.75,  position= position_jitterdodge(jitter.width=.2, dodge.width=.2)) +
+				geom_jitter(data=sample.subset(sample, data), alpha = raw.alph.func(raw.data, alpha), size=.75,  position= position_jitterdodge(jitter.width=.2, dodge.width=.2)) +
 				summary1 + summary2 + 
 				sum.line + 
 				labs(x=predictors[1], y=outcome) +
