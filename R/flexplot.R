@@ -156,7 +156,7 @@ flexplot = function(formula, data, related=F,
 		}	
 	}
 	
-	
+
 	if (!is.null(jitter)){
 			if (jitter[1]==T){
 				jit = geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha), width=.2, height=.2)
@@ -494,6 +494,14 @@ flexplot = function(formula, data, related=F,
 			if (!is.na(axis[2])){
 				stop("Sorry. I can't plot a second variable on the x axis. Try putting it in the given area (e.g., y~ x + z | b should become y~ x | b + z)")
 			}
+			
+			### make sure the reference groups are all in the data
+			if (sum(names(ghost.reference) %in%  variables) != length(ghost.reference)){
+				missing.var = names(ghost.reference[!(names(ghost.reference) %in% variables)])
+				msg = paste0("Sorry. One of your variables (", missing.var, ") is not in your formula.")
+				stop(msg)
+			}
+
 
 			#### if they don't specify a reference group, choose one
 			if (is.null(ghost.reference)){
