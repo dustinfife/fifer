@@ -541,7 +541,9 @@ flexplot = function(formula, data, related=F,
 		
 		#### check if first variable is a continuous predictor
 		if (is.numeric(data[,predictors])){
-			p = p + geom_line(data= prediction, aes(linetype=model, y=prediction, color=model))			
+			
+			print("got here")
+			p = p + geom_line(data= prediction, aes(linetype=model, y=prediction, color=model), size=2)			
 		} else {
 			p = p + geom_point(data=prediction, aes(y=prediction, color=model), position=position_dodge(width=.2))
 		}

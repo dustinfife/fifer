@@ -23,7 +23,7 @@ mixed.mod.visual = function(formula, data, model, n=6, jitter=F){
 	}
 	
 	##### subset the data
-	samp = sort(as.numeric(samp))
+	samp = sort((samp))
 	rows = data[,ID] %in% samp
 	d_new = data[rows,]	
 
@@ -35,7 +35,7 @@ mixed.mod.visual = function(formula, data, model, n=6, jitter=F){
 	if (length(predictors)>1){
 		stop("Sorry, I can only plot one predictor variable at a time")
 	}
-	
+	compare.fits
 
 	
 	##### extract the rows of the random effects
@@ -55,10 +55,21 @@ mixed.mod.visual = function(formula, data, model, n=6, jitter=F){
 	fixed.slope = fixef(model)[2]
 	fixed.intercept = fixef(model)[1]
 
+	##### find the link function
+	min.x = min(d[, predictors], na.rm=T); max.x = max(d[, predictors], na.rm=T)
+	x = seq(from=min.x, to=max.x, length.out=100)
+	if (family(model)$link=="identity"){
+		y = fixed.slope*x + fixed.intercept	
+	} else if (family(model)$link=="log"){
+		y = exp(fixed.slope*x + fixed.intercept)
+	}
+	new_data = data.frame(x=x, y=y)
+
 	##### plot it
 	ggplot(data=d_new, aes_string(predictors, outcome)) +
 		jit +
-		geom_abline(aes(slope=fixed.slope, intercept=fixed.intercept), col="red", size=2) +
+		#geom_abline(aes(slope=fixed.slope, intercept=fixed.intercept), col="red", size=2) +
+		geom_line(data=new_data, aes(x=x, y=y), col="red") + 
 		geom_abline(data=show.predicted, aes(slope=predictor, intercept=intercept), col="gray") +
 		facet_wrap(as.formula(paste0("~", ID)), labeller = labeller(.cols=label_both)) +				
 		theme_bw()

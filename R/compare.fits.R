@@ -110,21 +110,36 @@ compare.fits = function(formula, data, model1, model2=NULL, return.preds=F, ...)
 	#### generate predictions
 	if (model1.type == "lmerMod"){
 		pred.mod1 = data.frame(prediction = predict(model1, pred.values, type="response", re.form=NA), model= model1.type)		
-	} else {
+	} else if (model1.type == "polr"){
+		pred.mod1 = data.frame(prediction = predict(model1, pred.values, type="class", re.form=NA), model= model1.type)		
+	} else  {
 		pred.mod1 = data.frame(prediction = predict(model1, pred.values, type="response"), model= model1.type)		
 	}
 	
-	if (model1.type == "lmerMod"){
+	if (model2.type == "lmerMod"){
 		pred.mod2 = data.frame(prediction = predict(model2, pred.values, type="response", re.form=NA), model= model2.type)		
+	} else if (model2.type == "polr"){
+		pred.mod2 = data.frame(prediction = predict(model2, pred.values, type="class", re.form=NA), model= model2.type)		
 	} else {
 		pred.mod2 = data.frame(prediction = predict(model2, pred.values, type="response"), model= model2.type)		
-	}	
+	}
+	
+	#### convert polyr back to numeric (if applicable)
+	if (model1.type == "polr" | model2.type == "polr"){
+		data[,outcome] = as.numeric(as.character(data[,outcome]))		
+		pred.mod1$prediction = as.numeric(as.character(pred.mod1$prediction))
+		pred.mod2$prediction = as.numeric(as.character(pred.mod2$prediction))		
+	}
+	
 	
 
 
 	prediction.model = rbind(pred.mod1, pred.mod2)
 	prediction.model = cbind(pred.values, prediction.model)
-
+	
+	#### eliminate those predictions that are higher than the range of the data
+	min.dat = min(data[,outcome], na.rm=T); max.dat = max(data[,outcome], na.rm=T)
+	prediction.model  = prediction.model[-which(prediction.model$prediction>max.dat | prediction.model$prediction<min.dat), ]
 
 
 	#### create flexplot
