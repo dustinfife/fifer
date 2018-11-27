@@ -35,43 +35,48 @@ mixed.mod.visual = function(formula, data, model, n=6, jitter=F){
 	if (length(predictors)>1){
 		stop("Sorry, I can only plot one predictor variable at a time")
 	}
-	compare.fits
+
 
 	
 	##### extract the rows of the random effects
 	d2 = data[!duplicated(data[,ID]),]
 	select.rows = which(d2[,ID] %in% samp)
-	show.predicted = coef(model)[ID]
-	show.predicted = data.frame(show.predicted)[select.rows,]
-	names(show.predicted) = c("intercept", "predictor")
-	show.predicted[,ID] = factor(row.names(show.predicted))
 	d_new[,ID] = factor(d_new[,ID])
+	
 	##### jitter if needed
 	if (jitter){
-			jit = geom_jitter(width=.2, height=.2)
+			jit = geom_jitter(width=.2, height=.2, alpha=.5)
 		} else {
-			jit = geom_point()
+			jit = geom_point(alpha = .5)
 	}
-	fixed.slope = fixef(model)[2]
-	fixed.intercept = fixef(model)[1]
 
-	##### find the link function
-	min.x = min(d[, predictors], na.rm=T); max.x = max(d[, predictors], na.rm=T)
-	x = seq(from=min.x, to=max.x, length.out=100)
-	if (family(model)$link=="identity"){
-		y = fixed.slope*x + fixed.intercept	
-	} else if (family(model)$link=="log"){
-		y = exp(fixed.slope*x + fixed.intercept)
-	}
-	new_data = data.frame(x=x, y=y)
+
+	##### generate fixed effects predictions
+	preds = compare.fits(formula, data, model, return.preds=T); preds = preds[,1:(ncol(preds)-1)]	#### this contains the fixed effect prediction
+	names(preds)[ncol(preds)] = outcome
+	
+	#### make predictions for random effects
+	new_data = d_new
+	new_data[,outcome]= predict(model, new_data, type="response")
+
 
 	##### plot it
-	ggplot(data=d_new, aes_string(predictors, outcome)) +
-		jit +
-		#geom_abline(aes(slope=fixed.slope, intercept=fixed.intercept), col="red", size=2) +
-		geom_line(data=new_data, aes(x=x, y=y), col="red") + 
-		geom_abline(data=show.predicted, aes(slope=predictor, intercept=intercept), col="gray") +
-		facet_wrap(as.formula(paste0("~", ID)), labeller = labeller(.cols=label_both)) +				
-		theme_bw()
-		
+	### if it's categorical
+	if (is.factor(data[,predictors[1]])){
+		ggplot(data=d_new, aes_string(predictors[1], outcome)) +
+			jit +
+			#geom_abline(aes(slope=fixed.slope, intercept=fixed.intercept), col="red", size=2) +
+			geom_point(data=preds, aes_string(predictors, outcome), col="red", size=4) + #### fixed effect line
+			geom_point(data=new_data, aes_string(predictors, outcome), col="gray", size=4, shape=17) + 
+			facet_wrap(as.formula(paste0("~", ID)), labeller = labeller(.cols=label_both)) +				
+			theme_bw()		
+	} else {
+		ggplot(data=d_new, aes_string(predictors[1], outcome)) +
+			#geom_abline(aes(slope=fixed.slope, intercept=fixed.intercept), col="red", size=2) +
+			geom_line(data=preds, aes_string(predictors, outcome), col="red") + #### fixed effect line
+			geom_line(data=new_data, aes_string(predictors, outcome), col="gray") +
+			jit +			
+			facet_wrap(as.formula(paste0("~", ID)), labeller = labeller(.cols=label_both)) +				
+			theme_bw()
+		}
 }

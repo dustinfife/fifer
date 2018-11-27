@@ -108,7 +108,7 @@ compare.fits = function(formula, data, model1, model2=NULL, return.preds=F, ...)
 ### if it's binned, predict the midpoint of the binned variable
 
 	#### generate predictions
-	if (model1.type == "lmerMod"){
+	if (model1.type == "lmerMod" | model1.type == "glmerMod"){
 		pred.mod1 = data.frame(prediction = predict(model1, pred.values, type="response", re.form=NA), model= model1.type)		
 	} else if (model1.type == "polr"){
 		pred.mod1 = data.frame(prediction = predict(model1, pred.values, type="class", re.form=NA), model= model1.type)		
@@ -116,7 +116,7 @@ compare.fits = function(formula, data, model1, model2=NULL, return.preds=F, ...)
 		pred.mod1 = data.frame(prediction = predict(model1, pred.values, type="response"), model= model1.type)		
 	}
 	
-	if (model2.type == "lmerMod"){
+	if (model2.type == "lmerMod" | model2.type == "glmerMod"){
 		pred.mod2 = data.frame(prediction = predict(model2, pred.values, type="response", re.form=NA), model= model2.type)		
 	} else if (model2.type == "polr"){
 		pred.mod2 = data.frame(prediction = predict(model2, pred.values, type="class", re.form=NA), model= model2.type)		
@@ -139,10 +139,17 @@ compare.fits = function(formula, data, model1, model2=NULL, return.preds=F, ...)
 	
 	#### eliminate those predictions that are higher than the range of the data
 	min.dat = min(data[,outcome], na.rm=T); max.dat = max(data[,outcome], na.rm=T)
-	prediction.model  = prediction.model[-which(prediction.model$prediction>max.dat | prediction.model$prediction<min.dat), ]
+	if (length(which(prediction.model$prediction>max.dat)>0 | length(which(prediction.model$prediction<min.dat)))){
+		prediction.model  = prediction.model[-which(prediction.model$prediction>max.dat | prediction.model$prediction<min.dat), ]
+	}
+	
 
 
 	#### create flexplot
-	flexplot(formula, data=data, prediction=prediction.model, suppress_smooth=T, se=F, ...)
+	if (return.preds){
+		prediction.model
+	} else {
+		flexplot(formula, data=data, prediction=prediction.model, suppress_smooth=T, se=F, ...)
+	}	
 
 }	
