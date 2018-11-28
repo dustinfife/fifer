@@ -191,6 +191,13 @@ flexplot = function(formula, data, related=F,
 	### PLOT UNIVARIATE PLOTS
 		### if there's no predictors, use the "uni.plot" function
 	if (length(outcome)==1 & length(predictors)==0){
+		
+		##### reorder according to columns lengths (if it's not an ordered factor)
+		if (!is.ordered(data[,outcome])){
+			counts = sort(table(data[,outcome]), decreasing=T)
+			names(counts)
+			data[,outcome] = factor(data[,outcome], levels=names(counts))
+		}
 		p = uni.plot(outcome, d=data)
 		
 	### related t plot
@@ -240,6 +247,16 @@ flexplot = function(formula, data, related=F,
 
 	##### MEAN PLOT
 	} else if (length(outcome)==1 & length(predictors)==1 & is.na(given) & (is.numeric(data[,predictors]) | is.numeric(data[,outcome]))){		
+		
+		
+		#### reorder if it's not already ordered
+		if (!is.ordered(data[,outcome])){
+			if (spread=="quartiles"){ fn = "median"} else {fn = "mean"}
+			ord = aggregate(data[,outcome]~data[,predictors], FUN=fn, na.rm=T)
+			ord = ord[order(ord[,2], decreasing=T),]
+			data[,predictors] = factor(data[,predictors], levels=ord[,1])
+		}
+
 		#### set default alpha
 		if(alpha==.99977){
 			alpha = .2
