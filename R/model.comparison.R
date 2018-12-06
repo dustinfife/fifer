@@ -39,18 +39,28 @@ model.comparison = function(model1, model2){
 	model.table = data.frame(aic=aic, bic=bic, bayes.factor=c(bayes.factor, NA), p.value=c(p, NA))
 	row.names(model.table) = c(m1.name, m2.name)
 
-	mod1.predictions = sensitivity.table(model1)
-	mod2.predictions = sensitivity.table(model2)	
-	
-	predictions = data.frame(rbind(unlist(mod1.predictions), unlist(mod2.predictions))); row.names(predictions) = c(m1.name, m2.name)
-	if (length(mod1)>length(mod2)){
-		difference = unlist(predictions[1,]) - unlist(predictions[2,])
-	} else {
-		difference = predictions[2,] - predictions[1,]
-	}
-	predictions = data.frame(rbind(predictions, difference)); row.names(predictions)[3] = "Difference"
+	#### compute difference in predicted value
+	differences = quantile(abs(predict(model1, type="response") - predict(model2, type="response")))
 
-	list(statistics=model.table, predictions=predictions)
+	
+	if (family(model1)$link=="logit" & family(model2)$link=="logit"){
+		mod1.predictions = sensitivity.table(model1)
+		mod2.predictions = sensitivity.table(model2)	
+			predictions = data.frame(rbind(unlist(mod1.predictions), unlist(mod2.predictions))); row.names(predictions) = c(m1.name, m2.name)
+		if (length(mod1)>length(mod2)){
+			difference = unlist(predictions[1,]) - unlist(predictions[2,])
+		} else {
+			difference = predictions[2,] - predictions[1,]
+		}
+		predictions = data.frame(rbind(predictions, difference)); row.names(predictions)[3] = "Difference"
+	
+		list(statistics=model.table, predictions=predictions, pred.difference = differences)
+	} else {
+		list(statistics=model.table, pred.difference = differences)
+	}
+	
+	
+
 }
 
 ##' Compute sensitivity/specificity/etc. 

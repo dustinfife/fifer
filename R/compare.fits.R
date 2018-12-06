@@ -88,6 +88,9 @@ compare.fits = function(formula, data, model1, model2=NULL, return.preds=F, ...)
 		terms.mod2 = terms.mod2[-grep("^2", terms.mod1, fixed=T)]
 		model2.type="polynomial"
 	}	
+	
+	
+	#### if the outcome is an ordered factor...
 		
 	
 	#### if it's not in model 1:
@@ -105,7 +108,7 @@ compare.fits = function(formula, data, model1, model2=NULL, return.preds=F, ...)
 			}
 		}
 	}
-### if it's binned, predict the midpoint of the binned variable
+	
 
 	#### generate predictions
 	if (model1.type == "lmerMod" | model1.type == "glmerMod"){

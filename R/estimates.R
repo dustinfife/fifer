@@ -15,7 +15,7 @@ estimates = function(object,...){
 #' @param object a object
 #' @export
 estimates.default = function(object){
-	out = coef(object)
+	out = summary(object)
 	class(out) = "estimates"
 	out
 }
@@ -63,9 +63,23 @@ estimates.glm = function(object){
 	
 	#### output coefficients
 	options(warn=-1)
-	coef.matrix = data.frame(raw.coefficients = coef(object), OR = exp(coef(object)), inverse.OR = 1/exp(coef(object)), standardized.OR = exp(standardized.beta(object, sd.y=F)), inverse.standardized.OR = 1/exp(standardized.beta(object, sd.y=F)))
+	if (family(object)$link=="logit"){
+		coef.matrix = data.frame(raw.coefficients = coef(object), OR = exp(coef(object)), inverse.OR = 1/exp(coef(object)), standardized.OR = exp(standardized.beta(object, sd.y=F)), inverse.standardized.OR = 1/exp(standardized.beta(object, sd.y=F)))
+		
+	} else if (family(object)$link=="log"){
+		coef.matrix = data.frame(raw.coefficients = coef(object), 
+				multiplicative.coef = exp(coef(object)), 
+				std.mult.coef = exp(standardized.beta(object, sd.y=F)))
+	} else if (family(object)$link=="inverse"){
+		coef.matrix = data.frame(raw.coefficients = coef(object), 
+				inverse.coef = 1/((object)), 
+				std.mult.coef = 1/(standardized.beta(object, sd.y=F)))
+	}
+	
+	
 	options(warn=0)
 	coef.matrix[numbers,"Prediction Difference (+/- 1 SD)"] = sapply(preds[numbers], function(x){abs(round(x[2]-x[1], digits=2))})
+
 	
 	
 	#### for those that are factors, put the first prediction in the -1 SD column
@@ -88,6 +102,42 @@ estimates.glm = function(object){
 	}}
 	coef.matrix
 }
+
+#' Report zeroinfl object Estimates (effect sizes and parameters)
+#'
+#' Report zeroinfl object Estimates
+#' @aliases estimates.zeroinfl estimates
+#' @param object a zeroinfl object
+#' @export
+estimates.zeroinfl = function(object){
+	
+	#### generate list of coefficients
+	terms = attr(terms(object), "term.labels")
+	
+	#### identify factors
+	if (length(terms)>1){
+		factors = names(which(unlist(lapply(d[,terms], is.factor))));
+		numbers = names(which(unlist(lapply(d[,terms], is.numeric))));
+	} else {
+		factors = terms[which(is.factor(d[,terms]))]
+		numbers = terms[which(is.numeric(d[,terms]))]
+	}	
+	
+	#### output predictions
+	n.func = function(term){anchor.predictions(object, term, shutup=T)$prediction}
+	preds = lapply(terms, n.func); names(preds) = terms
+	
+	#### output coefficients
+	coef.matrix = data.frame(A = coef(object)[1:(length(terms)+1)], 
+							B = coef(object)[(length(terms)+2):length(coef(object))])
+	names(coef.matrix) = c(object$dist, object$link)
+	row.names(coef.matrix) = subsetString(row.names(coef.matrix), "_", 2)
+	coef.matrix[numbers,"Prediction Difference (+/- 1 SD)"] = sapply(preds[numbers], function(x){abs(round(x[2]-x[1], digits=2))})
+	
+	coef.matrix
+	
+}
+
 
 #' Report regression object Estimates (effect sizes and parameters)
 #'

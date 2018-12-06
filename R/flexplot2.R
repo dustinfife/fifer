@@ -18,11 +18,11 @@
 ##' @param method The method to be used to draw the lines. Defaults to loess
 ##' @param se Should standard errors be drawn?
 ##' @param ghost.line Should a ghost line be drawn? If so, user must specify a color. Default is NULL (in which case, the ghost line isn't shown). 
-##' @param ghost.group What should the reference group be (from which to draw the ghost line)? The user can specify up to two values as a vector. See examples. 
+##' @param ghost.reference What should the reference group be (from which to draw the ghost line)? The user can specify up to two values as a vector. See examples. 
 ##' @param spread How should standard errors be drawn? Defaults to quartiles
 ##' @param jitter Should values be jittered?
 ##' @param raw.data Should raw data be plotted?
-##' @param sample Should a sample of the data be plotted? Defaults to Inf (for all variables). 
+##' @param ss Should a sample of the data be plotted? Defaults to Inf (for all variables). 
 ##' @author Dustin Fife
 ##' @export
 ##' @examples
@@ -64,28 +64,28 @@
 #'
 #'	# #### three categorical variables (multiway dot plot)
 ##' flexplot(weight.change~gender + therapy.type + rewards, data=d, raw.data=F)
-flexplot = function(formula, data, related=F,
+flexplot2 = function(formula, data, related=F,
 		color=NULL, symbol=NULL, linetype=NULL, 
 		bins = 4, labels=NULL, breaks=NULL,
 		method="loess", se=T, 
 		ghost.line=NULL, ghost.reference=NULL,
 		spread=c('quartiles', 'stdev', 'sterr'), jitter=FALSE, raw.data=T,
-		sample=Inf, 
+		ss=Inf, 
 		prediction = NULL, suppress_smooth=F, alpha=.99977){
 			
 
 	##### use the following to debug flexplot
 	#formula = formula(weight.loss~therapy.type + rewards); related=T; data=d; color=NULL; symbol=NULL; linetype=NULL; bins = 4; labels=NULL; breaks=NULL; method="loess"; se=T; spread=c('stdev'); jitter=FALSE; raw.data=T; ghost.line="gray"; sample=Inf; prediction = NULL; suppress_smooth=F; alpha=1
-
+		print(ss)
 		
+	##### IDENTIFICATION
 	spread = match.arg(spread, c('quartiles', 'stdev', 'sterr'))
 	
-		#### extract outcome, predictors, and given variables
+	#### extract outcome, predictors, and given variables
 	variables = all.vars(formula)
 	outcome = variables[1]
 	predictors = variables[-1]
 	given = unlist(subsetString(as.character(formula)[3], sep=" | ", position=2, flexible=F))
-
 
 	#### identify which variables are numeric and which are factors
 	if (length(predictors)>0){
@@ -93,7 +93,7 @@ flexplot = function(formula, data, related=F,
 		categories = names(which(!(unlist(lapply(data[,predictors], is.numeric)))))
 	}
 
-		### remove missing values
+	### remove missing values
 	if (length(predictors)>0){
 		if (length(unlist(apply(data[,variables], 2, function(x){(which(is.na(x)))})))>0){
 			
@@ -102,102 +102,31 @@ flexplot = function(formula, data, related=F,
 		}
 	}
 	
-
-		#### identify the non given variables
+		#### create bins
+	bin.info = bin.variables(given, breaks, labels, data, bins, ghost.reference, prediction)
+	data = bin.info$data
+	
+	#### identify the non given variables
 	axis = unlist(subsetString(as.character(formula)[3], sep=" | ", position=1, flexible=F))
-	axis = unlist(strsplit(axis, " + ", fixed=T))
-	
+	axis = unlist(strsplit(axis, " + ", fixed=T))	
+
+	#### create x axis variable
+	x.raw = jit.func(jitter, data=data, ss =ss, raw.data=raw.data, alpha=alpha)
+	x.sum = x.summary(predictors, outcome, spread, data)
+
+	### generic plot
+	p = ggplot(data=bin.info$data, aes_string(x=predictors[1], y=outcome)) +
+		x.raw +
+		x.sum +
+		bin.info$giv + 
+		theme_bw()
+
 		
-	#### identify the correct line
-	if (suppress_smooth){
-		gm = theme_bw()
-	} else if (method=="logistic") {
-
-		#### make sure there's only two levels
-		if (length(unique(data[,outcome]))!=2){
-			stop("To fit a logistic curve, you must have only two levels of your outcome variable.")
-		}
-		
-		#### convert outcome to numeric (if necessary)
-		if (!is.numeric(data[,outcome])){
-			data[,outcome] = as.numeric(data[,outcome])-1
-		}
-		
-		#### specify the curve
-		gm = geom_smooth(method = "glm", method.args = list(family = "binomial"), se = se)
-	} else if (method=="poisson" | method=="Gamma") {
-		#### specify the curve
-		gm = geom_smooth(method = "glm", method.args = list(family = method), se = se)
-	} else {
-		gm = geom_smooth(method=method, se=se)
-	}
-
-
-	
-
-	#if (is.na(given)){given=NULL}
-	
-
-	
-
-	
-	### create custom function to sample data
-	sample.subset = function(sample, data){
-		if (sample!=Inf){
-			m = data[sample(1:nrow(data), size=sample),]
-		} else {
-			m = data
-		}
-	}
-
-	### if they don't want raw data, just make alpha = 0
-	raw.alph.func = function(raw.data,alpha=1){
-		if (raw.data){
-			alpha.raw = alpha
-		} else {
-			alpha.raw = 0
-		}	
-	}
-	
-
-	if (!is.null(jitter)){
-			if (jitter[1]==T & !is.numeric(jitter)[1]){
-				jit = geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha), width=.2, height=.2)
-			} else if (jitter[1] == F & !is.numeric(jitter)[1]){
-					print(jitter[1])
-				jit = geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha))
-			} else {
-				jit = geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha), width=jitter[1], height=jitter[2])
-			}
-			
-		} else {
-			jit = geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha))
-	}
-
-	if (spread=="stdev"){
-		summary1 = stat_summary(fun.y='mean', geom='point', size=3, position=position_dodge(width=.2)) 
-		summary2 = stat_summary(aes_string(x=predictors[1], y=outcome), geom='errorbar', fun.ymin = function(z){mean(z)-sd(z)}, fun.ymax = function(z) {mean(z)+sd(z)}, fun.y=median, size = 1.25, width=.2, position=position_dodge(width=.2))
-		sum.line = stat_summary(aes_string(group=predictors[2]), geom="line", fun.y="mean", position=position_dodge(width=.2))
-	} else if (spread=="sterr"){	
-		summary1 = stat_summary(fun.y='mean', geom='point', size=3, position=position_dodge(width=.2)) 
-		summary2 = stat_summary(aes_string(x=predictors[1], y=outcome), geom='errorbar', fun.data = mean_cl_normal, width=.2, size = 1.25, position=position_dodge(width=.2))
-		sum.line = stat_summary(aes_string(group=predictors[2]), geom="line", fun.y="mean", position=position_dodge(width=.2)) 	
-	} else if (spread == "quartiles"){	
-		summary1 = stat_summary(fun.y='median', geom='point', size=3, position=position_dodge(width=.2)) 
-		summary2 = stat_summary(aes_string(x=predictors[1], y=outcome), geom='errorbar', fun.ymin = function(z){quantile(z, .25)},size = 1.25,  fun.ymax = function(z) {quantile(z, .75)}, fun.y=median, width=.2, position=position_dodge(width=.2))
-		sum.line = stat_summary(aes_string(group=predictors[2]), geom="line", fun.y="median", position=position_dodge(width=.2)) 	
-	}		
-		
-
-
-
-	### BEGIN THE MEGA PLOTTING IFS!
 	### PLOT UNIVARIATE PLOTS
-		### if there's no predictors, use the "uni.plot" function
 	if (length(outcome)==1 & length(predictors)==0){
 		
 		##### reorder according to columns lengths (if it's not an ordered factor)
-		if (!is.numeric(data[,outcome]) & !is.ordered(data[,outcome])){
+		if (!is.ordered(data[,outcome])){
 			counts = sort(table(data[,outcome]), decreasing=T)
 			names(counts)
 			data[,outcome] = factor(data[,outcome], levels=names(counts))
@@ -206,51 +135,15 @@ flexplot = function(formula, data, related=F,
 		
 	### related t plot
 	} else if (related){
-		if (length(predictors)!=1){
-			stop("Currently, the 'related' option is only available when there's a single predictor.")
-		} 
-		
-		#### extract levels of the predictors
-		levs = levels(data[,predictors])
-		
-		if (length(levs)!=2){
-			stop("Sorry, I can only accept two levels of the grouping variable when related=T.")
-		}
+		p = related.plot(predictors=predictors, outcome=outcome, data=data, ss=ss, raw.data=raw.data, spread=spread)	
 
-		#### create difference scores
-		g1 = data[data[,predictors]==levs[1], outcome]
-		g2 = data[data[,predictors]==levs[2], outcome]		
-		
-		if (length(g1) != length(g2)){
-			stop("Sorry, the length of the two groups are not the same. I can only create difference scores when the group sizes are identical.")
-		}
-		
-		lab = paste0("Difference (",levs[2], "-", levs[1], ')')
-		d2 = data.frame(Difference=g2-g1)
-		
-		if (spread == "stdev"){ summary2 = stat_summary(geom='errorbar', fun.ymin = function(z){mean(z)-sd(z)}, fun.ymax = function(z) {mean(z)+sd(z)}, fun.y=median, size = 1.25, width=.12, position=position_dodge(width=.2))}
-		if (spread == "sterr"){ summary2 = stat_summary(geom='errorbar', fun.data = mean_cl_normal, color=rgb(1,0,0,.25), width=.12, size = 1.25, position=position_dodge(width=.2))}
-		if (spread == "quartiles"){ summary2 = stat_summary(geom='errorbar', fun.ymin = function(z){quantile(z, .25)},size = 1.25,  fun.ymax = function(z) {quantile(z, .75)}, fun.y=median, width=.12, position=position_dodge(width=.2))}				
-												#stat_summary(geom='errorbar', fun.ymin = function(z){mean(z)-sd(z)}, fun.ymax = function(z) {mean(z)+sd(z)}, fun.y=median, color='red', width=.2)
-		
-		p = ggplot(d2, aes(y=Difference, x=1)) +
-			geom_jitter(data=sample.subset(sample, d2), alpha=raw.alph.func(raw.data, .15), width=.05) +
-			summary1 + summary2 + 
-			gm +
-			geom_hline(yintercept=0, col="lightgray") +
-			labs(x=lab) +
-			theme_bw() +
-			theme(axis.ticks.x=element_blank(), axis.text.x=element_blank()) +
-			coord_cartesian(xlim=c(.75, 1.25))
 	#### SCATTERPLOT	
 	} else if (length(outcome)==1 & length(predictors)==1 & is.na(given) & (is.numeric(data[,predictors]) & is.numeric(data[,outcome]))){				
-		
-
 		p = ggplot(data=data, aes_string(x=predictors, y=outcome))+
 			jit + #geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
 			gm +
-			theme_bw()						
-
+			theme_bw()				
+	
 	##### MEAN PLOT
 	} else if (length(outcome)==1 & length(predictors)==1 & is.na(given) & (is.numeric(data[,predictors]) | is.numeric(data[,outcome]))){		
 		
@@ -367,117 +260,10 @@ flexplot = function(formula, data, related=F,
 	##### FOR VARAIBLES THAT WILL BE BINNED...
 	} else {
 
-		##### only allow two "given" variables
-		if (length(given)>2){
-			stop("Only two 'given' variables are allowed.")
-		}
-
-		#### modify given (if needed)
-		if (length(given)>0 & !is.na(given)){
-		if (regexpr("+", given)){
-			given = unlist(strsplit(given, " + ", fixed=T))
-		}
-		}		
-		
-		#### see if more than two variables are shown at the left of the given sign
-		if ((length(predictors) - length(given))>2){
-			stop("Only two 'axis' variables are allowed.")
-		}
-			
-		
-		
-		#### make given variables ggplot friendly (for facet_grid)
-		given.as.string = ifelse(length(given)>1 & !is.na(given),paste0(rev(given), collapse="~"), paste0("~",given))
-
-		#### if a category is "given", leave it alone
-		# if (length(which(given %in% categories))>0){
-			# given = given[-which(given %in% categories)]
-		# }
 
 
-		
-			
-		### identify the number of binned variables we need
-		if (length(axis)>1 & axis[2] %in% numbers){ 
-			binned.vars = c(axis[2], numbers[which((numbers) %in% given)])
-		} else {
-			binned.vars = numbers[which((numbers) %in% given)]
-		}
-
-		if (length(binned.vars)>0){
-			msg = paste0("The following variables are going to be binned: ", paste0(binned.vars, collapse=", "), "\n")
-			cat(msg)
-		}
-		
-		### repeat the bins the number of bins there are
-		if (length(bins) != length(binned.vars) & length(bins)>1){
-			warning("You haven't specified enough bins to cover all the binned variables. I'm making a guess for the rest of the variables")
-			bins = matrix(bins, nrow=1, ncol=length(binned.vars))
-		}
-		
-		if (length(bins)==1){
-			bins = rep(bins, times=length(binned.vars))
-		}
-
-		#### bin the binned variables
-		if (length(binned.vars)>0){
-			for (i in 1:length(binned.vars)){
-				
-				break.current = unlist(breaks[i])
-				if (!is.null(unlist(labels[i])) & length(unlist(labels[i])) != bins[i]){
-					stop(paste0("The label vectors (", paste0(unlist(labels[i]), collapse=", "), ") is not the same length as the bin length (", bins[i], ")", sep=""))
-				}
-				
-				### if they supply the breaks...
-				if (!is.null(break.current)){
-					#### give min as breaks, if the user doesn't
-					if (min(break.current)>min(data[,binned.vars[i]])){
-						break.current = c(-Inf, break.current)
-					}
-					if (max(break.current,na.rm=T)<max(data[,binned.vars[i]])){
-						break.current = c(break.current, Inf)
-					}
-					
-					quants = unlist(break.current)
-				} else {
-					quants = quantile(data[,binned.vars[i]], seq(from=0, to=1, length.out=bins[i]+1))
-				}
-	
-				data[,paste0(binned.vars[i])] = cut(data[,binned.vars[i]], quants, labels= unlist(labels[i]), include.lowest=T, include.highest=T)
-
-				#### if they're making a ghost reference, bin that too
-				if (!is.null(ghost.reference) & binned.vars[i] %in% names(ghost.reference)){
-					val = as.numeric(ghost.reference[binned.vars[i]])
-					ghost.reference[binned.vars[i]] = as.character(cut(val, quants, labels=unlist(labels[i]), include.lowest=T, include.highest=T))
-				}
-				
-				if (!is.null(prediction)){
-					prediction[,paste0(binned.vars[i])] = cut(prediction[,binned.vars[i]], quants, labels= unlist(labels[i]), include.lowest=T, include.highest=T)
-
-				}
-				
-			}
-
-			if (!is.null(prediction)){
-							#### average the predictions within bin
-				f = make.formula("prediction", c("model",
-														predictors[-which(predictors==binned.vars[i])],
-														binned.vars[i]
-														)
-									)			
-				prediction = aggregate(f, data=prediction, FUN=median)
-
-			}			
-			
-		}
 
 
-				#### add code for "given" variable
-		if (!is.na(given[1])){
-			giv = facet_grid(as.formula(given.as.string),labeller = labeller(.rows = label_both, .cols=label_both))
-		} else {
-			giv = theme_bw()
-		}
 		
 		#### repeat this (otherwise it references the old dataset, before things were binned)
 		if (!is.null(jitter)){
@@ -502,13 +288,12 @@ flexplot = function(formula, data, related=F,
 					giv + 
 					theme_bw()
 		} else {
-
+				
 			p = ggplot(data=data, aes_string(x=axis[1], y=outcome))+
 				jit + 
 				gm +
 				giv + 
-				theme_bw()	
-		
+				theme_bw()			
 		}
 
 
@@ -560,12 +345,13 @@ flexplot = function(formula, data, related=F,
 	
 
 	}	
-
+			p
 	if (!is.null(prediction)){	
 		
 		#### check if first variable is a continuous predictor
-		if (is.numeric(data[,predictors[1]])){
+		if (is.numeric(data[,predictors])){
 			
+			print("got here")
 			p = p + geom_line(data= prediction, aes(linetype=model, y=prediction, color=model), size=2)			
 		} else {
 			p = p + geom_point(data=prediction, aes(y=prediction, color=model), position=position_dodge(width=.2))
