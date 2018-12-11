@@ -158,13 +158,11 @@ flexplot = function(formula, data, related=F,
 			alpha.raw = 0
 		}	
 	}
-	
 
 	if (!is.null(jitter)){
 			if (jitter[1]==T & !is.numeric(jitter)[1]){
 				jit = geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha), width=.2, height=.2)
 			} else if (jitter[1] == F & !is.numeric(jitter)[1]){
-					print(jitter[1])
 				jit = geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha))
 			} else {
 				jit = geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha), width=jitter[1], height=jitter[2])
@@ -256,7 +254,7 @@ flexplot = function(formula, data, related=F,
 		
 		
 		#### reorder if it's not already ordered
-		if (!is.ordered(data[,outcome])){
+		if (!is.ordered(data[,predictors[1]])){
 			if (spread=="quartiles"){ fn = "median"} else {fn = "mean"}
 			ord = aggregate(data[,outcome]~data[,predictors], FUN=fn, na.rm=T)
 			ord = ord[order(ord[,2], decreasing=T),]

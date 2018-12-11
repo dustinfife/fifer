@@ -139,13 +139,18 @@ compare.fits = function(formula, data, model1, model2=NULL, return.preds=F, ...)
 
 	prediction.model = rbind(pred.mod1, pred.mod2)
 	prediction.model = cbind(pred.values, prediction.model)
-	
+
 	#### eliminate those predictions that are higher than the range of the data
+	if (!is.factor(data[,outcome])){
 	min.dat = min(data[,outcome], na.rm=T); max.dat = max(data[,outcome], na.rm=T)
 	if (length(which(prediction.model$prediction>max.dat)>0 | length(which(prediction.model$prediction<min.dat)))){
 		prediction.model  = prediction.model[-which(prediction.model$prediction>max.dat | prediction.model$prediction<min.dat), ]
 	}
-	
+	} else {
+		#### if they supply a factor, convert it to a number!!!!!
+		prediction.model$prediction = as.numeric(as.character(prediction.model$prediction))
+	}
+
 
 
 	#### create flexplot

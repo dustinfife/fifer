@@ -7,8 +7,27 @@
 ##' @return the ICC
 ##' @author Dustin Fife
 ##' @export
+##' @import lme4
+##' @examples
+##' data(alcuse)
+##' require(lme4)
+##' model = lmer(ALCUSE~1|ID, data=alcuse)
+##' icc(model)
 icc = function(model){
+	#### compute ICC
 	var.components = as.data.frame(VarCorr(model))$vcov
 	ICC = var.components[1]/sum(var.components)
-	ICC
+	
+	#### find out average cluster size
+	id.name = names(coef(model))
+	clusters = nrow(matrix(unlist((coef(model)[id.name]))))
+	n = length(residuals(model))
+	average.cluster.size = n/clusters
+	
+	#### compute design effects
+	design.effect = 1+ICC*(average.cluster.size-1)
+	
+	#### return stuff
+	list(icc=ICC, design.effect=design.effect)
+	
 }
