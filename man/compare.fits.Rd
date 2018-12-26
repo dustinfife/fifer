@@ -5,7 +5,7 @@
 \title{Compare the fits of two models}
 \usage{
 compare.fits(formula, data, model1, model2 = NULL, return.preds = F,
-  ...)
+  silent = F, report.se = F, ...)
 }
 \arguments{
 \item{formula}{A formula that can be used in flexplot. The variables inside must not include variables outside the fitted models.}
@@ -15,6 +15,12 @@ compare.fits(formula, data, model1, model2 = NULL, return.preds = F,
 \item{model1}{The fitted model object (e.g., lm) containing the variables specified in the formula}
 
 \item{model2}{The second fitted model object (e.g., lm) containing the variables specified in the formula}
+
+\item{return.preds}{Should the function return the predictions instead of a graphic? Defaults to F}
+
+\item{silent}{Should R tell you how it's handling the variables in the model that are not in the formula? Defaults to F.}
+
+\item{report.se}{Should standard errors be reported alongside the estimates? Defaults to F.}
 }
 \description{
 Compare the fits of two models

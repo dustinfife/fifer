@@ -3,7 +3,7 @@
 \name{estimates.lm}
 \alias{estimates.lm}
 \alias{estimates}
-\title{Report regression object Estimates (effect sizes and parameters)}
+\title{Report lm object Estimates (effect sizes and parameters)}
 \usage{
 \method{estimates}{lm}(object)
 }
@@ -11,5 +11,5 @@
 \item{object}{a lm object}
 }
 \description{
-Report regression object Estimates
+Report lm object Estimates
 }

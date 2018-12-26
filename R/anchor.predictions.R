@@ -30,15 +30,18 @@ anchor.predictions = function(model, reference, shutup=F){
 
 		#### extract dataset
 	d = model$model
-	
+
 		##### figure out which terms need to be aggregated across
 	included = terms[which(terms %in% reference)]
 	not.included = terms[which(!(terms %in% reference))]	
 
 		##### figure out which are categorical
-	factors = names(which(unlist(lapply(d[,terms], is.factor)))); factors.included = factors[factors%in%included]
+	if (length(terms)>1){	
+		factors = names(which(unlist(lapply(d[,terms], is.factor)))); factors.included = factors[factors%in%included]
+	} else {
+		factors = ifelse(is.factor(d[,terms]), terms, NULL); factors.included = factors[factors%in%included]
+	}
 	numeric = terms[!(terms %in% factors)]; numeric.included = numeric[numeric%in%included]
-
 
 		#### average the ones that need to be averaged
 	temp.func = function(x, factors=factors, d=d) { 

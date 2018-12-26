@@ -139,24 +139,38 @@ estimates.zeroinfl = function(object){
 }
 
 
-#' Report regression object Estimates (effect sizes and parameters)
+#' Report lm object Estimates (effect sizes and parameters)
 #'
-#' Report regression object Estimates
+#' Report lm object Estimates
 #' @aliases estimates.lm estimates
 #' @param object a lm object
 #' @importFrom lsmeans lsmeans
 #' @export
 estimates.lm = function(object){
-
+	#data(exercise_data); data=exercise_data
+	#f = make.formula("weight.loss", c("gender", "motivation"))
+	#object = lm(f, data=data)
 	n = nrow(model.frame(object)) 
 	
-	#### report R squared
-	r.squared = summary(object)$r.squared
-	t.crit = qt(.975, df=n-2)	
-	se.r = sqrt((4*r.squared*(1-r.squared)^2*(n-1-1)^2)/((n^2-1)*(n+3)))		### from cohen, cohen, west, aiken, page 88
-	r.squared = c(r.squared, r.squared-t.crit*se.r, r.squared+t.crit*se.r)
-	r.squared = round(r.squared, digits=4)
-
+	#### generate list of coefficients
+	terms = attr(terms(object), "term.labels")
+	variables = all.vars(formula(object))
+    outcome = variables[1]
+    
+    #### look for interaction terms
+	interaction = length(grep(":", terms))>0
+	
+	#### get dataset
+	d = object$model
+	
+	#### identify factors
+	if (length(terms)>1){
+		factors = names(which(unlist(lapply(d[,terms], is.factor))));
+		numbers = names(which(unlist(lapply(d[,terms], is.numeric))));
+	} else {
+		factors = terms[which(is.factor(d[,terms]))]
+		numbers = terms[which(is.numeric(d[,terms]))]
+	}
 
 
 	#### compute change in r squared
@@ -171,40 +185,102 @@ estimates.lm = function(object){
 	nms = row.names(anova(object))[min:max]	
 	names(semi.p) = nms
 	
-	# z = 1.96
-	# mult0 = r.squared[1] - semi.p 
-	# zr <- log((1 + sqrt(semi.p))/(1 - sqrt(semi.p)))/2
-	# a <- (r.squared[1]^2 - 2*r.squared[1] + mult0 - mult0^2 + 1)/(1 - sqrt(semi.p)^2)^2
-	# se <- sqrt(a/(n - 3))
-	# LL0 <- zr - z*se
- 	# UL0 <- zr + z*se
- 	# LL <- (exp(2*LL0) - 1)/(exp(2*LL0) + 1)
- 	# UL <- (exp(2*UL0) - 1)/(exp(2*UL0) + 1)
- 	# semi.p = data.frame(semi.partial = semi.p, lower=LL^2, upper=UL^2)
-
-
-	##### compute ls means
-		#### figure out what is numeric
-	classes = attr(terms(object), "dataClasses")[-1]
-
-		#### extract which variables are factors and which are numeric
-	factors = which(classes=="factor" | classes=="ordered")
-	numeric = which(classes=="numeric")
-	predictors = attr(terms(object),"term.labels")
-	#### extract lsmeans for factors
+		#### FACTORS FIRST
 	if (length(factors)>0){
-		lsmeans = lsmeans(object, predictors[factors])	
+		#### generate table with names
+		if (length(factors)==1){
+			factor.names = levels(d[,factors])
+			num.rows = length(factor.names)
+		} else {
+			factor.names = unlist(lapply(d[,factors], levels))
+			num.rows = sum(unlist(apply(d[,factors], 2, function(x) { length(unique(x))})))			
+		}
+
+	
+			#### create empty matrix with variable names
+			#### identify the number of rows
+			coef.matrix = data.frame(variables = rep("", num.rows), levels=NA, estimate=NA, lower=NA, upper=NA, std.estimate=0, std.lower=NA, std.upper=NA, df.spent=NA, df.remaining=NA)
+			coef.matrix$variables = factor(coef.matrix$variables, levels=c("", factors))		
+				#### write variable names/levels/df
+			coef.matrix$df.spent = NA	
+			
+				#### compute standardized estimates
+			coef.std = standardized.beta(object, se=T)
+			#### remove those that are numeric
+			if (length(numbers)>0){
+				coef.std$beta = coef.std$beta[-which(names(coef.std$beta) %in% numbers)]
+				coef.std$se = coef.std$se[-which(names(coef.std$se) %in% numbers)]			
+			}
+			p = 1; i=1
+			for (i in 1:length(factors)){
+				
+				#### populate df based on levels
+				levs = length(levels(d[,factors[i]]))
+				current.rows = p:(p+levs-1)
+				coef.matrix$levels[current.rows] = levels(d[,factors[i]])
+				coef.matrix$df.spent[p] = levs-1
+				
+				#### populate variable names
+				coef.matrix$variables[p] = factors[i]
+	
+				#### populate the estimates/lower/upper
+				f = make.formula(outcome, factors[i])			
+				est = compare.fits(f, data=d, object, return.preds=T, silent=T)
+				coef.matrix$estimate[current.rows] = est$prediction.fit
+				coef.matrix$lower[current.rows] = est$prediction.lwr
+				coef.matrix$upper[current.rows] = est$prediction.upr
+				
+				#### populate standardized estimates
+				names(coef.std$beta) = gsub(factors[i], "", names(coef.std$beta))
+				names(coef.std$se) = gsub(factors[i], "", names(coef.std$se))				
+				#### populate the df
+				coef.matrix$df.remaining = object$df
+				#### increment the counter
+				p = p + levs
+			}	
+
+
+
+			
+			std.rows = 	coef.matrix$levels %in% names(coef.std$beta)
+			coef.matrix$std.estimate[std.rows] = coef.std$beta[-1]
+			lower.limits = coef.std$beta[-1] - 1.96*coef.std$se[-1]
+			upper.limits = coef.std$beta[-1] + 1.96*coef.std$se[-1]
+			coef.matrix$std.lower[std.rows] = lower.limits
+			coef.matrix$std.upper[std.rows] = upper.limits
+				names(coef.matrix)[3] = "LS Means"
+		
+	} else {
+		coef.matrix = NA
 	}
 	
-	#### extract parameter estimates
-	if (length(numeric)>0){
-		rows = c(1, which(row.names(summary(object)$coef)%in%names(numeric)))
-		betas = standardized.beta(object)[rows]
-		params = data.frame(summary(object)$coef[rows,])
-		params$beta =betas
-		params = params[,c(1,5,2)]
-		names(params) = c("Coef", "Standardized Beta", "SE")
-	}	
+	#### NUMERIC VARIABLES
+	if (length(numbers)>0){
+		vars = c("(Intercept)", numbers)
+		coef.matrix.numb = data.frame(variables=vars, estimate=NA, lower=NA, upper=NA, std.estimate=NA, std.lower=NA, std.upper=NA, df.spent=1, df.remaining=object$df)
+		coef.matrix.numb$estimate = coef(object)[vars]
+		
+		#### get upper and lower using matrix multiplication
+		upper.lower = t(matrix(coef(object)[vars], ncol=2, nrow=length(vars), byrow=F) + t(t(t(c(1.96,-1.96)))%*%t(summary(object)$coef[vars,2])))
+
+		coef.matrix.numb$lower = (upper.lower)[2,]
+		coef.matrix.numb$upper = (upper.lower)[1,]
+
+		
+		##### standardized estimates
+		coef.std = standardized.beta(object, se=T)
+			#### remove those that are numeric
+		num = which(names(coef.std$beta) %in% numbers)	
+		coef.std$beta = coef.std$beta[num]
+		coef.std$se = coef.std$se[num]					
+		coef.matrix.numb$std.estimate = c(0, coef.std$beta)
+		upper.lower = t(matrix(c(0, coef.std$beta), ncol=2, nrow=length(vars), byrow=F) + t(t(t(c(1.96,-1.96)))%*%t(c(0, coef.std$beta))))
+		coef.matrix.numb[,c("std.upper", "std.lower")] = t(upper.lower)	
+		
+	} else {
+		coef.matrix.numb = NA
+	}
+
 
 
 	#### report R squared
@@ -214,19 +290,47 @@ estimates.lm = function(object){
 	r.squared = c(r.squared, r.squared-t.crit*se.r, r.squared+t.crit*se.r)
 	r.squared = round(r.squared, digits=4)
 
-	#### print summary
-	cat(paste("Model R squared:\n", round(r.squared[1], digits=3), " (", round(r.squared[2], digits=2),", ", round(r.squared[3], digits=2),")\n\nSemi-Partial R squared:\n",sep=""))
-	print(semi.p)
-	if (length(numeric)>0){
-		cat(paste("\nCoefficients:\n"))
-		print(params)
-	}
-	if (length(factors)>0){
-		cat(paste("\n\nLS Means = \n"))
-		print(lsmeans)		
-	}
-	cat(paste("\nsigma = ", round(summary(object)$sigma, digits=4), "\n\n"))
+	# #### print summary
+	# cat(paste("Model R squared:\n", round(r.squared[1], digits=3), " (", round(r.squared[2], digits=2),", ", round(r.squared[3], digits=2),")\n\nSemi-Partial R squared:\n",sep=""))
+	# print(semi.p)
+	# if (length(factors)>0){
+		# cat(paste("\nEstimates for Factors:\n"))
+		# print(coef.matrix)
+	# }
+	# if (length(numbers)>0){
+		# cat(paste("\n\nEstimates for Numeric Variables = \n"))
+		# print(coef.matrix.numb)		
+	# }
+	# cat(paste("\nsigma = ", round(summary(object)$sigma, digits=4), "\n\n"))
 	
-	ret = list(r.squared=r.squared, semi.p=semi.p, params=params, lsmeans=lsmeans)
+	ret = list(r.squared=r.squared, semi.p=semi.p, factor.summary = coef.matrix, factors=factors, numbers.summary=coef.matrix.numb, numbers=numbers, sigma=summary(object)$sigma)
+	attr(ret, "class") = "estimates"
 	return(ret)
+}
+
+
+#' Print estimates Summary
+#'
+#' Print estimates Summary
+#' @aliases print.estimates
+#' @param x an estimates object
+#' @param ... ignored
+#' @export
+print.estimates = function(x,...){
+	#### print summary
+	cat(paste("Model R squared:\n", round(x$r.squared[1], digits=3), " (", round(x$r.squared[2], digits=2),", ", round(x$r.squared[3], digits=2),")\n\nSemi-Partial R squared:\n",sep=""))
+	print(round(x$semi.p, digits=3))
+	if (length(x$factors)>0){
+		cat(paste("\nEstimates for Factors:\n"))
+		x$factor.summary[,3:ncol(x$factor.summary)] = round(x$factor.summary[,3:ncol(x$factor.summary)], digits=2)
+		#print(round(x$numbers.summary, digits=2))		
+		print(x$factor.summary)
+	}
+	if (length(x$numbers)>0){
+		cat(paste("\n\nEstimates for Numeric Variables = \n"))
+		x$numbers.summary[,2:ncol(x$numbers.summary)] = round(x$numbers.summary[,2:ncol(x$numbers.summary)], digits=2)
+		#print(round(x$numbers.summary, digits=2))		
+		print(x$numbers.summary)		
+	}
+	cat(paste("\nsigma = ", round(x$sigma, digits=4), "\n\n"))
 }

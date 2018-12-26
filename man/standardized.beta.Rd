@@ -4,10 +4,14 @@
 \alias{standardized.beta}
 \title{Compute standardized betas on a linear model object}
 \usage{
-standardized.beta(object, sd.y = T)
+standardized.beta(object, sd.y = T, se = F)
 }
 \arguments{
 \item{object}{a lm object}
+
+\item{sd.y}{Should we scale based on standard deviation of Y as well as the predictors?}
+
+\item{se}{Should standard errors be reported?}
 }
 \value{
 the standardized betas

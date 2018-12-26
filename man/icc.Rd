@@ -18,6 +18,12 @@ This function will extract the variances from a mixed model and output the value
 \details{
 Recall that the equation for the ICC is var(school)/[var(school)+ var(person)]. This forumla extracts the necessary variances from the mixed model and computes it.
 }
+\examples{
+data(alcuse)
+require(lme4)
+model = lmer(ALCUSE~1|ID, data=alcuse)
+icc(model)
+}
 \author{
 Dustin Fife
 }

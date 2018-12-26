@@ -20,7 +20,7 @@ visualize = function(object, plot=c("all", "residuals", "bivariate"),...){
 #' @param formula A flexplot-style formula
 #' @param linetype What time of smoothing line should be drawn? Defaults to loess. 
 #' @export
-estimates.default = function(object, plot=c("all", "residuals", "bivariate")){
+visualize.default = function(object, plot=c("all", "residuals", "bivariate")){
 	class(object) = "visualize"
 	plot(object)
 }
@@ -32,16 +32,16 @@ estimates.default = function(object, plot=c("all", "residuals", "bivariate")){
 #' @param object a lm object
 #' @param plot what should be plotted? Residuals? Bivariate plot? All of them?
 #' @param formula A flexplot-style formula
-#' @param linetype What time of smoothing line should be drawn? Defaults to loess. 
+#' @param ... Other arguments passed to flexplot
 #' @importFrom cowplot plot_grid
 #' @export
-visualize.lm = function(object, plot=c("all", "residuals", "bivariate"), linetype="loess", formula = NULL,...){
+visualize.lm = function(object, plot=c("all", "residuals", "bivariate"), formula = NULL,...){
 	
 
 	plot = match.arg(plot, c("all", "residuals", "bivariate"))
+	
 	#### figure out what is numeric
 	d = object$model
-	head(d)
 	levels = apply(d, 2, FUN=function(x) length(unique(x)))
 	
 	#### if there's too few levels and it's not categorical
@@ -63,15 +63,72 @@ visualize.lm = function(object, plot=c("all", "residuals", "bivariate"), linetyp
 	histo = ggplot(data=d, aes(x=residuals)) + geom_histogram(fill='lightgray', col='black') + theme_bw() + labs(x="Residuals", title="Histogram of Residuals")
 	res.dep = ggplot(data=d, aes(x=fitted, y=residuals)) + geom_point(alpha = .35, size=.75) + geom_smooth(method="loess") + 
 		theme_bw() + labs(x="Fitted", y="Residuals", title="Residual Dependence Plot")
-	sl = ggplot(data=d, aes(y=abs.res, x=fitted)) + geom_point(alpha=.35, size=.75) + geom_smooth(method= linetype) +
+	sl = ggplot(data=d, aes(y=abs.res, x=fitted)) + geom_point(alpha=.35, size=.75) + geom_smooth(method= "loess") +
 			theme_bw() + labs(x="fitted", y="Absolute Value of Residuals", title="S-L Plot")	
 	
 	
 	#### use flexplot to visualize
-	if ((plot=="all" | plot == "bivariate" )& is.null(formula)){
-		warning("You must provide a formula argument to plot the data. I'm just returning the residual plots.")
+	if ((plot=="all" | plot == "bivariate" ) & is.null(formula)){
+		
+		#### generate formula as best we can
+		#### get dataset
+		data = object$model
+		
+		#### extract the terms from each model
+		terms = attr(terms(object), "term.labels")
+	
+			
+		##### extract variable names
+		variables = all.vars(formula(object))
+	    outcome = variables[1]
+	    predictors = variables[-1]
+	    
+	    ##### look for interactions and remove them
+		if (length(grep(":", terms))>0){
+			terms = terms[-grep(":", terms)]
+		}
+		
+		##### look for polynomials and remove them
+		if (length(grep("^2", terms, fixed=T, value=T))>0){
+			terms = terms[-grep("^2", terms, fixed=T)]
+		}
+	
+		#### figure out variable types
+		if (length(terms)>1){
+			numb = names(which(unlist(lapply(data[,terms], is.numeric))))
+			cat = names(which(!(unlist(lapply(data[,terms], is.numeric)))))
+		} else {
+			numb = ifelse(is.numeric(data[,terms]), terms, NA)
+			cat = ifelse(is.factor(data[,terms]), terms, NA)		
+		}
+	    
+		#### now decide where things go
+		if (length(terms)>4){
+			cat("Note: I can't plot more than four variables")
+		} 
+		
+		#### if both numeric and factor, put numeric on x axis and factor as color/line
+		if ((!is.na(cat) | length(cat)!=0) & (!is.na(cat) | length(cat)!=0)){
+			### remove terms with first numb and first cat
+			t2 = terms[-which(terms==numb[1] | terms==cat[1])]
+			t2 = c(numb[1],cat[1], t2)
+		#### otherwise, if length is greater than 
+		} else {
+			t2 = terms[1:min(length(terms), 4)]
+		}
+	
+		#### now create formula
+		x = c(outcome, "~",t2[1], t2[2], "|", t2[3], t2[4])
+		x = x[-which(is.na(x))]
+		x = paste0(x, collapse="+")
+		x = gsub("+|+", "|", x, fixed=T);x = gsub("+~+", "~", x, fixed=T)
+		x = gsub("+|", "", x, fixed=T)
+		f = as.formula(x)		
+
+		step3 = flexplot(f, data=data, ...)
+		
 	} else if (plot=="all" | plot=="bivariate"){
-		step3 = flexplot(formula, data=d)
+		step3 = flexplot(formula, data=d, ...)
 	}
 
 	#### return the plots

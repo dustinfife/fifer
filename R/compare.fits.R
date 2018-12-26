@@ -7,15 +7,21 @@
 ##' @param data The dataset containing the variables in formula
 ##' @param model1 The fitted model object (e.g., lm) containing the variables specified in the formula
 ##' @param model2 The second fitted model object (e.g., lm) containing the variables specified in the formula
+##' @param return.preds Should the function return the predictions instead of a graphic? Defaults to F
+##' @param silent Should R tell you how it's handling the variables in the model that are not in the formula? Defaults to F. 
+##' @param report.se Should standard errors be reported alongside the estimates? Defaults to F. 
 ##' @author Dustin Fife
 ##' @export
 ##' @examples
 ##' #not yet
-compare.fits = function(formula, data, model1, model2=NULL, return.preds=F, ...){
+compare.fits = function(formula, data, model1, model2=NULL, return.preds=F, silent=F, report.se=F,...){
 
 	#### if mod2 is null..
 	if (is.null(model2)){
 		model2 = model1
+		old.mod = 1
+	} else {
+		old.mod = 0
 	}
 
 	#### extract the terms from each model
@@ -99,11 +105,11 @@ compare.fits = function(formula, data, model1, model2=NULL, return.preds=F, ...)
 		not.in.there = terms.mod1[which(!(terms.mod1 %in% predictors))]
 		for (i in 1:length(not.in.there)){
 			if (is.numeric(data[,not.in.there[i]])){
-				cat(paste0("Note: You didn't choose to plot ", not.in.there[i], " so I am inputting the median\n"))
+				if (!silent){cat(paste0("Note: You didn't choose to plot ", not.in.there[i], " so I am inputting the median\n"))}
 				pred.values[,not.in.there[i]] = median(data[,not.in.there[i]], na.rm=T)
 			} else {
 				val = unique(data[,not.in.there[i]])[1]
-				cat(paste0("Note: You didn't choose to plot ", not.in.there[i], " so I am inputting '", val, "'\n"))
+				if (!silent){cat(paste0("Note: You didn't choose to plot ", not.in.there[i], " so I am inputting '", val, "'\n"))}
 				pred.values[,not.in.there[i]] = val
 			}
 		}
@@ -116,15 +122,16 @@ compare.fits = function(formula, data, model1, model2=NULL, return.preds=F, ...)
 	} else if (model1.type == "polr"){
 		pred.mod1 = data.frame(prediction = predict(model1, pred.values, type="class", re.form=NA), model= model1.type)		
 	} else  {
-		pred.mod1 = data.frame(prediction = predict(model1, pred.values, type="response"), model= model1.type)		
+		pred.mod1 = data.frame(prediction = predict(model1, pred.values, type="response", interval="confidence"), model= model1.type)		
 	}
 	
+
 	if (model2.type == "lmerMod" | model2.type == "glmerMod"){
 		pred.mod2 = data.frame(prediction = predict(model2, pred.values, type="response", re.form=NA), model= model2.type)		
 	} else if (model2.type == "polr"){
 		pred.mod2 = data.frame(prediction = predict(model2, pred.values, type="class", re.form=NA), model= model2.type)		
 	} else {
-		pred.mod2 = data.frame(prediction = predict(model2, pred.values, type="response"), model= model2.type)		
+		pred.mod2 = data.frame(prediction = predict(model2, pred.values, type="response"), model= model2.type, se.fit= report.se)		
 	}
 	
 	#### convert polyr back to numeric (if applicable)
@@ -135,10 +142,14 @@ compare.fits = function(formula, data, model1, model2=NULL, return.preds=F, ...)
 	}
 	
 	
-
-
-	prediction.model = rbind(pred.mod1, pred.mod2)
-	prediction.model = cbind(pred.values, prediction.model)
+	#### report one or two coefficients, depending on if they supplied it
+	if (old.mod==0){
+		prediction.model = rbind(pred.mod1, pred.mod2)
+		prediction.model = cbind(pred.values, prediction.model)
+	} else {
+		prediction.model = pred.mod1
+		prediction.model = cbind(pred.values, prediction.model)
+	}
 
 	#### eliminate those predictions that are higher than the range of the data
 	if (!is.factor(data[,outcome])){
