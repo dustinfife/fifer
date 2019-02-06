@@ -35,7 +35,6 @@ glinmod = function(f, data, output=c("both", "estimates", "graphics"), ...){
 	
 	#### compute the estimates
 	if (output == "both" | output == "estimates"){
-		source("research/RPackages/fifer/R/estimates.R")
 		est = estimates(mod)
 		print(est)
 	} else {

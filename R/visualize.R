@@ -37,13 +37,25 @@ visualize.default = function(object, plot=c("all", "residuals", "bivariate")){
 #' @export
 visualize.lm = function(object, plot=c("all", "residuals", "bivariate"), formula = NULL,...){
 	
-
 	plot = match.arg(plot, c("all", "residuals", "bivariate"))
 	
-	#### figure out what is numeric
-	d = object$model
-	levels = apply(d, 2, FUN=function(x) length(unique(x)))
 	
+	terms = attr(terms(object), "term.labels")
+	
+	#### get dataset
+	d = object$model
+	
+	#### identify factors
+	if (length(terms)>1){
+		factors = names(which(unlist(lapply(d[,terms], is.factor))));
+		numbers = names(which(unlist(lapply(d[,terms], is.numeric))));
+	} else {
+		factors = terms[which(is.factor(d[,terms]))]
+		numbers = terms[which(is.numeric(d[,terms]))]
+	}
+
+		#### figure out what is numeric
+	levels = apply(d, 2, FUN=function(x) length(unique(x)))
 	#### if there's too few levels and it's not categorical
 	factors = !sapply(d, is.factor)
 	if (any(levels<5 & factors)){
@@ -60,11 +72,22 @@ visualize.lm = function(object, plot=c("all", "residuals", "bivariate"), formula
 	d$fitted = fitted(object)
 	
 	#### plot residuals
-	histo = ggplot(data=d, aes(x=residuals)) + geom_histogram(fill='lightgray', col='black') + theme_bw() + labs(x="Residuals", title="Histogram of Residuals")
-	res.dep = ggplot(data=d, aes(x=fitted, y=residuals)) + geom_point(alpha = .35, size=.75) + geom_smooth(method="loess") + 
-		theme_bw() + labs(x="Fitted", y="Residuals", title="Residual Dependence Plot")
-	sl = ggplot(data=d, aes(y=abs.res, x=fitted)) + geom_point(alpha=.35, size=.75) + geom_smooth(method= "loess") +
-			theme_bw() + labs(x="fitted", y="Absolute Value of Residuals", title="S-L Plot")	
+	histo = ggplot2::ggplot(data=d, aes(x=residuals)) + geom_histogram(fill='lightgray', col='black') + theme_bw() + labs(x="Residuals", title="Histogram of Residuals")
+	if (length(numbers)>0){
+		#res.dep = ggplot2::ggplot(data=d, aes(x=fitted, y=residuals)) + geom_point() + geom_smooth(method="loess", se=F) + 
+		#theme_bw() + labs(x="Fitted", y="Residuals", title="Residual Dependence Plot")
+		res.dep = flexplot(residuals~fitted, data=d) + labs(x="Fitted", y="Residuals", title="Residual Dependence Plot")
+		
+	} else {
+		res.dep = NULL
+	}
+	if (length(unique(d$fitted))<7){
+	sl = flexplot(abs.res~fitted, data=d, method="lm", jitter=c(.2, 0))+ labs(x="fitted", y="Absolute Value of Residuals", title="S-L Plot")			
+	} else {
+	sl = flexplot(abs.res~fitted, data=d, method="lm")+ labs(x="fitted", y="Absolute Value of Residuals", title="S-L Plot")			
+	}
+	#sl = flexplot(abs.res~fitted, data=d, method="lm")+ labs(x="fitted", y="Absolute Value of Residuals", title="S-L Plot")	#ggplot2::ggplot(data=d, aes(y=abs.res, x=fitted)) + geom_point(alpha=.5, size=.75) + geom_smooth(method= "loess") +
+			#theme_bw() + labs(x="fitted", y="Absolute Value of Residuals", title="S-L Plot")	
 	
 	
 	#### use flexplot to visualize
@@ -135,10 +158,16 @@ visualize.lm = function(object, plot=c("all", "residuals", "bivariate"), formula
 	if (plot=="bivariate"){
 		return(step3)
 	} else if (plot=="residuals"){
-		cowplot::plot_grid(histo, res.dep, sl)
+		if (length(numbers)>0){
+			top.row = cowplot::plot_grid(histo, res.dep,ncol=2)
+			bottom.row = cowplot::plot_grid(NULL, sl, NULL, ncol=3, rel_widths=c(.25, .5, .25))
+			cowplot::plot_grid(top.row, bottom.row, ncol=1)
+		} else {
+			cowplot::plot_grid(histo, sl, ncol=1)
+		}
 	} else {
 		cowplot::plot_grid(step3, histo, res.dep, sl)
-	}
+}
 }
 
 #' Visualize a fitted model 
