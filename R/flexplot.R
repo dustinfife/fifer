@@ -24,6 +24,7 @@
 ##' @param raw.data Should raw data be plotted?
 ##' @param sample Should a sample of the data be plotted? Defaults to Inf (for all variables). 
 ##' @author Dustin Fife
+##' @import ggplot2
 ##' @export
 ##' @examples
 #' clear()
@@ -124,12 +125,12 @@ flexplot = function(formula, data, related=F,
 		}
 		
 		#### specify the curve
-		gm = geom_smooth(method = "glm", method.args = list(family = "binomial"), se = se)
+		gm = ggplot2::geom_smooth(method = "glm", method.args = list(family = "binomial"), se = se)
 	} else if (method=="poisson" | method=="Gamma") {
 		#### specify the curve
-		gm = geom_smooth(method = "glm", method.args = list(family = method), se = se)
+		gm = ggplot2::geom_smooth(method = "glm", method.args = list(family = method), se = se)
 	} else {
-		gm = geom_smooth(method=method, se=se)
+		gm = ggplot2::geom_smooth(method=method, se=se)
 	}
 
 
@@ -161,15 +162,15 @@ flexplot = function(formula, data, related=F,
 
 	if (!is.null(jitter)){
 			if (jitter[1]==T & !is.numeric(jitter)[1]){
-				jit = geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha), width=.2, height=.2)
+				jit = ggplot2::geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha), width=.2, height=.2)
 			} else if (jitter[1] == F & !is.numeric(jitter)[1]){
-				jit = geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha))
+				jit = ggplot2::geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha))
 			} else {
-				jit = geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha), width=jitter[1], height=jitter[2])
+				jit = ggplot2::geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha), width=jitter[1], height=jitter[2])
 			}
 			
 		} else {
-			jit = geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha))
+			jit = ggplot2::geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha))
 	}
 
 	if (spread=="stdev"){
@@ -232,10 +233,10 @@ flexplot = function(formula, data, related=F,
 												#stat_summary(geom='errorbar', fun.ymin = function(z){mean(z)-sd(z)}, fun.ymax = function(z) {mean(z)+sd(z)}, fun.y=median, color='red', width=.2)
 		
 		p = ggplot(d2, aes(y=Difference, x=1)) +
-			geom_jitter(data=sample.subset(sample, d2), alpha=raw.alph.func(raw.data, .15), width=.05) +
+			ggplot2::geom_jitter(data=sample.subset(sample, d2), alpha=raw.alph.func(raw.data, .15), width=.05) +
 			summary1 + summary2 + 
 			gm +
-			geom_hline(yintercept=0, col="lightgray") +
+			ggplot2::geom_hline(yintercept=0, col="lightgray") +
 			labs(x=lab) +
 			theme_bw() +
 			theme(axis.ticks.x=element_blank(), axis.text.x=element_blank()) +
@@ -245,7 +246,7 @@ flexplot = function(formula, data, related=F,
 		
 
 		p = ggplot(data=data, aes_string(x=predictors, y=outcome))+
-			jit + #geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
+			jit + #ggplot2::geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
 			gm +
 			theme_bw()						
 
@@ -266,7 +267,7 @@ flexplot = function(formula, data, related=F,
 			alpha = .2
 		}
 		p = ggplot(data=data, aes_string(x=predictors, y=outcome)) +
-			geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha), size=.75, width=.05) + 
+			ggplot2::geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha), size=.75, width=.05) + 
 			summary1 + summary2 + 
 			theme_bw()						
 	##### logistic regression plot
@@ -277,7 +278,7 @@ flexplot = function(formula, data, related=F,
 	} else if (length(outcome) == 1 & length(predictors)==1 & is.na(given) & !is.numeric(data[,predictors]) & !is.numeric(data[,outcome])){
 		m = as.data.frame(table(d[,predictors], d[,outcome])); names(m)[1:2] = c(predictors, outcome)
 		Freq = 'Freq'
-		p = ggplot(data=m, aes_string(x=predictors, y=Freq, fill=outcome)) + geom_bar(stat='identity', position='dodge') + theme_bw()
+		p = ggplot(data=m, aes_string(x=predictors, y=Freq, fill=outcome)) + ggplot2::geom_bar(stat='identity', position='dodge') + theme_bw()
 
 	##### INTERACTION PLOT
 	} else if (length(outcome)==1 & length(predictors)==2 & (is.character(data[,predictors[1]]) | is.factor(data[,predictors[1]])) & (is.character(data[,predictors[2]]) | is.factor(data[,predictors[2]]))){
@@ -293,14 +294,14 @@ flexplot = function(formula, data, related=F,
 		if (!is.na(given)){
 
 			p = ggplot(data=data, aes_string(x=predictors[1], y=outcome)) +
-				geom_jitter(data=sample.subset(sample, data), alpha = raw.alph.func(raw.data, alpha), size = .75, width=.2) +
+				ggplot2::geom_jitter(data=sample.subset(sample, data), alpha = raw.alph.func(raw.data, alpha), size = .75, width=.2) +
 				facet_wrap(as.formula(paste("~", predictors[2]))) +
 				summary1 + summary2 +
 				labs(x=predictors[1], y=outcome) +
 				theme_bw()
 		} else {
 			p = ggplot(data=data, aes_string(x=predictors[1], y=outcome, color=predictors[2], linetype=predictors[2], shape=predictors[2])) +
-				geom_jitter(data=sample.subset(sample, data), alpha = raw.alph.func(raw.data, alpha), size=.75,  position= position_jitterdodge(jitter.width=.2, dodge.width=.2)) +
+				ggplot2::geom_jitter(data=sample.subset(sample, data), alpha = raw.alph.func(raw.data, alpha), size=.75,  position= position_jitterdodge(jitter.width=.2, dodge.width=.2)) +
 				summary1 + summary2 + 
 				sum.line + 
 				labs(x=predictors[1], y=outcome) +
@@ -313,14 +314,14 @@ flexplot = function(formula, data, related=F,
 		# if (!is.null(prediction)){
 			# given.as.string = paste0("~", categories)
 			# p = ggplot(data=data, aes_string(x=numbers, y=outcome))+
-				# geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
+				# ggplot2::geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
 				# gm +
 				# facet_grid(as.formula(given.as.string),labeller = labeller(.rows = label_both, .cols=label_both)) +
 				# theme_bw()	
 				
 		# } else {	
 			# p = ggplot(data=d, aes_string(x=numbers, y=outcome, group=categories, linetype=categories, color=categories)) +
-				# geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
+				# ggplot2::geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha)) +
 				# gm +
 				# theme_bw()							
 		# }
@@ -347,16 +348,16 @@ flexplot = function(formula, data, related=F,
 		d = merge(data, means, by=ordered.predictors)
 		if (se){
 			p = ggplot(data=d, aes_string(x= ordered.predictors[1], y=outcome, col=ordered.predictors[1])) + 
-				geom_jitter(data=sample.subset(sample, d), alpha = raw.alph.func(raw.data, .15)) +
-				geom_point(aes_string(y="mean")) + 
-				geom_errorbar(aes_string(ymin="lower", ymax= "upper", col=ordered.predictors), width=.2) +
+				ggplot2::geom_jitter(data=sample.subset(sample, d), alpha = raw.alph.func(raw.data, .15)) +
+				ggplot2::geom_point(aes_string(y="mean")) + 
+				ggplot2::geom_errorbar(aes_string(ymin="lower", ymax= "upper", col=ordered.predictors), width=.2) +
 				coord_flip() + 
 				facet_grid(as.formula(paste0(ordered.predictors[2]," +", ordered.predictors[3],"~."))) +
 				theme_bw()
 		} else {
 			p = ggplot(data=d, aes_string(x= ordered.predictors[1], y=outcome, col=ordered.predictors[1])) + 
-				geom_jitter(data=sample.subset(sample, d), alpha = raw.alph.func(raw.data, .15)) +
-				geom_point(aes_string(y="mean")) + 
+				ggplot2::geom_jitter(data=sample.subset(sample, d), alpha = raw.alph.func(raw.data, .15)) +
+				ggplot2::geom_point(aes_string(y="mean")) + 
 				coord_flip() + 
 				facet_grid(as.formula(paste0(ordered.predictors[2]," +", ordered.predictors[3],"~."))) +
 				theme_bw()			
@@ -480,15 +481,15 @@ flexplot = function(formula, data, related=F,
 		#### repeat this (otherwise it references the old dataset, before things were binned)
 		if (!is.null(jitter)){
 				if (jitter[1]==T){
-					jit = geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha), width=.2, height=.2)
+					jit = ggplot2::geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha), width=.2, height=.2)
 				} else if (jitter[1] == F){
-					jit = geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha))
+					jit = ggplot2::geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha))
 				} else {
-					jit = geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha), width=jitter[1], height=jitter[2])
+					jit = ggplot2::geom_jitter(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha), width=jitter[1], height=jitter[2])
 				}
 				
 			} else {
-				jit = geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha))
+				jit = ggplot2::geom_point(data=sample.subset(sample, data), alpha=raw.alph.func(raw.data, alpha=alpha))
 		}
 
 		
@@ -550,7 +551,7 @@ flexplot = function(formula, data, related=F,
 
 
 			## add line to existing plot   
-			p = p + geom_line(data=d_smooth, aes_string(x=axis[1], y= outcome), color=ghost.line)
+			p = p + ggplot2::geom_line(data=d_smooth, aes_string(x=axis[1], y= outcome), color=ghost.line)
 			
 		}		
 
@@ -564,9 +565,9 @@ flexplot = function(formula, data, related=F,
 		#### check if first variable is a continuous predictor
 		if (is.numeric(data[,predictors[1]])){
 			
-			p = p + geom_line(data= prediction, aes(linetype=model, y=prediction, color=model), size=2)			
+			p = p + ggplot2::geom_line(data= prediction, aes(linetype=model, y=prediction, color=model), size=2)			
 		} else {
-			p = p + geom_point(data=prediction, aes(y=prediction, color=model), position=position_dodge(width=.2))
+			p = p + ggplot2::geom_point(data=prediction, aes(y=prediction, color=model), position=position_dodge(width=.2))
 		}
 		return(p)
 	} else {
