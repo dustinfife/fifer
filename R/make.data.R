@@ -9,6 +9,7 @@
 ##' @param n Either a single value or a vector indicating the sample size of each group
 ##' @param names The names of the Y and X variables, respectively
 ##' @param groups The names of the groups
+##' @param digits The number of digits the numeric variables should be rounded to
 ##' @return a simulated dataset
 ##' @author Dustin Fife
 ##' @export
@@ -18,12 +19,13 @@
 ##' 
 ##' fake.data = make.data(means = c(10, 50, 30), sds=c(4, 15, 9), n=c(20, 26, 55), names=c("Depression", "Condition"), groups=c("Control", "Medication + Therapy", "Therapy"))
 ##' flexplot(Depression~Condition, data=fake.data)
-make.data = function(cor=NULL, means, sds, n, names=c("X","Y"), groups=c("A", "B")){
+make.data = function(cor=NULL, means, sds, n, names=c("X","Y"), groups=c("A", "B"), digits=0){
 	if (!is.null(cor)){
 		cor.mat = matrix(c(1, cor, cor, 1), nrow=2)
 		cov.mat = cor2cov(cor.mat, sds)
 		d = data.frame(mvrnorm(n, means, cov.mat))
 		names(d) = names
+		d = round(d, digits=digits)
 		return(d)
 	} else {
 		### generate categorical variable
@@ -36,6 +38,7 @@ make.data = function(cor=NULL, means, sds, n, names=c("X","Y"), groups=c("A", "B
 			end.row = end.row + n[i]
 		}
 		d = data.frame(x=outcome, groups=group.vals); names(d) = names
+		d[,1] = round(d[,1], digits=digits)
 		return(d)
 	}
 }
