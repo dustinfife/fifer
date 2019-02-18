@@ -38,7 +38,7 @@ visualize.default = function(object, plot=c("all", "residuals", "bivariate")){
 visualize.lm = function(object, plot=c("all", "residuals", "bivariate"), formula = NULL,...){
 	
 	plot = match.arg(plot, c("all", "residuals", "bivariate"))
-	
+
 	
 	terms = attr(terms(object), "term.labels")
 	
@@ -123,6 +123,9 @@ visualize.lm = function(object, plot=c("all", "residuals", "bivariate"), formula
 		} else {
 			numb = ifelse(is.numeric(data[,terms]), terms, NA)
 			cat = ifelse(is.factor(data[,terms]), terms, NA)		
+			if (is.na(cat)){
+				cat = ifelse(is.character(data[,terms]), terms, NA)						
+			}
 		}
 	    
 		#### now decide where things go
