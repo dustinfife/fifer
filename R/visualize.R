@@ -169,7 +169,14 @@ visualize.lm = function(object, plot=c("all", "residuals", "bivariate"), formula
 			cowplot::plot_grid(histo, sl, ncol=1)
 		}
 	} else {
-		cowplot::plot_grid(step3, histo, res.dep, sl)
+		if (length(numbers)<1){
+			top.row = cowplot::plot_grid(step3, histo, ncol=2)
+			bottom.row = cowplot::plot_grid(NULL, sl, NULL, ncol=3, rel_widths=c(.25, .5, .25))
+			cowplot::plot_grid(top.row, bottom.row, ncol=1)			
+		} else {
+			cowplot::plot_grid(step3, histo, res.dep, sl)			
+		}		
+
 }
 }
 
