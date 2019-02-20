@@ -301,6 +301,14 @@ estimates.lm = function(object){
 	}
 
 
+	
+	#### report correlation
+	if (length(numbers)==1 & length(factors)==0){
+		correlation = cor(d)[1,2]
+	} else {
+		correlation = NA
+	}
+
 
 	#### report R squared
 	r.squared = summary(object)$r.squared
@@ -322,7 +330,7 @@ estimates.lm = function(object){
 	# }
 	# cat(paste("\nsigma = ", round(summary(object)$sigma, digits=4), "\n\n"))
 	
-	ret = list(r.squared=r.squared, semi.p=semi.p, factor.summary = coef.matrix, difference.matrix=difference.matrix, factors=factors, numbers.summary=coef.matrix.numb, numbers=numbers, sigma=summary(object)$sigma)
+	ret = list(r.squared=r.squared, semi.p=semi.p, correlation = correlation, factor.summary = coef.matrix, difference.matrix=difference.matrix, factors=factors, numbers.summary=coef.matrix.numb, numbers=numbers, sigma=summary(object)$sigma)
 	attr(ret, "class") = "estimates"
 	return(ret)
 }
