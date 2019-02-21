@@ -13,7 +13,7 @@
 ##' x.new = rescale(x, 50, 5)
 ##' mean(x.new); sd(x.new)
 rescale = function(x, new.mean, new.sd){
-	m2 = new.mean+(x-mean(x))*(new.sd/sd(x))
+	m2 = new.mean+(x-mean(x, na.rm=T))*(new.sd/sd(x, na.rm=T))
 	m2
 }
 
