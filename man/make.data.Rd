@@ -5,7 +5,7 @@
 \title{Basic function for simulating bivariate data}
 \usage{
 make.data(cor = NULL, means, sds, n, names = c("X", "Y"),
-  groups = c("A", "B"))
+  groups = c("A", "B"), digits = 0, cap = NULL)
 }
 \arguments{
 \item{cor}{The correlation coefficient between the Y and X}
@@ -19,6 +19,8 @@ make.data(cor = NULL, means, sds, n, names = c("X", "Y"),
 \item{names}{The names of the Y and X variables, respectively}
 
 \item{groups}{The names of the groups}
+
+\item{digits}{The number of digits the numeric variables should be rounded to}
 }
 \value{
 a simulated dataset
