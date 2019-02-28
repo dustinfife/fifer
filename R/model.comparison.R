@@ -14,8 +14,12 @@ model.comparison = function(model1, model2){
 	mod1 = attr(terms(model1), "term.labels")
 	mod2 = attr(terms(model2), "term.labels")	
 	
+	#### find model types
+	class.mod1 = class(model1)
+	class.mod2 = class(model2)	
+	
 	#### check for nested models
-	if (all(length(mod1)>length(mod2) & (mod2 %in% mod1))){
+	if (all(length(mod1)>length(mod2) & (mod2 %in% mod1)) & class.mod1 == class.mod2){
 		nested = T
 	} else if (all(length(mod2)>length(mod1) & mod1 %in% mod2)) {
 		nested = T
@@ -23,7 +27,7 @@ model.comparison = function(model1, model2){
 		nested = F
 	}
 	
-	if (nested){
+	if (nested & class(model1) == "lm"){
 		anova.res = anova(model1, model2)
 		p = 1-pchisq( abs(anova.res$Deviance[2]), abs(anova.res$Df[2]))
 	} else {
