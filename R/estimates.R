@@ -143,7 +143,6 @@ estimates.zeroinfl = function(object){
 #' Report lm object Estimates
 #' @aliases estimates.lm estimates
 #' @param object a lm object
-#' @importFrom lsmeans lsmeans
 #' @export
 estimates.lm = function(object){
 	#data(exercise_data); data=exercise_data
