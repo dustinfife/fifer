@@ -346,6 +346,7 @@ print.estimates = function(x,...){
 	#### print summary
 	cat(paste("Model R squared:\n", round(x$r.squared[1], digits=3), " (", round(x$r.squared[2], digits=2),", ", round(x$r.squared[3], digits=2),")\n\nSemi-Partial R squared:\n",sep=""))
 	print(round(x$semi.p, digits=3))
+	cat(paste("\nCorrelation:\n", round(x$correlation[1], digits=3)))
 	if (length(x$factors)>0){
 		cat(paste("\nEstimates for Factors:\n"))
 		# x$factor.summary[,3:ncol(x$factor.summary)] = round(x$factor.summary[,3:ncol(x$factor.summary)], digits=2)
