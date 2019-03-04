@@ -166,7 +166,7 @@ estimates.lm = function(object){
 		factors = names(which(unlist(lapply(d[,terms], is.factor))));
 		numbers = names(which(unlist(lapply(d[,terms], is.numeric))));
 	} else {
-		factors = terms[which(is.factor(d[,terms]))]
+		factors = terms[which(is.factor(d[,terms]) ! is.character(d[,terms])]
 		numbers = terms[which(is.numeric(d[,terms]))]
 	}
 
