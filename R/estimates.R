@@ -92,7 +92,7 @@ estimates.glm = function(object){
 	if (length(factors)>0){
 	for (i in 1:length(factors)){
 		current.pre = preds[factors[i]]
-		levs = levels(d[,factors[i]]); levs = paste0(factors[i], levs)
+		levs = unique(d[,factors[i]]); levs = paste0(factors[i], levs)
 		coef.matrix[levs[-1],"Prediction Difference (+/- 1 SD)"] = paste0(string.round(unlist(current.pre)[-1] - unlist(current.pre)[1], digits=2), " (relative to ", levs[1], ")")
 		
 		if (length(factors)==1){
@@ -166,7 +166,7 @@ estimates.lm = function(object){
 		factors = names(which(unlist(lapply(d[,terms], is.factor))));
 		numbers = names(which(unlist(lapply(d[,terms], is.numeric))));
 	} else {
-		factors = terms[which(is.factor(d[,terms]))]
+		factors = terms[which(is.factor(d[,terms]) | is.character(d[,terms]))]
 		numbers = terms[which(is.numeric(d[,terms]))]
 	}
 
@@ -187,12 +187,12 @@ estimates.lm = function(object){
 	if (length(factors)>0){
 		#### generate table with names
 		if (length(factors)==1){
-			factor.names = levels(d[,factors])
+			factor.names = unique(d[,factors])
 			num.rows = length(factor.names)
 			a = length(unique(factor.names))
 			num.rows2 = (a*(a-1))/2
 		} else {
-			factor.names = unlist(lapply(d[,factors], levels))
+			factor.names = unlist(lapply(d[,factors], unique))
 			num.rows = sum(unlist(apply(d[,factors], 2, function(x) { length(unique(x))})))			
 			num.rows2 = apply(d[,factors], 2, function(x){ a = length(unique(x)); (a*(a-1))/2})
 		}
@@ -221,11 +221,11 @@ estimates.lm = function(object){
 			for (i in 1:length(factors)){
 				
 				#### populate df based on levels
-				levs = length(levels(d[,factors[i]]))
+				levs = length(unique(d[,factors[i]]))
 				levs2 = (levs*(levs-1))/2
 				current.rows = p:(p+levs-1)
 				current.rows2 = p2:(p2 + levs2-1)
-				coef.matrix$levels[current.rows] = levels(d[,factors[i]])
+				coef.matrix$levels[current.rows] = unique(d[,factors[i]])
 				coef.matrix$df.spent[p] = levs-1
 				
 				#### populate variable names
@@ -328,7 +328,7 @@ estimates.lm = function(object){
 		# print(coef.matrix.numb)		
 	# }
 	# cat(paste("\nsigma = ", round(summary(object)$sigma, digits=4), "\n\n"))
-	
+x=	
 	ret = list(r.squared=r.squared, semi.p=semi.p, correlation = correlation, factor.summary = coef.matrix, difference.matrix=difference.matrix, factors=factors, numbers.summary=coef.matrix.numb, numbers=numbers, sigma=summary(object)$sigma)
 	attr(ret, "class") = "estimates"
 	return(ret)
