@@ -131,7 +131,7 @@ compare.fits = function(formula, data, model1, model2=NULL, return.preds=F, sile
 	} else if (model2.type == "polr"){
 		pred.mod2 = data.frame(prediction = predict(model2, pred.values, type="class", re.form=NA), model= model2.type)		
 	} else {
-		pred.mod2 = data.frame(prediction = predict(model2, pred.values, type="response"), model= model2.type, se.fit= report.se)		
+		pred.mod2 = data.frame(prediction = predict(model2, pred.values, type="response"), model= model2.type)#, se.fit= report.se)		
 	}
 	
 	#### convert polyr back to numeric (if applicable)
