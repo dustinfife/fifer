@@ -54,8 +54,8 @@ rfInterp = function(object, nruns=20, nsd=1, importance="permutation",...){
 		if (is.numeric(data[,y])){
 			rfcall = function(form, data, mt){
 				y = row.names(attr(terms(formula), "factors"))[1]
-				rf = cforest(form, data=data, controls=cforest_control(ntree=1000, mtry=mt),...)
-				oob = predict(rf, OOB=T); oob = sum((oob-data[,y])^2)
+				rf = cforest(form, data=data, controls=cforest_control(ntree=1000, mtry=mt))
+				oob = predict(rf, OOB=T); oob = mean((oob-data[,y])^2)
 				return(oob)
 			}			
 		} else {
@@ -70,6 +70,7 @@ rfInterp = function(object, nruns=20, nsd=1, importance="permutation",...){
 		rfcall = function(form, data, mt){
 			if (object$model$type=="regression"){
 				oob = tail(randomForest(form, data=data, mtry=mt,...)$mse, n=1)				
+				oob = tail(randomForest(form, data=data, mtry=mt)$mse, n=1)								
 			} else {
 				oob = tail(randomForest(form, data=data, mtry=mt,...)$err.rate[,1], n=1)				
 			}
@@ -106,9 +107,9 @@ rfInterp = function(object, nruns=20, nsd=1, importance="permutation",...){
 		err.interp = rep(NA, nvars)
 		sd.interp = rep(NA, nvars)
 		
-	
+
 		
-	
+
 	
 		#### loop through each variable, one at a time
 		for (i in 1:nvars){

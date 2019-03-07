@@ -93,6 +93,8 @@ make.data = function(cor=NULL, means, sds, n, names=c("X","Y"), groups=c("A", "B
 			}			
 		
 		return(d)
+	} else {
+		return(d)
 	}
 	}
 }

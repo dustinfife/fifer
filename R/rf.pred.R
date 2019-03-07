@@ -85,7 +85,12 @@ rfPred <-function(object, importance="permutation", nfor.pred=25, nmj=1, outfile
 				y = row.names(attr(terms(formula), "factors"))[1]
 				f = make.formula(y, vars[1])
 				rfmod = cforest(f, data=data, controls=cforest_control(mtry=1), ...)
-				oob = predict(rfmod, OOB=T); oob = 1-length(which(oob==data[,y]))/length(data[,y], ...)
+				oob = predict(rfmod, OOB=T); 
+				if (!is.numeric(data[,y])){
+					oob = 1-length(which(oob==data[,y]))/length(data[,y], ...)
+				} else {
+					oob = mean((oob-data[,y])^2)
+				}
 				rf[j] <- oob
 			}
 		} else {
@@ -124,6 +129,12 @@ rfPred <-function(object, importance="permutation", nfor.pred=25, nmj=1, outfile
 						rfor = cforest(form.1, data=data, controls=cforest_control(mtry=sqrt(i)), ...)
 						oob = predict(rfor, OOB=T, ...); oob = 1-length(which(oob==data[,y.lab]))/length(data[,y])
 						rf[j] = oob
+						if (!is.numeric(data[,y])){
+							oob = 1-length(which(oob==data[,y]))/length(data[,y], ...)
+						} else {
+							oob = mean((oob-data[,y])^2)
+						}
+						rf[j] <- oob						
 					} else {
 						if (object$model$type=="regression"){
 							rf[j] <- tail(randomForest(form.1, data=data, ...)$mse, n=1)
