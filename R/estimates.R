@@ -225,7 +225,7 @@ estimates.lm = function(object){
 				levs2 = (levs*(levs-1))/2
 				current.rows = p:(p+levs-1)
 				current.rows2 = p2:(p2 + levs2-1)
-				coef.matrix$levels[current.rows] = unique(d[,factors[i]])
+				#coef.matrix$levels[current.rows] = unique(d[,factors[i]])
 				coef.matrix$df.spent[p] = levs-1
 				
 				#### populate variable names
@@ -234,6 +234,7 @@ estimates.lm = function(object){
 				#### populate the estimates/lower/upper
 				f = make.formula(outcome, factors[i])			
 				est = compare.fits(f, data=d, object, return.preds=T, silent=T)
+				coef.matrix$levels[current.rows] = as.character(est[,1])				
 				coef.matrix$estimate[current.rows] = est$prediction.fit
 				coef.matrix$lower[current.rows] = est$prediction.lwr
 				coef.matrix$upper[current.rows] = est$prediction.upr
