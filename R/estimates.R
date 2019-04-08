@@ -155,16 +155,21 @@ estimates.lm = function(object){
 	variables = all.vars(formula(object))
     outcome = variables[1]
     
+    
     #### look for interaction terms
 	interaction = length(grep(":", terms))>0
 	
-	#### get dataset
+	#### get dataset and convert all character to factors
 	d = object$model
+	d = as.data.frame(unclass(d))
+
+	str(d)
 	
 	#### identify factors
 	if (length(terms)>1){
-		factors = names(which(unlist(lapply(d[,terms], is.factor))));
+		#factors = names(which(unlist(lapply(d[,terms], is.factor))));
 		numbers = names(which(unlist(lapply(d[,terms], is.numeric))));
+		factors = terms[which(!(terms%in%numbers))]
 	} else {
 		factors = terms[which(is.factor(d[,terms]) | is.character(d[,terms]))]
 		numbers = terms[which(is.numeric(d[,terms]))]
@@ -247,10 +252,20 @@ estimates.lm = function(object){
 				
 				#### fill in the difference matrix
 				difference.matrix$variables[p2] = factors[i]
-				tk = data.frame(TukeyHSD(aov(object))[factors[i]])
-				difference.matrix$comparison[current.rows2] = row.names(tk)
-				difference.matrix[current.rows2,c("difference", "lower", "upper")] = tk[,1:3]
-				
+				center = outer(est$prediction.fit, est$prediction.fit, "-")
+				keep <- lower.tri(center)
+				center <- center[keep]
+				n = table(d[,factors[i]])
+				df = nrow(d) - length(coef(object))
+				width = qtukey(.95, levs, df) *
+					 summary(object)$sigma * 
+					 sqrt(outer(1/n, 1/n, "+"))[keep]
+				difference.names = outer(as.character(est[,1]), 
+										as.character(est[,1]), 
+										paste, sep = "-")[keep]
+				difference.matrix$comparison[current.rows2] = difference.names
+				difference.matrix[current.rows2,c("difference", "lower", "upper")] = 
+						c(center, center-width, center+width)				
 				difference.matrix$cohens.d[current.rows2] = difference.matrix$difference/summary(object)$sigma
 
 				#### increment the counter
@@ -301,7 +316,7 @@ estimates.lm = function(object){
 	}
 
 
-	
+
 	#### report correlation
 	if (length(numbers)==1 & length(factors)==0){
 		correlation = cor(d)[1,2]

@@ -70,7 +70,7 @@ visualize.lm = function(object, plot=c("all", "residuals", "bivariate"), formula
 	d$residuals = residuals(object)
 	d$abs.res = abs(d$residuals)
 	d$fitted = fitted(object)
-	
+
 	#### plot residuals
 	histo = ggplot2::ggplot(data=d, aes(x=residuals)) + geom_histogram(fill='lightgray', col='black') + theme_bw() + labs(x="Residuals", title="Histogram of Residuals")
 	if (length(numbers)>0){
@@ -120,6 +120,13 @@ visualize.lm = function(object, plot=c("all", "residuals", "bivariate"), formula
 		if (length(terms)>1){
 			numb = names(which(unlist(lapply(data[,terms], is.numeric))))
 			cat = names(which(!(unlist(lapply(data[,terms], is.numeric)))))
+			if (length(cat)==0){
+				cat = NA
+			}
+			
+			if (length(numb)==0){
+				numb = NA
+			}
 		} else {
 			numb = ifelse(is.numeric(data[,terms]), terms, NA)
 			cat = ifelse(is.factor(data[,terms]), terms, NA)		
@@ -132,7 +139,7 @@ visualize.lm = function(object, plot=c("all", "residuals", "bivariate"), formula
 		if (length(terms)>4){
 			cat("Note: I can't plot more than four variables")
 		} 
-		
+
 		#### if both numeric and factor, put numeric on x axis and factor as color/line
 		if ((!is.na(cat) | length(cat)!=0) & (!is.na(cat) | length(cat)!=0)){
 			### remove terms with first numb and first cat
