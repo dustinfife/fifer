@@ -2,7 +2,7 @@
 ##'
 ##' Create an added variable plot
 ##'	
-##' This function first residualizes the outcome variable based on the first variable listed in the formula.
+##' This function first residualizes the outcome variable based on the first variables listed in the formula.
 ##' The mean of the outcome variable is then added to the residuals (to maintain the interpretation of the variable),
 ##' then the function plots the residuals against the second variable. 
 ##' @param formula A formula with exactly two predictors and an outcome variable
@@ -20,26 +20,28 @@ added.plot = function(formula, data, ...){
 	variables = all.vars(formula)
 	outcome = variables[1]
 	predictors = variables[-1]
+	res.variable = predictors[length(predictors)]
+	remaining.vars = predictors[which(!(predictors %in% res.variable))]
 	
 	#### bark if there's not two variables
-	if (length(predictors) != 2){
-		stop("You must have exactly two predictor variables")
-	}
+	# if (length(predictors) != 2){
+		# stop("You must have exactly two predictor variables")
+	# }
 	
 	#### remove missing data
 	miss.vals = sapply(data[,variables], function(x) sum(is.na(x)))
 	miss.vals = miss.vals[miss.vals>0]
 	if (length(miss.vals)!=0){
 		warning("Note: I'm removing missing values so the function will work.")
-		data[,predictors] = na.omit(data[,predictors])
+		data = na.omit(data)
 	}
 
 
 	#### model the first chosen variable
-	new.form = make.formula(outcome, predictors[1])
+	new.form = make.formula(outcome, remaining.vars)
 	data$residuals = residuals(lm(new.form, data=data)) + mean(data[,outcome])
 	
 	##### now plot that succa
-	new.form = make.formula("residuals", predictors[2])
-	flexplot(new.form, data=data, ...) + labs(y=paste0(outcome, " | ", predictors[1]))
+	new.form = make.formula("residuals", res.variable)
+	flexplot(new.form, data=data, ...) + labs(y=paste0(outcome, " | ", paste0(remaining.vars, collapse=", ")))
 }

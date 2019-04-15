@@ -441,6 +441,30 @@ flexplot = function(formula, data, related=F,
 				} else {
 					quants = quantile(data[,binned.vars[i]], seq(from=0, to=1, length.out=bins[i]+1))
 				}
+				
+		#### check if breaks are not unique
+				if (length(unique(quants))<length(quants)){
+					quitting = 0
+					cat(paste0("Note: I am unable to create ", bins[i], " unique breaks for the variable '", binned.vars[i]), ".' I'm going to find a different number of bins.\n")
+					options = rev(seq(from=(bins[i]-bins[i])+1, to=bins[i]-1))
+					w = 1
+					while (length(unique(quants))< length(quants) & quitting == 0){
+						quants = quantile((data[,binned.vars[i]]), seq(from=0, to=1, length.out=options[w]))
+
+						w = w+1
+						if (w == (length(options))){
+							quitting = 1
+						}
+						
+					}
+					if (length(unique(quants))<length(quants) & quitting ==1){
+						stop("I couldn't find a way to bin these variables uniquely.")
+					} else {
+						cat(paste0("Okay, I was able to bin your variable into ", length(quants), " bins. If you don't like these breaks, consider doing custom breaks. Type ?flexplot to find out how. \n"))
+					}
+				}
+	
+				
 	
 				data[,paste0(binned.vars[i])] = cut(data[,binned.vars[i]], quants, labels= unlist(labels[i]), include.lowest=T, include.highest=T)
 

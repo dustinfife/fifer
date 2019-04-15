@@ -158,21 +158,24 @@ estimates.lm = function(object){
     
     #### look for interaction terms
 	interaction = length(grep(":", terms))>0
+	#### remove interactions from terms
+	t2 = terms
+	t2 = t2[-grep(":", t2)]
 	
 	#### get dataset and convert all character to factors
 	d = object$model
 	d = as.data.frame(unclass(d))
 
-	str(d)
+	
 	
 	#### identify factors
-	if (length(terms)>1){
+	if (length(t2)>1){
 		#factors = names(which(unlist(lapply(d[,terms], is.factor))));
-		numbers = names(which(unlist(lapply(d[,terms], is.numeric))));
-		factors = terms[which(!(terms%in%numbers))]
+		numbers = names(which(unlist(lapply(d[,t2], is.numeric))));
+		factors = t2[which(!(t2%in%numbers))]
 	} else {
-		factors = terms[which(is.factor(d[,terms]) | is.character(d[,terms]))]
-		numbers = terms[which(is.numeric(d[,terms]))]
+		factors = t2[which(is.factor(d[, t2]) | is.character(d[, t2]))]
+		numbers = t2[which(is.numeric(d[, t2]))]
 	}
 
 
@@ -314,8 +317,13 @@ estimates.lm = function(object){
 	} else {
 		coef.matrix.numb = NA
 	}
-
-
+	
+	
+	#### add all effects (including interactions)
+	
+	model.effects = data.frame(summary(object)$coefficients)
+	model.effects$beta = as.numeric(standardized.beta(object))
+	model.effects = model.effects[,c("Estimate", "Std..Error", "beta")]
 
 	#### report correlation
 	if (length(numbers)==1 & length(factors)==0){
@@ -344,8 +352,8 @@ estimates.lm = function(object){
 		# print(coef.matrix.numb)		
 	# }
 	# cat(paste("\nsigma = ", round(summary(object)$sigma, digits=4), "\n\n"))
-x=	
-	ret = list(r.squared=r.squared, semi.p=semi.p, correlation = correlation, factor.summary = coef.matrix, difference.matrix=difference.matrix, factors=factors, numbers.summary=coef.matrix.numb, numbers=numbers, sigma=summary(object)$sigma)
+
+	ret = list(r.squared=r.squared, semi.p=semi.p, correlation = correlation, factor.summary = coef.matrix, difference.matrix=difference.matrix, factors=factors, numbers.summary=coef.matrix.numb, model.effect = model.effects, numbers=numbers, sigma=summary(object)$sigma)
 	attr(ret, "class") = "estimates"
 	return(ret)
 }
@@ -362,7 +370,9 @@ print.estimates = function(x,...){
 	#### print summary
 	cat(paste("Model R squared:\n", round(x$r.squared[1], digits=3), " (", round(x$r.squared[2], digits=2),", ", round(x$r.squared[3], digits=2),")\n\nSemi-Partial R squared:\n",sep=""))
 	print(round(x$semi.p, digits=3))
-	cat(paste("\nCorrelation:\n", round(x$correlation[1], digits=3)))
+	if (!is.na(x$correlation[1])){
+		cat(paste("\nCorrelation:\n", round(x$correlation[1], digits=3)))
+	}
 	if (length(x$factors)>0){
 		cat(paste("\nEstimates for Factors:\n"))
 		# x$factor.summary[,3:ncol(x$factor.summary)] = round(x$factor.summary[,3:ncol(x$factor.summary)], digits=2)
@@ -378,5 +388,12 @@ print.estimates = function(x,...){
 		#print(round(x$numbers.summary, digits=2))		
 		print(x$numbers.summary)		
 	}
+	
+	cat(paste("\n\nAll Estimates = \n"))
+	x$model.effect[,2:ncol(x$model.effect)] = round(x$model.effect[,2:ncol(x$model.effect)], digits=2)
+	#print(round(x$numbers.summary, digits=2))		
+	print(x$model.effect)
+
+
 	cat(paste("\nsigma = ", round(x$sigma, digits=4), "\n\n"))
 }

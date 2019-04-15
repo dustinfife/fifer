@@ -29,7 +29,9 @@ model.comparison = function(model1, model2){
 	
 	if (nested & class(model1) == "lm"){
 		anova.res = anova(model1, model2)
-		p = 1-pchisq( abs(anova.res$Deviance[2]), abs(anova.res$Df[2]))
+		names(anova.res)
+		p = unlist(anova.res["Pr(>F)"])[2]
+		#1-pchisq( abs(anova.res$Deviance[2]), abs(anova.res$Df[2]))
 	} else {
 		p = NA
 	}
@@ -43,8 +45,9 @@ model.comparison = function(model1, model2){
 	model.table = data.frame(aic=aic, bic=bic, bayes.factor=c(bayes.factor, NA), p.value=c(p, NA))
 	row.names(model.table) = c(m1.name, m2.name)
 
-	#### compute difference in predicted value
-	differences = quantile(abs(predict(model1, type="response") - predict(model2, type="response")))
+	#### compute difference in predicted value (scaled)
+	mean.sigma = sqrt((sigma(model1)^2 + sigma(model2)^2)/2)
+	differences = (quantile(abs(predict(model1, type="response") - predict(model2, type="response"))))/mean.sigma
 
 	
 	if (family(model1)$link=="logit" & family(model2)$link=="logit"){
