@@ -160,7 +160,9 @@ estimates.lm = function(object){
 	interaction = length(grep(":", terms))>0
 	#### remove interactions from terms
 	t2 = terms
+	if (interaction){
 	t2 = t2[-grep(":", t2)]
+	}
 	
 	#### get dataset and convert all character to factors
 	d = object$model
