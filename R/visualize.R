@@ -45,13 +45,25 @@ visualize.lm = function(object, plot=c("all", "residuals", "bivariate"), formula
 	#### get dataset
 	d = object$model
 	
+	
+	
+    #### look for interaction terms
+	interaction = length(grep(":", terms))>0
+	#### remove interactions from terms
+	t2 = terms
+	if (interaction){
+	t2 = t2[-grep(":", t2)]
+	}
+	
+	
 	#### identify factors
-	if (length(terms)>1){
-		factors = names(which(unlist(lapply(d[,terms], is.factor))));
-		numbers = names(which(unlist(lapply(d[,terms], is.numeric))));
+	if (length(t2)>1){
+		#factors = names(which(unlist(lapply(d[,terms], is.factor))));
+		numbers = names(which(unlist(lapply(d[,t2], is.numeric))));
+		factors = t2[which(!(t2%in%numbers))]
 	} else {
-		factors = terms[which(is.factor(d[,terms]))]
-		numbers = terms[which(is.numeric(d[,terms]))]
+		factors = t2[which(is.factor(d[, t2]) | is.character(d[, t2]))]
+		numbers = t2[which(is.numeric(d[, t2]))]
 	}
 
 		#### figure out what is numeric
