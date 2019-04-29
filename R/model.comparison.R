@@ -41,8 +41,10 @@ model.comparison = function(model1, model2){
 	aic = c(AIC(model1), AIC(model2))
 	bic = c(BIC(model1), BIC(model2))
 	bayes.factor = bf.bic(model1, model2)
+	rsq = 	c(summary(model1)$r.squared, summary(model2)$r.squared)
+
 	
-	model.table = data.frame(aic=aic, bic=bic, bayes.factor=c(bayes.factor, NA), p.value=c(p, NA))
+	model.table = data.frame(aic=aic, bic=bic, bayes.factor=c(bayes.factor, 1/bayes.factor), r.squared = rsq, p.value=c(p, NA))
 	row.names(model.table) = c(m1.name, m2.name)
 
 	#### compute difference in predicted value (scaled)

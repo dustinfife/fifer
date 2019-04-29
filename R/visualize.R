@@ -153,7 +153,7 @@ visualize.lm = function(object, plot=c("all", "residuals", "bivariate"), formula
 		} 
 
 		#### if both numeric and factor, put numeric on x axis and factor as color/line
-		if ((!is.na(cat) | length(cat)!=0) & (!is.na(cat) | length(cat)!=0)){
+		if ((!is.na(cat[1]) | length(cat)!=0) & (!is.na(cat[1]) | length(cat)!=0)){
 			### remove terms with first numb and first cat
 			t2 = terms[-which(terms==numb[1] | terms==cat[1])]
 			t2 = c(numb[1],cat[1], t2)

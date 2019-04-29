@@ -217,7 +217,8 @@ estimates.lm = function(object){
 			
 				#### difference.matrix
 				
-			difference.matrix = data.frame(variables = rep("", num.rows2), comparison = NA, difference=NA, 
+				
+			difference.matrix = data.frame(variables = rep("", sum(num.rows2)), comparison = NA, difference=NA, 
 					lower=NA, upper=NA, cohens.d=NA)	
 			difference.matrix$variables = factor(difference.matrix$variables, levels=c("", factors))		
 				#### compute standardized estimates
@@ -271,7 +272,7 @@ estimates.lm = function(object){
 				difference.matrix$comparison[current.rows2] = difference.names
 				difference.matrix[current.rows2,c("difference", "lower", "upper")] = 
 						c(center, center-width, center+width)				
-				difference.matrix$cohens.d[current.rows2] = difference.matrix$difference/summary(object)$sigma
+				difference.matrix$cohens.d[current.rows2] = difference.matrix$difference[current.rows2]/summary(object)$sigma
 
 				#### increment the counter
 				p = p + levs
