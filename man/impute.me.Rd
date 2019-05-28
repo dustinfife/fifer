@@ -5,7 +5,7 @@
 \title{Multiple Imputation on a Model}
 \usage{
 impute.me(model, data, predictors = NULL, keep = T, imputations = 20,
-  silent = F)
+  silent = F, return.mod = F)
 }
 \arguments{
 \item{model}{An R-friendly model. Currently, it only allows lm objects, but will eventually allow other objects (e.g., glm).}
@@ -17,6 +17,9 @@ impute.me(model, data, predictors = NULL, keep = T, imputations = 20,
 \item{keep}{Logical. Should the list of predictors be kept or dropped? Defaults to keep.}
 
 \item{imputations}{The number of imputations to be performed. Defaults to 20.}
+}
+\value{
+.mod Should the model be returned?
 }
 \description{
 Multiple Imputation on a Model

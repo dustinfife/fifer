@@ -17,7 +17,7 @@ added.plot(formula, data, ...)
 Create an added variable plot
 }
 \details{
-This function first residualizes the outcome variable based on the first variable listed in the formula.
+This function first residualizes the outcome variable based on the first variables listed in the formula.
 The mean of the outcome variable is then added to the residuals (to maintain the interpretation of the variable),
 then the function plots the residuals against the second variable.
 }
