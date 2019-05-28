@@ -11,6 +11,7 @@
 ##' @param predictors A list of predictors (as a character vector) that identify which variables to keep (or drop; see below argument). 
 ##' @param keep Logical. Should the list of predictors be kept or dropped? Defaults to keep. 
 ##' @param imputations The number of imputations to be performed. Defaults to 20. 
+##' @return.mod Should the model be returned?
 ##' @import mice
 ##' @author Dustin Fife
 ##' @export
@@ -28,7 +29,7 @@
 ##' mod = lm(weight.change.missing~motivation, data=d, model=T)
 ##' predictors = c("muscle.gain.missing", "weight.change")
 ##' impute.me(mod, data=d, predictors=predictors, keep=F, imputations=5)
-impute.me = function(model, data, predictors=NULL, keep=T, imputations=20, silent=F){
+impute.me = function(model, data, predictors=NULL, keep=T, imputations=20, silent=F, return.mod=F){
 
 		#### set up data to perform the imputations
 		if (!is.null(predictors)){
@@ -51,7 +52,57 @@ impute.me = function(model, data, predictors=NULL, keep=T, imputations=20, silen
 
 		#### pool estimates
 		fit = with(data=imputed.data,expr= eval(model$call))
+
 		combined = pool(fit)
-		estimates = (summary(combined))
-		return(estimates)
+		mod.combined=pool(fit$analyses)
+		if (!return.mod){
+			estimates = (summary(combined))
+		} else {
+			list(estimates=estimates, models=fit)
+		}
+
+}
+
+##' Compute Bayes Factor for a Imputed Model
+##'
+##' Compute Bayes Factor for a Imputed Model
+##'	
+##' blah blah blah
+##' @param model1 The full model
+##' @param model2 The reduced model
+##' @param data The dataset used for analysis. This dataset should contain predictors used to impute the missing values
+##' @param predictors A list of predictors (as a character vector) that identify which variables to keep (or drop; see below argument). 
+##' @param keep Logical. Should the list of predictors be kept or dropped? Defaults to keep. 
+##' @param imputations The number of imputations to be performed. Defaults to 20. 
+##' @return.mod Should the model be returned?
+##' @import mice
+##' @author Dustin Fife
+##' @export
+##' @examples
+##' data(exercise_data)
+##' d = exercise_data
+##' 
+##' 		##### create missing data in motivation
+##' missing.ld = which(d$motivation<quantile(d$motivation, .25))
+##' notmissing = which(!(1:nrow(d) %in% missing.ld))
+##' d$weight.change.missing = d$weight.change
+##' d$weight.change.missing[missing.ld] = NA
+##' 
+##' 		#### create model with missing data
+##' mod = lm(weight.change.missing~motivation, data=d, model=T)
+##' predictors = c("muscle.gain.missing", "weight.change")
+##' impute.me(mod, data=d, predictors=predictors, keep=F, imputations=5)
+impute.bf = function(model1, model2, data,predictors=NULL, keep=T, imputations=20, silent=F, invert=F){
+	impute.me.full = impute.me(model1, data=data, predictors=predictors, keep=keep, imputations=imputations, silent=F, return.mod=T)
+	impute.me.reduced = impute.me(model2, data=data, predictors=predictors, keep=keep, imputations=imputations, silent=F, return.mod=T)	
+	
+	compared = pool.compare(impute.me.full$models, impute.me.reduced$models, method="likelihood")
+	bic.full = log(nrow(data))*length(compared$qbar1)-compared$deviances$dev1.M[1]
+	bic.reduced = log(nrow(data))*length(compared$qbar0)-compared$deviances$dev0.M[1]
+	bf = exp((bic.full-bic.reduced)/2)
+	if (invert){
+		1/bf
+	} else {
+		bf
+	}
 }
