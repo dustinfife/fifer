@@ -91,6 +91,7 @@ impute.model.comparison = function(model1, model2, data,predictors=NULL, keep=T,
 	rsq.full = pool.r.squared(impute.me.full$models)
 	rsq.reduced = pool.r.squared(impute.me.reduced$models)	
 
+
 	if (invert){
 		1/bf
 	} else {
@@ -105,5 +106,5 @@ impute.model.comparison = function(model1, model2, data,predictors=NULL, keep=T,
 	results.table$BF[1] = bf
 	results.table$p[1] = compared$pvalue
 
-	return(results)	
+	return(results.table)	
 }
