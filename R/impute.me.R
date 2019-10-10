@@ -22,12 +22,12 @@
 ##' 		##### create missing data in motivation
 ##' missing.ld = which(d$motivation<quantile(d$motivation, .25))
 ##' notmissing = which(!(1:nrow(d) %in% missing.ld))
-##' d$weight.change.missing = d$weight.change
-##' d$weight.change.missing[missing.ld] = NA
+##' d$weight.loss.missing = d$weight.loss
+##' d$weight.loss.missing[missing.ld] = NA
 ##' 
 ##' 		#### create model with missing data
-##' mod = lm(weight.change.missing~motivation, data=d, model=T)
-##' predictors = c("muscle.gain.missing", "weight.change")
+##' model = lm(weight.loss.missing~motivation, data=d)
+##' predictors = c("muscle.gain.missing", "weight.loss")
 ##' impute.me(mod, data=d, predictors=predictors, keep=F, imputations=5)
 impute.me = function(model, data, predictors=NULL, keep=T, imputations=20, silent=F, return.mod=F){
 
@@ -36,15 +36,13 @@ impute.me = function(model, data, predictors=NULL, keep=T, imputations=20, silen
 			data = make.null(predictors, data=data, keep=keep)
 		}
 
-		#### figure out missing data pattern
-		pattern = md.pattern(data)
 
 		#### do multiple imputations
 		if (!silent){
 			cat("Performing Imputations. \n\n")
-			imputed.data= mice(data=data, m=imputations)
+			imputed.data= mice::mice(data=data, m=imputations)
 		} else {
-			imputed.data= mice(data=data, m=imputations, quietly=T)
+			imputed.data= mice::mice(data=data, m=imputations, quietly=T)
 		}
 		
 		#### remove dataset in the call
@@ -52,13 +50,15 @@ impute.me = function(model, data, predictors=NULL, keep=T, imputations=20, silen
 
 		#### pool estimates
 		fit = with(data=imputed.data,expr= eval(model$call))
+		pooled_mod = fit$analyses[[1]] 
+		combined = mice::pool(fit)
+		pooled_mod$coefficients = summary(combined)$estimate	### from https://stackoverflow.com/questions/52713733/how-to-use-predict-function-with-my-pooled-results-from-mice
 
-		combined = pool(fit)
-		mod.combined=pool(fit$analyses)
 		if (!return.mod){
 			estimates = (summary(combined))
 		} else {
-			list(estimates=estimates, models=fit)
+			#class(pooled_mod) = "lm"
+			return(pooled_mod)
 		}
 
 }

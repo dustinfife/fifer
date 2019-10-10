@@ -37,12 +37,12 @@ d = exercise_data
 		##### create missing data in motivation
 missing.ld = which(d$motivation<quantile(d$motivation, .25))
 notmissing = which(!(1:nrow(d) \%in\% missing.ld))
-d$weight.change.missing = d$weight.change
-d$weight.change.missing[missing.ld] = NA
+d$weight.loss.missing = d$weight.loss
+d$weight.loss.missing[missing.ld] = NA
 
 		#### create model with missing data
-mod = lm(weight.change.missing~motivation, data=d, model=T)
-predictors = c("muscle.gain.missing", "weight.change")
+model = lm(weight.loss.missing~motivation, data=d)
+predictors = c("muscle.gain.missing", "weight.loss")
 impute.me(mod, data=d, predictors=predictors, keep=F, imputations=5)
 }
 \author{

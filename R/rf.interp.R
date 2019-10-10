@@ -54,14 +54,14 @@ rfInterp = function(object, nruns=20, nsd=1, importance="permutation",...){
 		if (is.numeric(data[,y])){
 			rfcall = function(form, data, mt){
 				y = row.names(attr(terms(formula), "factors"))[1]
-				rf = cforest(form, data=data, controls=cforest_control(ntree=1000, mtry=mt))
+				rf = party::cforest(form, data=data, controls=cforest_control(ntree=1000, mtry=mt))
 				oob = predict(rf, OOB=T); oob = mean((oob-data[,y])^2)
 				return(oob)
 			}			
 		} else {
 			rfcall = function(form, data, mt){
 				y = row.names(attr(terms(formula), "factors"))[1]
-				rf = cforest(form, data=data, controls=cforest_control(ntree=1000, mtry=mt),...)
+				rf = party::cforest(form, data=data, controls=cforest_control(ntree=1000, mtry=mt),...)
 				oob = predict(rf, OOB=T); oob = 1-length(which(oob==data[,y]))/length(data[,y])
 				return(oob)
 			}
@@ -69,10 +69,10 @@ rfInterp = function(object, nruns=20, nsd=1, importance="permutation",...){
 	} else {
 		rfcall = function(form, data, mt){
 			if (object$model$type=="regression"){
-				oob = tail(randomForest(form, data=data, mtry=mt,...)$mse, n=1)				
-				oob = tail(randomForest(form, data=data, mtry=mt)$mse, n=1)								
+				oob = tail(randomForest::randomForest(form, data=data, mtry=mt,...)$mse, n=1)				
+				oob = tail(randomForest::randomForest(form, data=data, mtry=mt)$mse, n=1)								
 			} else {
-				oob = tail(randomForest(form, data=data, mtry=mt,...)$err.rate[,1], n=1)				
+				oob = tail(randomForest::randomForest(form, data=data, mtry=mt,...)$err.rate[,1], n=1)				
 			}
 			return(oob)
 		}
@@ -83,6 +83,7 @@ rfInterp = function(object, nruns=20, nsd=1, importance="permutation",...){
 		warning("The threshold step only yielded one variable. I'm returning the results of the threshold step.")
 		err.interp = rfcall(formula, data=object$data, mt=1)
 		varselect = object$remaining.variables
+		oob.matrix=err.interp
 		vars = varselect
 		sd.min = NA
 		nvarselect = 1
@@ -109,54 +110,57 @@ rfInterp = function(object, nruns=20, nsd=1, importance="permutation",...){
 		
 
 		
-
+		### keep track of oob estimates
+		oob.matrix = matrix(nrow=nruns, ncol=length(vars))
 	
 		#### loop through each variable, one at a time
 		for (i in 1:nvars){
 			rf = rep(NA, nruns)
 			u = vars[1:i]
 			w = as.matrix(x[,u])
+		
 	
-		#### repeatedly obtain oob estimate
+			#### repeatedly obtain oob estimate
 			if (i <= n) {
 				for (j in 1:nruns) {				
-					form = make.formula(y.lab, u)
+					form = flexplot::make.formula(y.lab, u)
 					mt = sqrt(i)
 					rf[j] = rfcall(form, data=object$data, mt=mt)
+					oob.matrix[j,i] = rf[j]					
 				}
 			} else {
 	
 				for (j in 1:nruns) {
-					form = make.formula(y.lab, u)
+					form = flexplot::make.formula(y.lab, u)
 					mt = i/3
 					rf[j] = rfcall(form, data=object$data, mt=mt)
+					oob.matrix[j,i] = rf[j]					
 				}
 			}
 	
 	
 			err.interp[i] = mean(rf)
-			print(mean(rf))
+			cat(paste0("Iteration ", i, " of ", nvars, "\n"))
 			sd.interp[i] = sd(rf)
 		}
 	
 		var.min = which.min(err.interp)
 		sd.min = sd.interp[var.min]
-	
-		nvarselect = min( which(err.interp <= (err.interp[var.min] + nsd*sd.min)) )
+		threshold = err.interp[var.min] + nsd*sd.min
+		nvarselect = min( which(err.interp <= (threshold) ))
 		varselect = vars[1:nvarselect]
 	
 		comput.time = Sys.time()-start
 		
-		final.form = make.formula(y.lab, varselect)
+		final.form = flexplot::make.formula(y.lab, varselect)
 	}
 	
-	### build final model
-		
+	### build final model	
 	formula = final.form
 	if (importance=="gini"){
-		model = randomForest(formula, data=data, importance=TRUE,...)
+		model = randomForest::randomForest(formula, data=data, importance=TRUE,...)
 	} else {
-		model = cforest(formula, data=data, controls=cforest_unbiased(ntree=1000, mtry=mt),...)
+		model = party::cforest(formula, data=data, controls=cforest_unbiased(ntree=1000, mtry=mt),...)
 	}
 	
 	output = list('varselect.interp'=varselect,
@@ -168,11 +172,12 @@ rfInterp = function(object, nruns=20, nsd=1, importance="permutation",...){
 				 'comput.time'=comput.time,
 				 'data' = object$data,
 				 'formula' = final.form,
-				 'model' = model)
+				 'model' = model,
+				 'oob' = oob.matrix,
+				 'threshold' = threshold)
 	attr(output, "class") = "rfInterp"
 	return(output)
 }
-
 
 #' Print rfInterp Summary
 #'
@@ -278,7 +283,7 @@ xtable.rfInterp = function(x,caption=NULL, label=NULL, align=NULL, digits=NULL, 
 	xtable(tab, caption=caption, label=label, align=align, digits=digits, display=display, ...)
 
 }
-	
+
 
 #' Plot rfInterp Summary
 #'
@@ -289,13 +294,9 @@ xtable.rfInterp = function(x,caption=NULL, label=NULL, align=NULL, digits=NULL, 
 #' @param ... other parameters passed to plot
 #' @export
 plot.rfInterp = function(x, y, ...){
-	length.vars = length(x$varselect.interp)
-	
-	labels = list(ylab="Stepwise OOB Error", xlab="", pch=16, cex=.8,col="gray", type="b", xaxt="n") 
-	args = modifyList(labels, list(x=1:length.vars, y=x$err.interp[1:length.vars],...))
-	do.call("plot", args)
-		
-# # 	plot(1:length.vars, x$err.interp[1:length.vars], ylab="Stepwise OOB Error", xlab="", pch=16, cex=.8,col="gray", type="b",...)
-	text(1:length.vars, x$err.interp[1:length.vars], x$varselect.interp, pos=4, cex=.8)
+
+	data = data.frame(x$oob); names(data) = c(x$vars.considered)
+	data = tidyr::gather(data, Variable, OOB)
+	flexplot::flexplot(OOB~Variable, data=data) + ggplot2::coord_flip()	+ggplot2::geom_hline(yintercept=x$threshold)	
 }
 

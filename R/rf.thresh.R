@@ -64,10 +64,12 @@
 #' @importFrom party cforest_control
 #' @importFrom party varimp
 #' @importFrom randomForest randomForest
+#' @importFrom randomForest rfImpute
 #' @importFrom randomForestSRC var.select
 #' @importFrom rpart rpart
 #' @importFrom rpart rpart.control
 #' @importFrom rpart prune
+#' @importFrom flexplot make.formula
 #' @author Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot, with modifications by Dustin Fife
 #' @references 
 #' Genuer, R. and Poggi, J.M. and Tuleau-Malot, C. (2010), Variable
@@ -109,10 +111,19 @@ rfThresh = function(formula, data, nruns = 50, silent=FALSE, importance="permuta
 	names(preds) = vars
 	oob = 1:length(nruns)	
 
+
+	#### impute missing values (if needed)
+	if (vars[1]=="."){ vars=names(data)}
+	if (length(missing.vals(data))>0 & importance=="gini"){
+		# give message
+		message("Note: You have missing values in your dataset. I'm going to impute them using randomForest.")
+		data = randomForest::rfImpute(formula, data=data)
+	}
+
 	##### compute importance 50 times
 	if (importance=="gini"){
 		for (i in 1:nrow(preds)){
-			rf = randomForest(formula, data=data, importance=TRUE,...)
+			rf = randomForest::randomForest(formula, data=data, importance=TRUE,...)
 			preds[i,] = rf$importance[, ncol(rf$importance)-1]
 			if (rf$type=="regression"){
 				oob[i] =  tail(rf$mse, n=1)
@@ -122,8 +133,6 @@ rfThresh = function(formula, data, nruns = 50, silent=FALSE, importance="permuta
 		}
 	} else if (importance=="permutation"){
 		for (i in 1:nrow(preds)){
-			
-
 
 			mt = sqrt(length(vars))
 			
@@ -174,17 +183,17 @@ rfThresh = function(formula, data, nruns = 50, silent=FALSE, importance="permuta
 		
 			p <- length(vars)
 			u <- 1:p
-			u <- as.data.frame(u)
+			u <- data.frame(ord.imp,u)
 	
 			# estimation of the standard deviations curve with CART (using "rpart" package)
 	
 			# construction of the maximal tree and search of optimal complexity
-			tree <- rpart(ord.sd ~., data=u, control=rpart.control(cp=0, minsplit=2))
+			tree <- rpart::rpart(ord.sd ~., data=u, control=rpart::rpart.control(cp=0, minsplit=2))
 			d <- tree$cptable
 			argmin.cp <- which.min(d[,4])
 			
 			# pruning
-			pruned.tree <- prune(tree, cp=d[argmin.cp, 1])
+			pruned.tree <- rpart::prune(tree, cp=d[argmin.cp, 1])
 			pred.pruned.tree <- predict(pruned.tree)
 			
 			# determination of the y-value of the lowest stair: this is the estimation
@@ -196,17 +205,17 @@ rfThresh = function(formula, data, nruns = 50, silent=FALSE, importance="permuta
 			
 			if (length(w)==0) {
 			  s <- p
-			}
-			else {
+			} else {
 			  s <- min(w)-1
 			}
 		}
 	
 	}
 	
-	formula = make.formula(resp, names(ord.imp[1:s]))
+	formula = flexplot::make.formula(resp, names(ord.imp[1:s]))
 	if (importance!="permutation"){
-		model = randomForest(formula, data=data, importance=TRUE,...)
+
+		model = randomForest::randomForest(formula, data=data, importance=TRUE,...)
 	} else {			
 		my_cforest_control <- cforest_control(teststat = "quad",
 		    testtype = "Univ", mincriterion = 0, ntree = 1000, mtry = mt,
@@ -214,10 +223,10 @@ rfThresh = function(formula, data, nruns = 50, silent=FALSE, importance="permuta
 		model = cforest(formula, data=data, controls= my_cforest_control,...)
 	}
 	
-	time = Sys.time()-start
+	time = round(Sys.time()-start, digits=2)
 
 	##### make a list to store important info
-	ret = list(importance.mean=ord.imp[1:s], importance.all=ord.imp, importance.sd=ord.sd[1:s], 
+	ret = list(importance.mean=ord.imp[1:s], importance.all= preds, importance.sd=ord.sd[1:s], 
 			response=resp, remaining.variables=names(ord.imp)[1:s], nruns=nruns, formula = formula,
 			data=data, oob=oob, time=time, all.vars=names(ord.imp), model=model)
 	
@@ -239,7 +248,7 @@ rfThresh = function(formula, data, nruns = 50, silent=FALSE, importance="permuta
 print.rfThresh = function(x,...){
 	print(names(x))
 	cat(paste("\n\nThe best variables (in order of importance) were:\n\n", sep=""))
-	print(sort(x$importance.mean, decreasing=TRUE))
+	print(sort(round(x$importance.mean, digits=3), decreasing=TRUE))
 		cat(paste("\n\n"))
 	print(x$time)
 }	
@@ -251,14 +260,12 @@ print.rfThresh = function(x,...){
 #' @param x an rfThresh object
 #' @param y igorned
 #' @param ... other parameters passed to plo
+#' @importFrom tidyr gather
+#' @import ggplot2
 #' @export
-plot.rfThresh = function(x, y, ...){
-	length.vars = length(x$importance.mean)
-	var = x$importance.sd
-	vimp = x$importance.mean
-	labels = list(xlab="", ylab="Variable Importance", pch=16, cex=.8, xlim=range(.5, length.vars+.5), xaxt="n") 
-	args = modifyList(labels, list(x=1:length.vars, y=vimp,...))
-	do.call("plot", args)	
-	text(1:length.vars, vimp, names(vimp), pos=4, cex=1.2)
-	segments(1:length.vars, vimp+1.96*var, 1:length.vars, vimp-1.96*var, col="lightgray")
+plot.rfThresh = function(x, y, type,...){
+	#x$importance.all
+	rf.data = tidyr::gather(x$importance.all, Variable, Importance)
+	flexplot::flexplot(Importance ~ Variable, data=rf.data) + ggplot2::coord_flip() + ggplot2::geom_vline(xintercept=length(x$importance.mean)+.5)
 }
+#::geom_vline(xintercept=line+.5)
