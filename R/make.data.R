@@ -10,16 +10,14 @@
 ##' @param names The names of the Y and X variables, respectively
 ##' @param groups The names of the groups
 ##' @param digits The number of digits the numeric variables should be rounded to
-##' @cap The min/max values for each of the variables, to be used for truncating scores, coded as a vector. 
+##' @param cap The min/max values for each of the variables, to be used for truncating scores, coded as a vector. 
 ##' @return a simulated dataset
 ##' @author Dustin Fife
 ##' @export
 ##' @examples
 ##' fake.data = make.data(cor=.6, means=c(50, 100), sds = c(15, 15), n=100, names=c("Exam Score", "IQ"))
-##' flexplot(IQ~Exam.score, data=fake.data)
 ##' 
 ##' fake.data = make.data(means = c(10, 50, 30), sds=c(4, 15, 9), n=c(20, 26, 55), names=c("Depression", "Condition"), groups=c("Control", "Medication + Therapy", "Therapy"))
-##' flexplot(Depression~Condition, data=fake.data)
 make.data = function(cor=NULL, means, sds, n, names=c("X","Y"), groups=c("A", "B"), digits=0, cap=NULL){
 	if (!is.null(cor)){
 		cor.mat = matrix(c(1, cor, cor, 1), nrow=2)

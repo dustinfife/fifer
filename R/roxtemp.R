@@ -2,7 +2,6 @@
 ##'
 ##' @title Generate a Roxygen Template
 ##' @author Dustin Fife
-##' @export
 roxtemp = function(){
 	f = paste0(
 "##' Insert title here

@@ -4,7 +4,7 @@
 \alias{plot.rfThresh}
 \title{rfThesh Summary}
 \usage{
-\method{plot}{rfThresh}(x, y, ...)
+\method{plot}{rfThresh}(x, y, type, ...)
 }
 \arguments{
 \item{x}{an rfThresh object}

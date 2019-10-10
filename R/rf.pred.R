@@ -78,13 +78,13 @@ rfPred <-function(object, importance="permutation", nfor.pred=25, nmj=1, outfile
 		# comparison between the error with the variable and the precedent error
 		# and test of the addition of the variable
 		rf <- rep(NA, nfor.pred)
-
+		error.matrix = data.frame(matrix(nrow=nfor.pred, ncol=length(vars))); names(error.matrix) = vars
 		##### fit it for only first variable
 		if (importance=="permutation"){		
 			for (j in 1:nfor.pred) {
 				y = row.names(attr(terms(formula), "factors"))[1]
-				f = make.formula(y, vars[1])
-				rfmod = cforest(f, data=data, controls=cforest_control(mtry=1), ...)
+				f = flexplot::make.formula(y, vars[1])
+				rfmod = party::cforest(f, data=data, controls=party::cforest_control(mtry=1), ...)
 				oob = predict(rfmod, OOB=T); 
 				if (!is.numeric(data[,y])){
 					oob = 1-length(which(oob==data[,y]))/length(data[,y], ...)
@@ -92,6 +92,7 @@ rfPred <-function(object, importance="permutation", nfor.pred=25, nmj=1, outfile
 					oob = mean((oob-data[,y])^2)
 				}
 				rf[j] <- oob
+				error.matrix[j,1] = oob
 			}
 		} else {
 			for (j in 1:nfor.pred) {
@@ -102,6 +103,7 @@ rfPred <-function(object, importance="permutation", nfor.pred=25, nmj=1, outfile
 				} else {
 					rf[j] <- tail(randomForest(f, data=data, ...)$err.rate[,1], n=1)					
 				}
+				error.matrix[j,1] = oobrf[j]
 			}
 		}
 		err.pred <- mean(rf)
@@ -112,6 +114,7 @@ rfPred <-function(object, importance="permutation", nfor.pred=25, nmj=1, outfile
 		stepwise.error = 1:l
 		stepwise.error[1] = t
 
+
 		### if there's more than one variable
 		if (l>1) { 
 			
@@ -119,28 +122,30 @@ rfPred <-function(object, importance="permutation", nfor.pred=25, nmj=1, outfile
 			varselect.pred = vars[1]
 			
 			for (i in 2:l){	
-				form.1 = make.formula(y.lab, c(varselect.pred, vars[i]))
+				form.1 = flexplot::make.formula(y.lab, c(varselect.pred, vars[i]))
 				#### preallocate
 				rf <- rep(NA, nfor.pred)
 				
 				#### fit just this set of variables nfor.pred times
 				for (j in 1:nfor.pred) {
 					if (importance=="permutation"){
-						rfor = cforest(form.1, data=data, controls=cforest_control(mtry=sqrt(i)), ...)
-						oob = predict(rfor, OOB=T, ...); oob = 1-length(which(oob==data[,y.lab]))/length(data[,y])
-						rf[j] = oob
+						rfor = party::cforest(form.1, data=data, controls=party::cforest_control(mtry=sqrt(i)), ...)
+						oob = predict(rfor, OOB=T, ...)#; oob = 1-length(which(oob==data[,y.lab]))/length(data[,y])
 						if (!is.numeric(data[,y])){
 							oob = 1-length(which(oob==data[,y]))/length(data[,y], ...)
 						} else {
 							oob = mean((oob-data[,y])^2)
 						}
 						rf[j] <- oob						
+						error.matrix[j,i] = oob
+						#cat(paste0("i = ", i, ", j=", j, ", oob = ", oob, "\n"))
 					} else {
 						if (object$model$type=="regression"){
 							rf[j] <- tail(randomForest(form.1, data=data, ...)$mse, n=1)
 						} else {
 							rf[j] <- tail(randomForest(form.1, data=data, ...)$err.rate[,1], n=1)					
 						}
+						error.matrix[j,i] = rf[j]
 					}	
 				}
 				z <- mean(rf)
@@ -157,11 +162,12 @@ rfPred <-function(object, importance="permutation", nfor.pred=25, nmj=1, outfile
 			}
 		}
 	}
-	formula = make.formula(y.lab, varselect.pred)
+
+	formula = flexplot::make.formula(y.lab, varselect.pred)
 	if (importance=="gini"){
 		model = randomForest(formula, data=data, importance=TRUE,...)
 	} else {
-		model = cforest(formula, data=data, controls=cforest_unbiased(ntree=1000, mtry=sqrt(length(varselect.pred))),...)
+		model = party::cforest(formula, data=data, controls=party::cforest_unbiased(ntree=1000, mtry=sqrt(length(varselect.pred))),...)
 	}
 		
 	comput.time <- Sys.time()-start
@@ -176,7 +182,8 @@ rfPred <-function(object, importance="permutation", nfor.pred=25, nmj=1, outfile
 	 'num.varselect.pred'=length(varselect.pred),
 	 'comput.time'=comput.time,
 	 'model' = model,
-	 importance = importance)
+	 importance = importance,
+	 "importance.matrix" = error.matrix)
 	attr(output, "class") = "rfPred"
 	assign(named.file, output)
 	save(list = named.file, file=outfile)	
@@ -345,13 +352,10 @@ summary.rfPred = function(object, ...){
 #' @param ... other parameters passed to plo
 #' @export
 plot.rfPred = function(x, y, ...){
-	length.vars = length(x$varselect.pred)
-
-	labels = list(ylab="Stepwise OOB Error", xlab="", pch=16, cex=.8,col="gray", type="b", xaxt="n") 
-	args = modifyList(labels, list(x=1:length.vars, y=x$err.pred[1:length.vars],...))
-	do.call("plot", args)
-#	plot(1:length.vars, x$err.pred[1:length.vars], ylab="Stepwise OOB Error", xlab="", pch=16, cex=.8,col="gray", type="b",...)
-	text(1:length.vars, x$err.pred[1:length.vars], x$varselect.pred, pos=4, cex=.8)
+	line = length(x$varselect.pred)
+	data = data.frame(x$importance.matrix); names(data) = c(x$vars.considered)
+	data = tidyr::gather(data, Variable, OOB)
+	flexplot::flexplot(OOB~Variable, data=data) + ggplot2::coord_flip()	+ggplot2::geom_vline(xintercept=line+.5)
 }
 
 ##' Output accuracy, sensitivity, specificity, NPV, and PPV. 
