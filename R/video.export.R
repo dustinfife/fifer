@@ -9,7 +9,9 @@
 ##' @param folder the directory in images where the file is to be placed. This defaults to "images" in the root folder. 
 ##' @param shape.plot the shape of the plot for scaling. Can be "vertical", "horizontal", or "square"
 ##' @export
-##' @import extrafont flexplot ggplot2 egg
+##' @import flexplot ggplot2
+##' @importFrom extrafont loadfonts
+##' @importFrom egg set_panel_size
 ##' @references There's some diffulty with setting a fixed size: 
 ##' \url{https://stackoverflow.com/questions/54892086/setting-canvas-size-in-ggsave-to-a-fixed-width-while-maintaining-aspect-ratio-of}
 ##' @examples
