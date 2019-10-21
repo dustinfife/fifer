@@ -26,8 +26,6 @@ video.export = function(a, name, folder="images", shape.plot = "horizontal"){
 	### create folder if it doesn't exist
 	dir.create(file.path(folder), showWarnings = FALSE)
 
-
-	
 	### save to file with appropriate size
 	loc = paste0(c(folder, paste0(name, ".jpg")), collapse="/")
 	if (shape.plot=="horizontal"){
