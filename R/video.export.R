@@ -21,7 +21,7 @@
 video.export = function(a, name, folder="images", shape.plot = "horizontal"){
 
 	### load fonts
-	extrafont::loadfonts()
+	suppressMessages(extrafont::loadfonts())
 	
 	### create folder if it doesn't exist
 	dir.create(file.path(folder), showWarnings = FALSE)
