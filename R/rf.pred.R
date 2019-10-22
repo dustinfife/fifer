@@ -103,7 +103,7 @@ rfPred <-function(object, importance="permutation", nfor.pred=25, nmj=1, outfile
 				} else {
 					rf[j] <- tail(randomForest(f, data=data, ...)$err.rate[,1], n=1)					
 				}
-				error.matrix[j,1] = oobrf[j]
+				error.matrix[j,1] = rf[j]
 			}
 		}
 		err.pred <- mean(rf)

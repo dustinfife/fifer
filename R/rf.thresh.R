@@ -81,12 +81,12 @@
 #' @export rfThresh
 #' @seealso \code{\link{rfInterp}}, \code{\link{rfPred}}
 # data(iris); data = iris; formula = as.formula("Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width"); nruns=5; silent=FALSE; importance="gini";nmin=1
-rfThresh = function(formula, data, nruns = 50, silent=FALSE, importance="permutation", nmin=1,...){
+rfThresh = function(formula, data, nruns = 50, silent=FALSE, importance="permutation", nmin=1, ...){
 	
 	
 	character.vars = names(which(!(unlist(lapply(data, is.numeric)))))
 	if (length(character.vars)>0){
-		cat(paste0("Note: converting the following character variables to factors: ", paste0(character.vars, collapse=", ")))
+		cat(paste0("Note: converting the following character variables to factors: ", paste0(character.vars, collapse=", "), "\n"))
 		data = as.data.frame(unclass(data))
 	}
 	
@@ -113,11 +113,12 @@ rfThresh = function(formula, data, nruns = 50, silent=FALSE, importance="permuta
 
 
 	#### impute missing values (if needed)
-	if (vars[1]=="."){ vars=names(data)}
-	if (length(missing.vals(data))>0 & importance=="gini"){
+	#if (vars[1]=="."){ vars=names(data)}
+	if (length(missing.vals(data))>0){
 		# give message
-		message("Note: You have missing values in your dataset. I'm going to impute them using randomForest.")
-		data = randomForest::rfImpute(formula, data=data)
+		message("Note: You have missing values in your dataset. I'm going to DELETE them! I'd recommend handling missing data in advance.")
+	  data = na.omit(data)
+		#data = randomForest::rfImpute(formula, data=data)
 	}
 
 	##### compute importance 50 times
