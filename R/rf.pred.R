@@ -83,7 +83,7 @@ rfPred <-function(object, importance="permutation", nfor.pred=25, nmj=1, outfile
 		if (importance=="permutation"){		
 			for (j in 1:nfor.pred) {
 				y = row.names(attr(terms(formula), "factors"))[1]
-				f = flexplot::make.formula(y, vars[1])
+				f = make.formula(y, vars[1])
 				rfmod = party::cforest(f, data=data, controls=party::cforest_control(mtry=1), ...)
 				oob = predict(rfmod, OOB=T); 
 				if (!is.numeric(data[,y])){
@@ -122,7 +122,7 @@ rfPred <-function(object, importance="permutation", nfor.pred=25, nmj=1, outfile
 			varselect.pred = vars[1]
 			
 			for (i in 2:l){	
-				form.1 = flexplot::make.formula(y.lab, c(varselect.pred, vars[i]))
+				form.1 = make.formula(y.lab, c(varselect.pred, vars[i]))
 				#### preallocate
 				rf <- rep(NA, nfor.pred)
 				
@@ -163,7 +163,7 @@ rfPred <-function(object, importance="permutation", nfor.pred=25, nmj=1, outfile
 		}
 	}
 
-	formula = flexplot::make.formula(y.lab, varselect.pred)
+	formula = make.formula(y.lab, varselect.pred)
 	if (importance=="gini"){
 		model = randomForest(formula, data=data, importance=TRUE,...)
 	} else {

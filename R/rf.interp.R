@@ -123,7 +123,7 @@ rfInterp = function(object, nruns=20, nsd=1, importance="permutation",...){
 			#### repeatedly obtain oob estimate
 			if (i <= n) {
 				for (j in 1:nruns) {				
-					form = flexplot::make.formula(y.lab, u)
+					form = make.formula(y.lab, u)
 					mt = sqrt(i)
 					rf[j] = rfcall(form, data=object$data, mt=mt)
 					oob.matrix[j,i] = rf[j]					
@@ -131,7 +131,7 @@ rfInterp = function(object, nruns=20, nsd=1, importance="permutation",...){
 			} else {
 	
 				for (j in 1:nruns) {
-					form = flexplot::make.formula(y.lab, u)
+					form = make.formula(y.lab, u)
 					mt = i/3
 					rf[j] = rfcall(form, data=object$data, mt=mt)
 					oob.matrix[j,i] = rf[j]					
@@ -152,7 +152,7 @@ rfInterp = function(object, nruns=20, nsd=1, importance="permutation",...){
 	
 		comput.time = Sys.time()-start
 		
-		final.form = flexplot::make.formula(y.lab, varselect)
+		final.form = make.formula(y.lab, varselect)
 	}
 	
 	### build final model	
@@ -297,6 +297,6 @@ plot.rfInterp = function(x, y, ...){
 
 	data = data.frame(x$oob); names(data) = c(x$vars.considered)
 	data = tidyr::gather(data, Variable, OOB)
-	flexplot::flexplot(OOB~Variable, data=data) + ggplot2::coord_flip()	+ggplot2::geom_hline(yintercept=x$threshold)	
+	flexplot(OOB~Variable, data=data) + ggplot2::coord_flip()	+ggplot2::geom_hline(yintercept=x$threshold)	
 }
 

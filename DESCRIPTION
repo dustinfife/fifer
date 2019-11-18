@@ -24,5 +24,6 @@ Imports:
     ggplot2,
     Hmisc,
     rpart,
-    fields
+    fields,
+    flexplot
 RoxygenNote: 6.1.1

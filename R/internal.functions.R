@@ -1,3 +1,16 @@
+make.formula = function(response, predictors, random=NULL){
+  if (is.null(random)){
+    formula(paste(response, "~", 
+                  paste(predictors, collapse="+"),
+                  sep=""))
+  } else {
+    formula(paste(response, "~", 
+                  paste(predictors, collapse="+"),
+                  "+",random,
+                  sep=""))
+  }
+}
+
 ##' Function to create a related t test plot
 ##'
 ##' Function to create a related t test plot

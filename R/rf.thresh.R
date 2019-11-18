@@ -69,7 +69,6 @@
 #' @importFrom rpart rpart
 #' @importFrom rpart rpart.control
 #' @importFrom rpart prune
-#' @importFrom flexplot make.formula
 #' @author Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot, with modifications by Dustin Fife
 #' @references 
 #' Genuer, R. and Poggi, J.M. and Tuleau-Malot, C. (2010), Variable
@@ -212,7 +211,7 @@ rfThresh = function(formula, data, nruns = 50, silent=FALSE, importance="permuta
 	
 	}
 	
-	formula = flexplot::make.formula(resp, names(ord.imp[1:s]))
+	formula = make.formula(resp, names(ord.imp[1:s]))
 	if (importance!="permutation"){
 
 		model = randomForest::randomForest(formula, data=data, importance=TRUE,...)
@@ -261,7 +260,7 @@ print.rfThresh = function(x,...){
 #' @param y igorned
 #' @param ... other parameters passed to plo
 #' @importFrom tidyr gather
-#' @import ggplot2
+#' @import ggplot2 flexplot
 #' @export
 plot.rfThresh = function(x, y, type,...){
 	#x$importance.all
