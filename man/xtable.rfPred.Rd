@@ -4,8 +4,15 @@
 \alias{xtable.rfPred}
 \title{Prepare xtable Summary}
 \usage{
-\method{xtable}{rfPred}(x, caption = NULL, label = NULL,
-  align = NULL, digits = NULL, display = NULL, ...)
+\method{xtable}{rfPred}(
+  x,
+  caption = NULL,
+  label = NULL,
+  align = NULL,
+  digits = NULL,
+  display = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{an rfPred object}

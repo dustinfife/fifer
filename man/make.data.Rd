@@ -4,8 +4,16 @@
 \alias{make.data}
 \title{Basic function for simulating bivariate data}
 \usage{
-make.data(cor = NULL, means, sds, n, names = c("X", "Y"),
-  groups = c("A", "B"), digits = 0, cap = NULL)
+make.data(
+  cor = NULL,
+  means,
+  sds,
+  n,
+  names = c("X", "Y"),
+  groups = c("A", "B"),
+  digits = 0,
+  cap = NULL
+)
 }
 \arguments{
 \item{cor}{The correlation coefficient between the Y and X}

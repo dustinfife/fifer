@@ -8,8 +8,15 @@
 \alias{write.fifer}
 \title{Write a dataset and load the meta-data}
 \usage{
-write.fife(object, newfile, originalfile = NULL, file.type = ".csv",
-  row.names = F, fullpath = T, ...)
+write.fife(
+  object,
+  newfile,
+  originalfile = NULL,
+  file.type = ".csv",
+  row.names = F,
+  fullpath = T,
+  ...
+)
 }
 \arguments{
 \item{object}{An R object to be written as a .csv (or whatever) file.}

@@ -4,8 +4,14 @@
 \alias{SummarizeFactorDefault}
 \title{Summarize a factor vector with count and percentages}
 \usage{
-SummarizeFactorDefault(x, group = rep(1, length(x)), decimal = 0,
-  latex = TRUE, useNA = "ifany", ...)
+SummarizeFactorDefault(
+  x,
+  group = rep(1, length(x)),
+  decimal = 0,
+  latex = TRUE,
+  useNA = "ifany",
+  ...
+)
 }
 \arguments{
 \item{x}{Vector of values.}

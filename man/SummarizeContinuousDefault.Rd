@@ -4,8 +4,14 @@
 \alias{SummarizeContinuousDefault}
 \title{Summarize a continuous vector with mean plus/minus standard deviation}
 \usage{
-SummarizeContinuousDefault(x, group = rep(1, length(x)), decimal = 2,
-  latex = TRUE, na.rm = TRUE, ...)
+SummarizeContinuousDefault(
+  x,
+  group = rep(1, length(x)),
+  decimal = 2,
+  latex = TRUE,
+  na.rm = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{Vector of values.}

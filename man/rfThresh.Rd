@@ -4,8 +4,15 @@
 \alias{rfThresh}
 \title{Variable Selection Using Random Forests}
 \usage{
-rfThresh(formula, data, nruns = 50, silent = FALSE,
-  importance = "permutation", nmin = 1, ...)
+rfThresh(
+  formula,
+  data,
+  nruns = 50,
+  silent = FALSE,
+  importance = "permutation",
+  nmin = 1,
+  ...
+)
 }
 \arguments{
 \item{formula}{a formula, such as \code{y~x1 + x2}, where \code{y} is the response variable and anything following \code{~} are predictors.}

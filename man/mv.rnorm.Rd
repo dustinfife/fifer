@@ -6,8 +6,7 @@
 \alias{mvrnorm}
 \title{Randomly Generate Multivariate Normal Data}
 \usage{
-mv.rnorm(n = 1, vars = NULL, mu = NULL, Sigma = NULL,
-  names = NULL)
+mv.rnorm(n = 1, vars = NULL, mu = NULL, Sigma = NULL, names = NULL)
 }
 \arguments{
 \item{n}{The sample size of the randomly generated dataset}

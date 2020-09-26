@@ -4,8 +4,7 @@
 \alias{related.plot}
 \title{Function to create a related t test plot}
 \usage{
-related.plot(predictors, outcome, data, raw.data, ss,
-  spread = "quartiles")
+related.plot(predictors, outcome, data, raw.data, ss, spread = "quartiles")
 }
 \arguments{
 \item{predictors}{the character of the predictor variable}

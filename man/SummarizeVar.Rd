@@ -4,10 +4,16 @@
 \alias{SummarizeVar}
 \title{Summarize a vector (continuous or factor)}
 \usage{
-SummarizeVar(x, group = rep(1, length(x)), latex = TRUE,
-  decimalFactor = 0, decimalContinuous = 2,
+SummarizeVar(
+  x,
+  group = rep(1, length(x)),
+  latex = TRUE,
+  decimalFactor = 0,
+  decimalContinuous = 2,
   ContinuousSummaryFunction = SummarizeContinuousDefault,
-  FactorSummaryFunction = SummarizeFactorDefault, ...)
+  FactorSummaryFunction = SummarizeFactorDefault,
+  ...
+)
 }
 \arguments{
 \item{x}{Vector of values.}

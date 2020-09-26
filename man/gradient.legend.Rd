@@ -5,8 +5,14 @@
 \alias{gradient}
 \title{Create a gradiented legend}
 \usage{
-gradient.legend(y = NULL, yrange = NULL, cols = c("red", "blue"),
-  location = c(0.075, 0.3, 0.575, 0.975), n = 100, ...)
+gradient.legend(
+  y = NULL,
+  yrange = NULL,
+  cols = c("red", "blue"),
+  location = c(0.075, 0.3, 0.575, 0.975),
+  n = 100,
+  ...
+)
 }
 \arguments{
 \item{y}{the variable used to create the gradient, typically in \code{\link{number.to.colors}}}

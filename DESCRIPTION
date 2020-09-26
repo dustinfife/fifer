@@ -9,7 +9,7 @@ Description: Functions and datasets that can be used for data cleanup (e.g.,
     to biostatistics (e.g., random forest, multiple comparisons with chi square
     tests). See the package vignette for a brief introduction to many of the main
     functions.
-Version: 1.1
+Version: 1.2
 Author: Dustin Fife <fife.dustin@gmail.com>
 Maintainer: Dustin Fife <fife.dustin@gmail.com>
 License: GPL-2
@@ -26,4 +26,4 @@ Imports:
     rpart,
     fields,
     flexplot
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1

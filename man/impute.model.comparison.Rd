@@ -4,8 +4,16 @@
 \alias{impute.model.comparison}
 \title{Compute Bayes Factor for a Imputed Model}
 \usage{
-impute.model.comparison(model1, model2, data, predictors = NULL,
-  keep = T, imputations = 20, silent = F, invert = F)
+impute.model.comparison(
+  model1,
+  model2,
+  data,
+  predictors = NULL,
+  keep = T,
+  imputations = 20,
+  silent = F,
+  invert = F
+)
 }
 \arguments{
 \item{model1}{The full model}

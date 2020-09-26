@@ -12,6 +12,9 @@ roxtemp()
 \description{
 Generate a Roxygen Template
 }
+\references{
+
+}
 \seealso{
 \\code{\\link{MASS}}
 }
@@ -21,4 +24,6 @@ Dustin Fife
 Write the description here
 
 Write the details here
+
+
 }

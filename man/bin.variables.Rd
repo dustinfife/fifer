@@ -4,8 +4,7 @@
 \alias{bin.variables}
 \title{Bin them vars}
 \usage{
-bin.variables(given, breaks, labels, data, bins, ghost.reference,
-  prediction)
+bin.variables(given, breaks, labels, data, bins, ghost.reference, prediction)
 }
 \arguments{
 \item{given}{stuff}

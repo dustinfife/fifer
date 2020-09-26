@@ -6,9 +6,22 @@
 \alias{col.table}
 \title{Create a color-coded table in latex}
 \usage{
-colored.table(data, file, dep.var, row.factors, col.factors, breaks = 4,
-  round = 2, rng = NULL, FUN = mean, row.prefix = NULL,
-  col.prefix = NULL, custom.breaks = NULL, return.table = F, ...)
+colored.table(
+  data,
+  file,
+  dep.var,
+  row.factors,
+  col.factors,
+  breaks = 4,
+  round = 2,
+  rng = NULL,
+  FUN = mean,
+  row.prefix = NULL,
+  col.prefix = NULL,
+  custom.breaks = NULL,
+  return.table = F,
+  ...
+)
 }
 \arguments{
 \item{data}{the dataset in "long" format, where the conditions are on columns.}

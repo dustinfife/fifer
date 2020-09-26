@@ -4,8 +4,7 @@
 \alias{stratified}
 \title{Sample from a \code{data.frame} according to a stratification variable}
 \usage{
-stratified(df, group, size, select = NULL, replace = FALSE,
-  bothSets = FALSE)
+stratified(df, group, size, select = NULL, replace = FALSE, bothSets = FALSE)
 }
 \arguments{
 \item{df}{The source \code{data.frame}.}

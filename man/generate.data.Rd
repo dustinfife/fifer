@@ -4,8 +4,13 @@
 \alias{generate.data}
 \title{Simulate multivariate normal data}
 \usage{
-generate.data(cor.matrix, sds = c(1, 1), means = c(0, 0),
-  names = c("y", "x"), n = 100)
+generate.data(
+  cor.matrix,
+  sds = c(1, 1),
+  means = c(0, 0),
+  names = c("y", "x"),
+  n = 100
+)
 }
 \arguments{
 \item{cor.matrix}{Either a scalar (indicating the correlation between two variables) or a symmetrical matrix for a variance/covariance matrix}

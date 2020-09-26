@@ -6,8 +6,13 @@
 \alias{anchor.gradient}
 \title{Create a color gradient with a color for zero}
 \usage{
-anchored.gradient(minColor = "blue", maxColor = "red",
-  zeroColor = "white", z = NULL, vals = 100)
+anchored.gradient(
+  minColor = "blue",
+  maxColor = "red",
+  zeroColor = "white",
+  z = NULL,
+  vals = 100
+)
 }
 \arguments{
 \item{minColor}{what color corresponds to the minimum value?}

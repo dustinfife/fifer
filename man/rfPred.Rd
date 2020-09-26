@@ -4,8 +4,15 @@
 \alias{rfPred}
 \title{Variable selection in Random Forest}
 \usage{
-rfPred(object, importance = "permutation", nfor.pred = 25, nmj = 1,
-  outfile = "rfPred.file", named.file = "rfPredResults", ...)
+rfPred(
+  object,
+  importance = "permutation",
+  nfor.pred = 25,
+  nmj = 1,
+  outfile = "rfPred.file",
+  named.file = "rfPredResults",
+  ...
+)
 }
 \arguments{
 \item{object}{an object returned from \code{\link{rfInterp}}}

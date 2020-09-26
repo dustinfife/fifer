@@ -7,10 +7,19 @@
 \alias{plots.prism}
 \title{Plot prism-like Plots}
 \usage{
-prism.plots(formula, data, centerfunc = median, interquartile = TRUE,
+prism.plots(
+  formula,
+  data,
+  centerfunc = median,
+  interquartile = TRUE,
   spreadfunc = function(x) {     return(1.96 * sd(x)/sqrt(length(x))) },
-  def.axis = TRUE, jitter.y = FALSE, add = FALSE, start = 0,
-  col = "gray", ...)
+  def.axis = TRUE,
+  jitter.y = FALSE,
+  add = FALSE,
+  start = 0,
+  col = "gray",
+  ...
+)
 }
 \arguments{
 \item{formula}{a formula object with the quantitative variable as the response variable (e.g., Var~group).}

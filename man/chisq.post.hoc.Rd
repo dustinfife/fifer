@@ -5,9 +5,14 @@
 \title{Tests for significant differences among all pairs of populations in a
 chi-square test, correcting for multiple comparisons.}
 \usage{
-chisq.post.hoc(tbl, test = c("fisher.test"), popsInRows = TRUE,
-  control = c("fdr", "BH", "BY", "bonferroni", "holm", "hochberg",
-  "hommel"), digits = 4, ...)
+chisq.post.hoc(
+  tbl,
+  test = c("fisher.test"),
+  popsInRows = TRUE,
+  control = c("fdr", "BH", "BY", "bonferroni", "holm", "hochberg", "hommel"),
+  digits = 4,
+  ...
+)
 }
 \arguments{
 \item{tbl}{A \code{table} object.}

@@ -4,9 +4,18 @@
 \alias{predicted.line}
 \title{Create and plot a fitted line for a generalized linear model}
 \usage{
-predicted.line(model, outcome, IV, covs = NA, data,
-  cov.func = c("mean", "median", "min", "max"), length = 100,
-  add = F, ret.pred = F, ...)
+predicted.line(
+  model,
+  outcome,
+  IV,
+  covs = NA,
+  data,
+  cov.func = c("mean", "median", "min", "max"),
+  length = 100,
+  add = F,
+  ret.pred = F,
+  ...
+)
 }
 \arguments{
 \item{model}{A model (e.g., lmer model, or any type of model that supports the "predict" command)}

@@ -4,8 +4,7 @@
 \alias{rfInterp}
 \title{Variable Selection with Random Forest}
 \usage{
-rfInterp(object, nruns = 20, nsd = 1, importance = "permutation",
-  ...)
+rfInterp(object, nruns = 20, nsd = 1, importance = "permutation", ...)
 }
 \arguments{
 \item{object}{a rfThresh object}

@@ -8,8 +8,15 @@
 \alias{last.row}
 \title{Return only one row per ID}
 \usage{
-last.sample(ID, sort.var = NULL, decreasing = TRUE, data, FUN = NULL,
-  fun.var = NULL, ...)
+last.sample(
+  ID,
+  sort.var = NULL,
+  decreasing = TRUE,
+  data,
+  FUN = NULL,
+  fun.var = NULL,
+  ...
+)
 }
 \arguments{
 \item{ID}{The name of the unique identifier, expressed as a string (e.g., "Match.Group")}

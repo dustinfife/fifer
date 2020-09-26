@@ -4,8 +4,7 @@
 \alias{univariate.tests}
 \title{Extract p values for a data frame}
 \usage{
-univariate.tests(dataframe, exclude.cols = NULL, group, parametric = T,
-  ...)
+univariate.tests(dataframe, exclude.cols = NULL, group, parametric = T, ...)
 }
 \arguments{
 \item{dataframe}{a data frame containing both the variables and the grouping variable}
