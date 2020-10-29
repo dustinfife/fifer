@@ -16,12 +16,16 @@
 ##' lines(lowess(Wind, Temp), col="red")
 ##' residuals = residualize.lowess(Wind, Temp)
 ##' plot(Wind, residuals)
-residualize.lowess = function(x,y){
- lfit = lowess(x,y)
+residualize.lowess = function(x,y, return.fitted){
+ lfit = loess(x,y, degree=3)
 
  # create a functional version of the lowess fit
  lfun = approxfun(lfit)
  fitted = lfun(x)
  resid = y-fitted
- resid
+ if(return.fitted) {
+   return(fitted)
+ } else {
+   return(resid)
+ }
 }

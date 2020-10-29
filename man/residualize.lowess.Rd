@@ -4,7 +4,7 @@
 \alias{residualize.lowess}
 \title{Residualize a lowess function}
 \usage{
-residualize.lowess(x, y)
+residualize.lowess(x, y, return.fitted)
 }
 \arguments{
 \item{x}{The predictor of interest}
